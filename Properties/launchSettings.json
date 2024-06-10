@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WorkLog (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WorkLog (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
