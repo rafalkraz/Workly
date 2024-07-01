@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -25,10 +26,21 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         this.InitializeComponent();
+        
     }
 
-    private void myButton_Click(object sender, RoutedEventArgs e)
+    private void mainNavigation_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
-        //myButton.Content = "Clicked";
+
+        if (args.IsSettingsSelected)
+        {
+            contentFrame.Navigate(typeof(SettingsPage));
+        }
+        else if (args.SelectedItemContainer != null)
+        {
+            Type navPageType = Type.GetType(args.SelectedItemContainer.Tag.ToString());
+            contentFrame.Navigate(navPageType);
+            
+        }
     }
 }

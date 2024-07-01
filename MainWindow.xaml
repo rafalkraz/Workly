@@ -10,19 +10,15 @@
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
-    <Grid>
-        <NavigationView x:Name="mainNavigation">
-            <NavigationView.MenuItems>
-                <NavigationViewItem Content="Dziennik pracy">
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xF000;" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem Icon="Calculator" Content="Kalkulator wynagrodzenia"/>
-            </NavigationView.MenuItems>
-        </NavigationView>
-        <Frame x:Name="contentFrame">
-            
-        </Frame>
-    </Grid>
+    <NavigationView x:Name="mainNavigation" SelectionChanged="mainNavigation_SelectionChanged" IsBackButtonVisible="Collapsed">
+        <NavigationView.MenuItems>
+            <NavigationViewItem Tag="WorkLog.LogPage" Content="Dziennik pracy">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xF000;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+            <NavigationViewItem Tag="WorkLog.SalaryPage"  Content="Kalkulator wynagrodzenia" Icon="Calculator"/>
+        </NavigationView.MenuItems>
+        <Frame Margin="0,0,0,0" x:Name="contentFrame"/>
+    </NavigationView>
 </Window>
