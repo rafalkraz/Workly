@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -13,6 +17,8 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Globalization.DateTimeFormatting;
+using Windows.Security.Cryptography.Certificates;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -26,21 +32,44 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         this.InitializeComponent();
-        
+        CopyData();
+        mainNavigation.SelectedItem = mainNavigation.MenuItems[0];
+        //ContentFrame.Navigate(typeof(LogPage));
     }
 
     private void mainNavigation_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
-
         if (args.IsSettingsSelected)
         {
-            contentFrame.Navigate(typeof(SettingsPage));
+            ContentFrame.Navigate(typeof(SettingsPage));
         }
         else if (args.SelectedItemContainer != null)
         {
             Type navPageType = Type.GetType(args.SelectedItemContainer.Tag.ToString());
-            contentFrame.Navigate(navPageType);
-            
+            ContentFrame.Navigate(navPageType);
         }
+    }
+
+    public void CopyData()
+    {
+        string result = Assembly.GetExecutingAssembly().Location;
+        int index = result.LastIndexOf("\\");
+        string dPath = $"{result.Substring(0, index)}\\2024-07.json";
+        string destinationPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\WorkLog\\2024-07.json";
+        string destinationFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\WorkLog\\";
+        if (!File.Exists(destinationPath))
+        {
+            Directory.CreateDirectory(destinationFolder);
+            File.Copy(dPath, destinationPath, true);
+        }
+    }
+
+    public static ObservableCollection<Entry> Deserialize()
+    {
+        string month = "2024-07";
+        string fileName = month + ".json";
+        string jsonString = File.ReadAllText($"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\WorkLog\\2024-07.json");
+        ObservableCollection<Entry> result = JsonSerializer.Deserialize<ObservableCollection<Entry>>(jsonString);
+        return result;
     }
 }

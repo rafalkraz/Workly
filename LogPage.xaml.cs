@@ -12,6 +12,8 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using System.Collections.ObjectModel;
+using System.Text.Json;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -26,6 +28,16 @@ namespace WorkLog
         public LogPage()
         {
             this.InitializeComponent();
+
+            ObservableCollection<Entry> Entries = MainWindow.Deserialize();
+            var result =
+                from entry in Entries
+                group entry by entry.BeginTime.Date.ToString("dd.MM") into g
+                orderby g.Key
+                select g;
+            EntriesCollection.Source = result;
         }
+
+        
     }
 }

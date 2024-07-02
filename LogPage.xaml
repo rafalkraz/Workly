@@ -10,6 +10,43 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <TextBlock>LogPage</TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0">Dziennik pracy</TextBlock>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <CollectionViewSource x:Name="EntriesCollection" IsSourceGrouped="True"/>
+            </Grid.Resources>
+            <ListView x:Name="MonthWorkLog" Grid.Column="0" ItemsSource="{Binding Source={StaticResource EntriesCollection}}">
+                <ListView.GroupStyle>
+                    <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Key}" />
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ListView.GroupStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="local:Entry">
+                        <TextBlock Text="{x:Bind Duration}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackPanel Grid.Column="1" >
+                <TextBlock>Czas pracy</TextBlock>
+                <TextBlock>9:00-13:00</TextBlock>
+                <TextBlock>Lokalizacja</TextBlock>
+                <TextBlock>IFPiLM</TextBlock>
+                <TextBlock>Opis wykonanej pracy</TextBlock>
+                <TextBlock>Dyżur wykonywany zgodnie z umową</TextBlock>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>
