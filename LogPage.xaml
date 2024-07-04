@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -23,7 +23,9 @@
             <Grid.Resources>
                 <CollectionViewSource x:Name="EntriesCollection" IsSourceGrouped="True"/>
             </Grid.Resources>
-            <ListView x:Name="MonthWorkLog" Grid.Column="0" ItemsSource="{Binding Source={StaticResource EntriesCollection}}">
+            <StackPanel Grid.Column="0">
+                <ComboBox Header="Miesiąc" Width="200"></ComboBox>
+                <ListView x:Name="MonthWorkLog" ItemsSource="{Binding Source={StaticResource EntriesCollection}}">
                 <ListView.GroupStyle>
                     <GroupStyle>
                     <GroupStyle.HeaderTemplate>
@@ -39,13 +41,23 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            </StackPanel>
+
             <StackPanel Grid.Column="1" >
-                <TextBlock>Czas pracy</TextBlock>
-                <TextBlock>9:00-13:00</TextBlock>
-                <TextBlock>Lokalizacja</TextBlock>
-                <TextBlock>IFPiLM</TextBlock>
-                <TextBlock>Opis wykonanej pracy</TextBlock>
-                <TextBlock>Dyżur wykonywany zgodnie z umową</TextBlock>
+                <RadioButtons Header="Typ wpisu" >
+                    <RadioButton Content="Standardowy" Checked="RadioButton_Checked"/>
+                    <RadioButton Content="Bezpłatne wolne" Checked="RadioButton_Checked"/>
+                    <RadioButton Content="Urlop" Checked="RadioButton_Checked"/>
+                </RadioButtons>
+                <CalendarDatePicker PlaceholderText="Wybierz datę" Header="Data" />
+                <TimePicker ClockIdentifier="24HourClock" Header="Godzina rozpoczęcia" />
+                <TimePicker ClockIdentifier="24HourClock" Header="Godzina zakończenia" />
+                <TextBox Header="Lokalizacja" />
+                <TextBox Header="Opis" AutomationProperties.Name="multi-line TextBox" TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="True"/>
+                <StackPanel Orientation="Horizontal">
+                    <ToggleButton Content="Urlop" Click="Button_Click" Width="150" Margin="0,0,10,0"/>
+                    <ToggleButton Content="Bezpłatne wolne" Click="Button_Click" Width="150"/>
+                </StackPanel>
             </StackPanel>
         </Grid>
     </Grid>
