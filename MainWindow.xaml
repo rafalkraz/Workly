@@ -10,15 +10,40 @@
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
-    <NavigationView x:Name="mainNavigation" SelectionChanged="mainNavigation_SelectionChanged" IsBackButtonVisible="Collapsed">
-        <NavigationView.MenuItems>
-            <NavigationViewItem Tag="WorkLog.LogPage" Content="Dziennik pracy">
-                <NavigationViewItem.Icon>
-                    <FontIcon Glyph="&#xF000;" />
-                </NavigationViewItem.Icon>
-            </NavigationViewItem>
-            <NavigationViewItem Tag="WorkLog.SalaryPage"  Content="Kalkulator wynagrodzenia" Icon="Calculator"/>
-        </NavigationView.MenuItems>
-        <Frame Margin="0,0,0,0" x:Name="ContentFrame"/>
-    </NavigationView>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid x:Name="AppTitleBar" Height="32" Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
+                <ColumnDefinition/>
+                <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
+            </Grid.ColumnDefinitions>
+            <Image x:Name="TitleBarIcon" Source="ms-appx:///Assets/StoreLogo.png"
+       Grid.Column="1"
+       HorizontalAlignment="Left"
+       Width="16" Height="16"
+       Margin="8,0,0,0"/>
+            <TextBlock x:Name="TitleBarTextBlock" 
+           Text="App title" 
+           Style="{StaticResource CaptionTextBlockStyle}"
+           Grid.Column="1"
+           VerticalAlignment="Center"
+           Margin="28,0,0,0"/>
+        </Grid>
+        <NavigationView x:Name="mainNavigation" SelectionChanged="mainNavigation_SelectionChanged" IsBackButtonVisible="Collapsed"
+                        Grid.Row="1">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Tag="WorkLog.LogPage" Content="Dziennik pracy">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xF000;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Tag="WorkLog.SalaryPage"  Content="Kalkulator wynagrodzenia" Icon="Calculator"/>
+            </NavigationView.MenuItems>
+            <Frame Margin="0,0,0,0" x:Name="ContentFrame"/>
+        </NavigationView>
+    </Grid>
 </Window>

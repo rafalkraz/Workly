@@ -45,19 +45,15 @@
 
             <StackPanel Grid.Column="1" >
                 <RadioButtons Header="Typ wpisu" >
-                    <RadioButton Content="Standardowy" Checked="RadioButton_Checked"/>
-                    <RadioButton Content="Bezpłatne wolne" Checked="RadioButton_Checked"/>
-                    <RadioButton Content="Urlop" Checked="RadioButton_Checked"/>
+                    <RadioButton Content="Standardowy" />
+                    <RadioButton Content="Bezpłatne wolne"/>
+                    <RadioButton Content="Urlop" />
                 </RadioButtons>
                 <CalendarDatePicker PlaceholderText="Wybierz datę" Header="Data" />
                 <TimePicker ClockIdentifier="24HourClock" Header="Godzina rozpoczęcia" />
                 <TimePicker ClockIdentifier="24HourClock" Header="Godzina zakończenia" />
                 <TextBox Header="Lokalizacja" />
                 <TextBox Header="Opis" AutomationProperties.Name="multi-line TextBox" TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="True"/>
-                <StackPanel Orientation="Horizontal">
-                    <ToggleButton Content="Urlop" Click="Button_Click" Width="150" Margin="0,0,10,0"/>
-                    <ToggleButton Content="Bezpłatne wolne" Click="Button_Click" Width="150"/>
-                </StackPanel>
             </StackPanel>
         </Grid>
     </Grid>

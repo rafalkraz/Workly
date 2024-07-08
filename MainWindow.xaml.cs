@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -15,10 +16,12 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Globalization.DateTimeFormatting;
 using Windows.Security.Cryptography.Certificates;
+using Windows.Storage;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -32,9 +35,11 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         this.InitializeComponent();
+        TitleBarTextBlock.Text = AppInfo.Current.DisplayInfo.DisplayName;
         CopyData();
         mainNavigation.SelectedItem = mainNavigation.MenuItems[0];
-        //ContentFrame.Navigate(typeof(LogPage));
+        var a = await LoadFiles();
+        Debug.WriteLine("DEBUG:" + a);
     }
 
     private void mainNavigation_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -62,6 +67,18 @@ public sealed partial class MainWindow : Window
             Directory.CreateDirectory(destinationFolder);
             File.Copy(dPath, destinationPath, true);
         }
+    }
+
+    public static async Task<List<StorageFile>> LoadFiles()
+    {
+        List<StorageFile> files = new();
+        var a = SystemDataPaths.GetDefault().ProgramData + "\\WorkLog";
+        var b = await StorageFolder.GetFolderFromPathAsync(a);
+        IReadOnlyList<StorageFile> fileList = await b.GetFilesAsync();
+        foreach (var file in fileList) {
+            files.Add(file);
+        }
+        return files;
     }
 
     public static ObservableCollection<Entry> Deserialize()
