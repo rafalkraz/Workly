@@ -38,8 +38,14 @@ public sealed partial class MainWindow : Window
         TitleBarTextBlock.Text = AppInfo.Current.DisplayInfo.DisplayName;
         CopyData();
         mainNavigation.SelectedItem = mainNavigation.MenuItems[0];
-        var a = await LoadFiles();
-        Debug.WriteLine("DEBUG:" + a);
+    }
+
+    public List<StorageFile> monthList;
+
+    private async void mainNavigation_Loaded(object sender, RoutedEventArgs e)
+    {
+        monthList = await LoadFilesAsync();
+        //LogPage.UpdateMonthList(monthList);
     }
 
     private void mainNavigation_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -69,12 +75,12 @@ public sealed partial class MainWindow : Window
         }
     }
 
-    public static async Task<List<StorageFile>> LoadFiles()
+    public static async Task<List<StorageFile>> LoadFilesAsync()
     {
         List<StorageFile> files = new();
-        var a = SystemDataPaths.GetDefault().ProgramData + "\\WorkLog";
-        var b = await StorageFolder.GetFolderFromPathAsync(a);
-        IReadOnlyList<StorageFile> fileList = await b.GetFilesAsync();
+        var workLogDataPath = SystemDataPaths.GetDefault().ProgramData + "\\WorkLog";
+        var workLogStorageFolder = await StorageFolder.GetFolderFromPathAsync(workLogDataPath);
+        IReadOnlyList<StorageFile> fileList = await workLogStorageFolder.GetFilesAsync();
         foreach (var file in fileList) {
             files.Add(file);
         }
@@ -89,4 +95,5 @@ public sealed partial class MainWindow : Window
         ObservableCollection<Entry> result = JsonSerializer.Deserialize<ObservableCollection<Entry>>(jsonString);
         return result;
     }
+
 }

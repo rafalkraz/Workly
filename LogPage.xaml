@@ -7,7 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Loaded="Page_Loaded">
 
     <Grid Margin="5">
         <Grid.RowDefinitions>
@@ -24,7 +25,7 @@
                 <CollectionViewSource x:Name="EntriesCollection" IsSourceGrouped="True"/>
             </Grid.Resources>
             <StackPanel Grid.Column="0">
-                <ComboBox Header="Miesiąc" Width="200"></ComboBox>
+                <ComboBox Header="Miesiąc" Width="200" ItemsSource="{x:Bind MonthList}" />
                 <ListView x:Name="MonthWorkLog" ItemsSource="{Binding Source={StaticResource EntriesCollection}}">
                 <ListView.GroupStyle>
                     <GroupStyle>
