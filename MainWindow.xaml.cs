@@ -22,6 +22,7 @@ using Windows.Foundation.Collections;
 using Windows.Globalization.DateTimeFormatting;
 using Windows.Security.Cryptography.Certificates;
 using Windows.Storage;
+using WorkLog.Structure;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -36,7 +37,6 @@ public sealed partial class MainWindow : Window
     {
         this.InitializeComponent();
         TitleBarTextBlock.Text = AppInfo.Current.DisplayInfo.DisplayName;
-        CopyData();
         mainNavigation.SelectedItem = mainNavigation.MenuItems[0];
     }
 
@@ -44,8 +44,7 @@ public sealed partial class MainWindow : Window
 
     private async void mainNavigation_Loaded(object sender, RoutedEventArgs e)
     {
-        monthList = await LoadFilesAsync();
-        //LogPage.UpdateMonthList(monthList);
+        
     }
 
     private void mainNavigation_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -61,37 +60,27 @@ public sealed partial class MainWindow : Window
         }
     }
 
-    public void CopyData()
-    {
-        string result = Assembly.GetExecutingAssembly().Location;
-        int index = result.LastIndexOf("\\");
-        string dPath = $"{result.Substring(0, index)}\\2024-07.json";
-        string destinationPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\WorkLog\\2024-07.json";
-        string destinationFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\WorkLog\\";
-        if (!File.Exists(destinationPath))
-        {
-            Directory.CreateDirectory(destinationFolder);
-            File.Copy(dPath, destinationPath, true);
-        }
-    }
+    //public void CopyData()
+    //{
+    //    string result = Assembly.GetExecutingAssembly().Location;
+    //    int index = result.LastIndexOf("\\");
+    //    string dPath = $"{result.Substring(0, index)}\\2024-07.json";
+    //    string destinationPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\WorkLog\\2024-07.json";
+    //    string destinationFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\WorkLog\\";
+    //    if (!File.Exists(destinationPath))
+    //    {
+    //        Directory.CreateDirectory(destinationFolder);
+    //        File.Copy(dPath, destinationPath, true);
+    //    }
+    //}
 
-    public static async Task<List<StorageFile>> LoadFilesAsync()
-    {
-        List<StorageFile> files = new();
-        var workLogDataPath = SystemDataPaths.GetDefault().ProgramData + "\\WorkLog";
-        var workLogStorageFolder = await StorageFolder.GetFolderFromPathAsync(workLogDataPath);
-        IReadOnlyList<StorageFile> fileList = await workLogStorageFolder.GetFilesAsync();
-        foreach (var file in fileList) {
-            files.Add(file);
-        }
-        return files;
-    }
+    
 
-    public static ObservableCollection<Entry> Deserialize()
+
+    public static ObservableCollection<Entry> Deserialize(string year)
     {
-        string month = "2024-07";
-        string fileName = month + ".json";
-        string jsonString = File.ReadAllText($"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\WorkLog\\2024-07.json");
+        string fileName = year + ".json";
+        string jsonString = File.ReadAllText($"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\WorkLog\\{year}.json");
         ObservableCollection<Entry> result = JsonSerializer.Deserialize<ObservableCollection<Entry>>(jsonString);
         return result;
     }

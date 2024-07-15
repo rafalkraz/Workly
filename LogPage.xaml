@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:WorkLog"
+    xmlns:structure="using:WorkLog.Structure"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -11,50 +12,61 @@
     Loaded="Page_Loaded">
 
     <Grid Margin="5">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0">Dziennik pracy</TextBlock>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.Resources>
-                <CollectionViewSource x:Name="EntriesCollection" IsSourceGrouped="True"/>
-            </Grid.Resources>
-            <StackPanel Grid.Column="0">
-                <ComboBox Header="Miesiąc" Width="200" ItemsSource="{x:Bind MonthList}" />
-                <ListView x:Name="MonthWorkLog" ItemsSource="{Binding Source={StaticResource EntriesCollection}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MaxWidth="500" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.Resources>
+            <CollectionViewSource x:Name="EntriesCollection" IsSourceGrouped="True"/>
+        </Grid.Resources>
+        <StackPanel Grid.Column="0">
+            <StackPanel Orientation="Horizontal">
+                <ComboBox x:Name="YearSelectionComboBox" Header="Rok" Width="80" SelectionChanged="YearSelectionComboBox_SelectionChanged"/>
+                <ComboBox x:Name="MonthSelectionComboBox" Header="Miesiąc" Width="200" SelectionChanged="MonthSelectionComboBox_SelectionChanged"/>
+            </StackPanel>
+            <ListView x:Name="MonthEntriesListView" ItemsSource="{Binding Source={StaticResource EntriesCollection}}" SelectionChanged="MonthEntriesListView_SelectionChanged">
                 <ListView.GroupStyle>
                     <GroupStyle>
-                    <GroupStyle.HeaderTemplate>
+                        <GroupStyle.HeaderTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Key}" />
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Key}" />
+                                    <TextBlock Text="{Binding Duration}" />
+                                </StackPanel>
                             </DataTemplate>
                         </GroupStyle.HeaderTemplate>
                     </GroupStyle>
                 </ListView.GroupStyle>
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="local:Entry">
-                        <TextBlock Text="{x:Bind Duration}"/>
+                    <DataTemplate x:DataType="structure:Entry">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{x:Bind DurationRange}" Margin="0,0,10,0"/>
+                            <FontIcon Glyph="{x:Bind FontIcon}" />
+                        </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+        </StackPanel>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button>Edytuj</Button>
+                <Button>Usuń</Button>
             </StackPanel>
-
-            <StackPanel Grid.Column="1" >
-                <RadioButtons Header="Typ wpisu" >
-                    <RadioButton Content="Standardowy" />
-                    <RadioButton Content="Bezpłatne wolne"/>
-                    <RadioButton Content="Urlop" />
+            <StackPanel Grid.Row="1">
+                <RadioButtons x:Name="TypeEntryRadioButton" Header="Typ wpisu" SelectionChanged="TypeEntryRadioButton_SelectionChanged" MaxColumns="3">
+                    <RadioButton x:Name="StandardEntryRadioButton" Content="Standardowy" />
+                    <RadioButton x:Name="UnpaidEntryRadioButton" Content="Bezpłatne wolne" Margin="0,0,40,0"/>
+                    <RadioButton x:Name="DayOffEntryRadioButton" Content="Urlop" />
                 </RadioButtons>
-                <CalendarDatePicker PlaceholderText="Wybierz datę" Header="Data" />
-                <TimePicker ClockIdentifier="24HourClock" Header="Godzina rozpoczęcia" />
-                <TimePicker ClockIdentifier="24HourClock" Header="Godzina zakończenia" />
-                <TextBox Header="Lokalizacja" />
-                <TextBox Header="Opis" AutomationProperties.Name="multi-line TextBox" TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="True"/>
+                <CalendarDatePicker x:Name="EventDatePicker" PlaceholderText="Wybierz datę" Header="Data" />
+                <TimePicker x:Name="BeginTimePicker" ClockIdentifier="24HourClock" Header="Godzina rozpoczęcia" />
+                <TimePicker x:Name="EndTimePicker" ClockIdentifier="24HourClock" Header="Godzina zakończenia" />
+                <TextBox x:Name="LocalizationTextBox" Header="Lokalizacja" />
+                <TextBox x:Name="DescriptionTextBox" Header="Opis" AutomationProperties.Name="multi-line TextBox" TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="True"/>
             </StackPanel>
         </Grid>
     </Grid>
