@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="WorkLog.EntryEditPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WorkLog"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <StackPanel Grid.Row="1">
+            <TextBlock Text="Edycja wpisu" Style="{StaticResource SubtitleTextBlockStyle}" />
+            <RadioButtons x:Name="TypeEntryRadioButton" Header="Typ wpisu" SelectionChanged="TypeEntryRadioButton_SelectionChanged" MaxColumns="3">
+                <RadioButton x:Name="StandardEntryRadioButton" Content="Standardowy" />
+                <RadioButton x:Name="UnpaidEntryRadioButton" Content="Bezpłatne wolne" Margin="0,0,40,0"/>
+                <RadioButton x:Name="DayOffEntryRadioButton" Content="Urlop" />
+            </RadioButtons>
+            <CalendarDatePicker x:Name="EventDatePicker" PlaceholderText="Wybierz datę" Header="Data" />
+            <StackPanel Orientation="Horizontal">
+                <TimePicker x:Name="BeginTimePicker" ClockIdentifier="24HourClock" Header="Godzina rozpoczęcia" />
+                <TimePicker x:Name="EndTimePicker" ClockIdentifier="24HourClock" Header="Godzina zakończenia" />
+            </StackPanel>
+            <TextBox x:Name="LocalizationTextBox" Header="Lokalizacja" />
+            <TextBox x:Name="DescriptionTextBox" Header="Opis" AutomationProperties.Name="multi-line TextBox" TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="True"/>
+        </StackPanel>
+    </Grid>
+</Page>

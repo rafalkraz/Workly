@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -29,12 +30,13 @@ namespace WorkLog.Structure
             }
             return _instance;
         }
+        private static string workLogDataPath = SystemDataPaths.GetDefault().ProgramData + "\\WorkLog";
 
         // Returns list of files located in C:\ProgramData\WorkLog folder
         public static async Task<List<StorageFile>> LoadFilesAsync()
         {
             List<StorageFile> files = new();
-            var workLogDataPath = SystemDataPaths.GetDefault().ProgramData + "\\WorkLog";
+            
             var workLogStorageFolder = await StorageFolder.GetFolderFromPathAsync(workLogDataPath);
             IReadOnlyList<StorageFile> fileList = await workLogStorageFolder.GetFilesAsync();
             foreach (var file in fileList)
@@ -63,6 +65,14 @@ namespace WorkLog.Structure
                 }
             }
             Years.Reverse();
+        }
+
+        public void SaveLog(Year year)
+        {
+            year.Months.Reverse();
+            var options = new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+            string jsonString = JsonSerializer.Serialize(year.Months, options);
+            File.WriteAllText($"{workLogDataPath}\\{year.Name}.json", jsonString);
         }
     }
 }

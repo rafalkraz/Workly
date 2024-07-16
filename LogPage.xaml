@@ -9,64 +9,125 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    Loaded="Page_Loaded">
+    Loaded="Page_Loaded"
+    SizeChanged="Page_SizeChanged">
 
-    <Grid Margin="5">
+    <Grid x:Name="ContentGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MaxWidth="500" />
+            <ColumnDefinition Width="*" MaxWidth="700" />
+            <ColumnDefinition Width="5" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.Resources>
             <CollectionViewSource x:Name="EntriesCollection" IsSourceGrouped="True"/>
         </Grid.Resources>
-        <StackPanel Grid.Column="0">
-            <StackPanel Orientation="Horizontal">
-                <ComboBox x:Name="YearSelectionComboBox" Header="Rok" Width="80" SelectionChanged="YearSelectionComboBox_SelectionChanged"/>
-                <ComboBox x:Name="MonthSelectionComboBox" Header="Miesiąc" Width="200" SelectionChanged="MonthSelectionComboBox_SelectionChanged"/>
-            </StackPanel>
-            <ListView x:Name="MonthEntriesListView" ItemsSource="{Binding Source={StaticResource EntriesCollection}}" SelectionChanged="MonthEntriesListView_SelectionChanged">
-                <ListView.GroupStyle>
-                    <GroupStyle>
-                        <GroupStyle.HeaderTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Key}" />
-                                    <TextBlock Text="{Binding Duration}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </GroupStyle.HeaderTemplate>
-                    </GroupStyle>
-                </ListView.GroupStyle>
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="structure:Entry">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{x:Bind DurationRange}" Margin="0,0,10,0"/>
-                            <FontIcon Glyph="{x:Bind FontIcon}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </StackPanel>
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="0" Padding="20,12,20,20">
             <Grid.RowDefinitions>
-                <RowDefinition Height="50" />
+                <RowDefinition Height="55" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="55" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <ComboBox x:Name="YearSelectionComboBox" Width="80" SelectionChanged="YearSelectionComboBox_SelectionChanged"/>
+                        <ComboBox x:Name="MonthSelectionComboBox" Width="200" SelectionChanged="MonthSelectionComboBox_SelectionChanged"/>
+                    </StackPanel>
+                    <Button x:Name="AddEntryButton" HorizontalAlignment="Right" Style="{StaticResource AccentButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xE710;" Margin="0,0,4,0"/>
+                            <TextBlock>Dodaj nowy wpis</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+            </Grid>
+            <StackPanel Grid.Row="1">
+                <ListView x:Name="MonthEntriesListView" ItemsSource="{Binding Source={StaticResource EntriesCollection}}" SelectionChanged="MonthEntriesListView_SelectionChanged" ItemClick="MonthEntriesListView_ItemClick">
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Key}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="structure:Entry">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{x:Bind DurationRange}" Margin="0,0,10,0"/>
+                                <FontIcon Glyph="{x:Bind FontIcon}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Line x:Name="VerticalSeparatorLine" Stroke="Gray" X1="0" Y1="0" X2="0" Y2="500" StrokeThickness="1"/>
+        </Grid>
+        <Grid Grid.Column="2" Padding="20,12,20,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button>Edytuj</Button>
-                <Button>Usuń</Button>
-            </StackPanel>
-            <StackPanel Grid.Row="1">
-                <RadioButtons x:Name="TypeEntryRadioButton" Header="Typ wpisu" SelectionChanged="TypeEntryRadioButton_SelectionChanged" MaxColumns="3">
-                    <RadioButton x:Name="StandardEntryRadioButton" Content="Standardowy" />
-                    <RadioButton x:Name="UnpaidEntryRadioButton" Content="Bezpłatne wolne" Margin="0,0,40,0"/>
-                    <RadioButton x:Name="DayOffEntryRadioButton" Content="Urlop" />
-                </RadioButtons>
-                <CalendarDatePicker x:Name="EventDatePicker" PlaceholderText="Wybierz datę" Header="Data" />
-                <TimePicker x:Name="BeginTimePicker" ClockIdentifier="24HourClock" Header="Godzina rozpoczęcia" />
-                <TimePicker x:Name="EndTimePicker" ClockIdentifier="24HourClock" Header="Godzina zakończenia" />
-                <TextBox x:Name="LocalizationTextBox" Header="Lokalizacja" />
-                <TextBox x:Name="DescriptionTextBox" Header="Opis" AutomationProperties.Name="multi-line TextBox" TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="True"/>
+            <Grid Grid.Row="0" VerticalAlignment="Center">
+                <TextBlock Text="Szczegóły wpisu" Style="{StaticResource TitleTextBlockStyle}" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="MoneyEntryButton" Click="MoneyEntryButton_Click" Margin="0,0,8,0">
+                        <FontIcon Glyph="&#xE825;"/>
+                    </Button>
+                    <TeachingTip x:Name="MoneyEntryTeachingTip" Target="{x:Bind MoneyEntryButton}"
+                        Title="Opłata"
+                        Subtitle="0,00 PLN">
+                    </TeachingTip>
+                    <Button x:Name="EditEntryButton" Click="EditEntryButton_Click" Margin="0,0,8,0">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xE70F;" Margin="0,0,4,0"/>
+                            <TextBlock>Edytuj</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="DeleteEntryButton">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xE74D;" Margin="0,0,4,0"/>
+                            <TextBlock>Usuń</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <StackPanel Grid.Row="1" HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                    <FontIcon Glyph="&#xE787;" Margin="0,0,4,0"/>
+                    <TextBlock Text="Data" />
+                </StackPanel>
+                <TextBlock x:Name="DateTextBox"  Text="1 stycznia 2024" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                    <FontIcon Glyph="&#xE916;" Margin="0,0,4,0" />
+                    <TextBlock Text="Czas pracy" />
+                </StackPanel>
+                <TextBlock x:Name="DurationRangeTextBox" Text="09:00 - 13:00" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                    <FontIcon Glyph="&#xE8EC;" Margin="0,0,4,0" />
+                    <TextBlock Text="Rodzaj" />
+                </StackPanel>
+                <TextBlock x:Name="TypeTextBlock" Text="Standardowy" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+
+                <StackPanel x:Name ="LocationStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
+                    <FontIcon Glyph="&#xE707;" Margin="0,0,4,0" />
+                    <TextBlock Text="Lokalizacja" />
+                </StackPanel>
+                <TextBlock x:Name="LocationTextBlock" Text="IFPiLM" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+
+                <StackPanel x:Name="DescriptionStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
+                    <FontIcon Glyph="&#xE946;" Margin="0,0,4,0" />
+                    <TextBlock Text="Opis" />
+                </StackPanel>
+                <TextBox x:Name="DescriptionTextBox" AutomationProperties.Name="multi-line TextBox" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True" MinWidth="400" MaxWidth="1000"/>
             </StackPanel>
         </Grid>
     </Grid>

@@ -30,6 +30,9 @@ namespace WorkLog
         private List<Year> yearList = [];
         private Year selectedYear;
         private Month selectedMonth;
+        public static bool isEntryEditVisible = false;
+        public static bool isEntryAddVisible = false;
+        private Window h_window;
         public LogPage()
         {
             this.InitializeComponent();
@@ -74,18 +77,42 @@ namespace WorkLog
             if (entry == null) return;
             else
             {
-                if (!entry.IsDayOff && !entry.IsUnpaid) { StandardEntryRadioButton.IsChecked = true; }
-                else if (entry.IsDayOff) { DayOffEntryRadioButton.IsChecked = true; }
-                else if (entry.IsUnpaid) { UnpaidEntryRadioButton.IsChecked = true; }
+                if (!entry.IsDayOff && !entry.IsUnpaid) 
+                { 
+                    TypeTextBlock.Text = "Standardowy"; 
+                    
+                    LocationTextBlock.Visibility = Visibility.Visible;
+                    LocationStackPanel.Visibility = Visibility.Visible;
+
+                    DescriptionTextBox.Visibility = Visibility.Visible;
+                    DescriptionStackPanel.Visibility = Visibility.Visible;
+                }
+                else if (entry.IsDayOff) 
+                { 
+                    TypeTextBlock.Text = "Urlop";
+
+                    LocationTextBlock.Visibility = Visibility.Collapsed;
+                    LocationStackPanel.Visibility = Visibility.Collapsed;
+
+                    DescriptionTextBox.Visibility = Visibility.Collapsed;
+                    DescriptionStackPanel.Visibility = Visibility.Collapsed;
+                }
+                else if (entry.IsUnpaid) { 
+                    TypeTextBlock.Text = "Bezp³atne wolne";
+
+                    LocationTextBlock.Visibility = Visibility.Collapsed;
+                    LocationStackPanel.Visibility = Visibility.Collapsed;
+
+                    DescriptionTextBox.Visibility = Visibility.Collapsed;
+                    DescriptionStackPanel.Visibility = Visibility.Collapsed;
+                }
                 else
                 {
                     throw new Exception();
                 }
-
-                EventDatePicker.Date = entry.BeginTime;
-                BeginTimePicker.Time = entry.BeginTime.TimeOfDay;
-                EndTimePicker.Time = entry.EndTime.TimeOfDay;
-                LocalizationTextBox.Text = entry.Localization;
+                DateTextBox.Text = entry.BeginTime.ToString("dd MMMM yyyy");
+                DurationRangeTextBox.Text = $"{entry.DurationRange} (X h)";
+                LocationTextBlock.Text = entry.Localization;
                 DescriptionTextBox.Text = entry.Description;
             }
         }
@@ -96,27 +123,51 @@ namespace WorkLog
             
         }
 
-        private void TypeEntryRadioButton_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void MonthEntriesListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (DayOffEntryRadioButton.IsChecked == false && UnpaidEntryRadioButton.IsChecked == false)
+            if (isEntryEditVisible)
             {
-                LocalizationTextBox.Visibility = Visibility.Visible;
-                DescriptionTextBox.Visibility = Visibility.Visible;
+                MonthEntriesListView.SelectedItem = e.ClickedItem;
             }
-            else if (UnpaidEntryRadioButton.IsChecked == false)
+        }
+
+        private void SaveEntryButton_Click(object sender, RoutedEventArgs e)
+        {
+            log.SaveLog(selectedYear);
+        }
+
+        private async void EditEntryButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!isEntryEditVisible && !isEntryAddVisible)
             {
-                LocalizationTextBox.Visibility = Visibility.Collapsed;
-                DescriptionTextBox.Visibility = Visibility.Collapsed;
-            }
-            else if (DayOffEntryRadioButton.IsChecked == false)
-            {
-                LocalizationTextBox.Visibility = Visibility.Collapsed;
-                DescriptionTextBox.Visibility = Visibility.Collapsed;
+                h_window = new HelperWindow((Entry)MonthEntriesListView.SelectedItem);
+                h_window.Activate();
             }
             else
             {
-                throw new Exception();
+                ContentDialog dialog = new ContentDialog();
+
+                dialog.XamlRoot = this.XamlRoot;
+                dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
+                if (isEntryEditVisible) { dialog.Title = "Zakoñcz najpierw edycjê poprzedniego wpisu!"; }
+                else { dialog.Title = "Zakoñcz najpierw dodawanie nowego wpisu!"; }
+                dialog.PrimaryButtonText = "OK";
+                dialog.DefaultButton = ContentDialogButton.Primary;
+
+                var result = await dialog.ShowAsync();
             }
+            
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            VerticalSeparatorLine.Y2 = ContentGrid.ActualHeight;
+        }
+
+        private void MoneyEntryButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (MoneyEntryTeachingTip.IsOpen) { MoneyEntryTeachingTip.IsOpen = false; }
+            else { MoneyEntryTeachingTip.IsOpen = true; }
         }
     }
 }
