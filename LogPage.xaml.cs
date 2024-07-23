@@ -17,6 +17,8 @@ using System.Text.Json;
 using Windows.Storage;
 using System.Threading.Tasks;
 using WorkLog.Structure;
+using Microsoft.UI.Windowing;
+using System.Diagnostics;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -30,7 +32,7 @@ namespace WorkLog
         private List<Year> yearList = [];
         private Year selectedYear;
         private Month selectedMonth;
-        public static bool isEntryEditVisible = false;
+        public static bool editLock = false;
         public static bool isEntryAddVisible = false;
         private Window h_window;
         public LogPage()
@@ -40,6 +42,7 @@ namespace WorkLog
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            Page_SizeChanged(null, null);
             log = await Log.GetInstance();
             yearList = log.Years;
             YearSelectionComboBox.ItemsSource = yearList;
@@ -125,10 +128,7 @@ namespace WorkLog
 
         private void MonthEntriesListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (isEntryEditVisible)
-            {
-                MonthEntriesListView.SelectedItem = e.ClickedItem;
-            }
+            if (AllEntriesButton.Visibility == Visibility.Visible) { RootSplitView.IsPaneOpen = false; }
         }
 
         private void SaveEntryButton_Click(object sender, RoutedEventArgs e)
@@ -138,9 +138,9 @@ namespace WorkLog
 
         private async void EditEntryButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!isEntryEditVisible && !isEntryAddVisible)
+            if (!editLock && !isEntryAddVisible)
             {
-                h_window = new HelperWindow((Entry)MonthEntriesListView.SelectedItem);
+                h_window = new HelperWindow((Entry)MonthEntriesListView.SelectedItem, HelperWindow.Action.Edit);
                 h_window.Activate();
             }
             else
@@ -149,7 +149,7 @@ namespace WorkLog
 
                 dialog.XamlRoot = this.XamlRoot;
                 dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
-                if (isEntryEditVisible) { dialog.Title = "Zakoñcz najpierw edycjê poprzedniego wpisu!"; }
+                if (editLock) { dialog.Title = "Zakoñcz najpierw edycjê poprzedniego wpisu!"; }
                 else { dialog.Title = "Zakoñcz najpierw dodawanie nowego wpisu!"; }
                 dialog.PrimaryButtonText = "OK";
                 dialog.DefaultButton = ContentDialogButton.Primary;
@@ -161,13 +161,24 @@ namespace WorkLog
 
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            VerticalSeparatorLine.Y2 = ContentGrid.ActualHeight;
+            if (AllEntriesButton.Visibility == Visibility.Visible) RootSplitView.OpenPaneLength = this.ActualWidth;
+            else
+            {
+                var requiredPaneWidth = this.ActualWidth * 0.40;
+                if (requiredPaneWidth > 1000) RootSplitView.OpenPaneLength = 1000;
+                else RootSplitView.OpenPaneLength = requiredPaneWidth; 
+            }
         }
 
         private void MoneyEntryButton_Click(object sender, RoutedEventArgs e)
         {
             if (MoneyEntryTeachingTip.IsOpen) { MoneyEntryTeachingTip.IsOpen = false; }
             else { MoneyEntryTeachingTip.IsOpen = true; }
+        }
+
+        private void AllEntriesButton_Click(object sender, RoutedEventArgs e)
+        {
+            RootSplitView.IsPaneOpen = true;
         }
     }
 }

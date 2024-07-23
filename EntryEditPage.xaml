@@ -8,22 +8,85 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <ScrollView>
+        <Grid Padding="12">
+            <StackPanel>
+                <InfoBar
+                x:Name="IncorrectTimeInfoBar"
+                IsOpen="False"
+                IsClosable="False"
+                Severity="Warning"
+                Title="Nieprawidłowe dane"
+                Message="Godzina zakończenia nie może być wcześniejsza niż rozpoczęcia!" />
+                <InfoBar
+                x:Name="LocationEmptyInfoBar"
+                IsOpen="False"
+                IsClosable="False"
+                Severity="Warning"
+                Title="Nieprawidłowe dane"
+                Message="Pole lokalizacja nie może być puste" />
+                <InfoBar
+                x:Name="DescriptionEmptyInfoBar"
+                IsOpen="False"
+                IsClosable="False"
+                Severity="Warning"
+                Title="Nieprawidłowe dane"
+                Message="Pole opis nie może być puste" />
+                <Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
+                        <Button x:Name="CancelEntryButton" Margin="0,0,8,0" Click="CancelEntryButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xE711;" Margin="0,0,4,0"/>
+                                <TextBlock>Anuluj</TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="SaveEntryButton" Style="{StaticResource AccentButtonStyle}" Click="SaveEntryButton_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xF78C;" Margin="0,0,4,0"/>
+                                <TextBlock>Zapisz</TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                            <FontIcon Glyph="&#xE8EC;" Margin="0,0,4,0" />
+                            <TextBlock Text="Rodzaj" />
+                        </StackPanel>
+                        <ComboBox x:Name="EntryTypeComboBox" SelectionChanged="EntryTypeComboBox_SelectionChanged">
+                            <x:String>Standardowy</x:String>
+                            <x:String>Urlop</x:String>
+                            <x:String>Bezpłatne wolne</x:String>
+                        </ComboBox>
+                    </StackPanel>
 
-    <Grid>
-        <StackPanel Grid.Row="1">
-            <TextBlock Text="Edycja wpisu" Style="{StaticResource SubtitleTextBlockStyle}" />
-            <RadioButtons x:Name="TypeEntryRadioButton" Header="Typ wpisu" SelectionChanged="TypeEntryRadioButton_SelectionChanged" MaxColumns="3">
-                <RadioButton x:Name="StandardEntryRadioButton" Content="Standardowy" />
-                <RadioButton x:Name="UnpaidEntryRadioButton" Content="Bezpłatne wolne" Margin="0,0,40,0"/>
-                <RadioButton x:Name="DayOffEntryRadioButton" Content="Urlop" />
-            </RadioButtons>
-            <CalendarDatePicker x:Name="EventDatePicker" PlaceholderText="Wybierz datę" Header="Data" />
-            <StackPanel Orientation="Horizontal">
-                <TimePicker x:Name="BeginTimePicker" ClockIdentifier="24HourClock" Header="Godzina rozpoczęcia" />
-                <TimePicker x:Name="EndTimePicker" ClockIdentifier="24HourClock" Header="Godzina zakończenia" />
+                </Grid>
+
+
+                <StackPanel Orientation="Horizontal" Margin="0,12,0,4">
+                    <FontIcon Glyph="&#xE787;" Margin="0,0,4,0"/>
+                    <TextBlock Text="Data" />
+                </StackPanel>
+                <CalendarDatePicker x:Name="EventDatePicker" PlaceholderText="Wybierz datę" DateChanged="EventDatePicker_DateChanged"/>
+                <StackPanel Orientation="Horizontal" Margin="0,12,0,4">
+                    <FontIcon Glyph="&#xE916;" Margin="0,0,4,0" />
+                    <TextBlock Text="Czas pracy" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TimePicker x:Name="BeginTimePicker" ClockIdentifier="24HourClock" Header="Godzina rozpoczęcia" TimeChanged="BeginTimePicker_TimeChanged"/>
+                    <TextBlock Padding="4,25,4,0">-</TextBlock>
+                    <TimePicker x:Name="EndTimePicker" ClockIdentifier="24HourClock" Header="Godzina zakończenia" TimeChanged="EndTimePicker_TimeChanged"/>
+                </StackPanel>
+                <StackPanel x:Name ="LocationStackPanel" Orientation="Horizontal" Margin="0,12,0,4">
+                    <FontIcon Glyph="&#xE707;" Margin="0,0,4,0" />
+                    <TextBlock Text="Lokalizacja"/>
+                </StackPanel>
+                <TextBox x:Name="LocationTextBox" LostFocus="LocationTextBox_LostFocus"/>
+                <StackPanel x:Name="DescriptionStackPanel" Orientation="Horizontal" Margin="0,12,0,4">
+                    <FontIcon Glyph="&#xE946;" Margin="0,0,4,0" />
+                    <TextBlock Text="Opis" />
+                </StackPanel>
+                <TextBox x:Name="DescriptionTextBox" AutomationProperties.Name="multi-line TextBox" TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="True" LostFocus="DescriptionTextBox_LostFocus"/>
             </StackPanel>
-            <TextBox x:Name="LocalizationTextBox" Header="Lokalizacja" />
-            <TextBox x:Name="DescriptionTextBox" Header="Opis" AutomationProperties.Name="multi-line TextBox" TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="True"/>
-        </StackPanel>
-    </Grid>
+        </Grid>
+    </ScrollView>
 </Page>

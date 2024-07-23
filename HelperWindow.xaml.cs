@@ -1,3 +1,5 @@
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -22,18 +24,35 @@ namespace WorkLog
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class HelperWindow : Window
+    public sealed partial class HelperWindow : WinUIEx.WindowEx
     {
-        public HelperWindow(Entry entry)
+        public enum Action
+        {
+            Add,
+            Edit
+        }
+        public HelperWindow(Entry entry, Action action)
         {
             this.InitializeComponent();
-            LogPage.isEntryEditVisible = true;
-            ContentFrame.Content = new EntryEditPage(entry);
+            
+
+            LogPage.editLock = true;
+            
+            if (action == Action.Add)
+            {
+                this.Title = "Dodawanie nowego wpisu";
+            }
+            else
+            {
+                this.Title = "Edycja wpisu";
+                ContentFrame.Content = new EntryEditPage(entry, this);
+            }
+            
         }
 
         private void Window_Closed(object sender, WindowEventArgs args)
         {
-            LogPage.isEntryEditVisible = false;
+            LogPage.editLock = false;
         }
     }
 }

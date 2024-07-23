@@ -8,127 +8,201 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Loaded="Page_Loaded"
     SizeChanged="Page_SizeChanged">
 
     <Grid x:Name="ContentGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MaxWidth="700" />
-            <ColumnDefinition Width="5" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
         <Grid.Resources>
             <CollectionViewSource x:Name="EntriesCollection" IsSourceGrouped="True"/>
         </Grid.Resources>
-        <Grid Grid.Column="0" Padding="20,12,20,20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="55" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="55" />
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <Grid VerticalAlignment="Center">
-                    <StackPanel Orientation="Horizontal">
-                        <ComboBox x:Name="YearSelectionComboBox" Width="80" SelectionChanged="YearSelectionComboBox_SelectionChanged"/>
-                        <ComboBox x:Name="MonthSelectionComboBox" Width="200" SelectionChanged="MonthSelectionComboBox_SelectionChanged"/>
-                    </StackPanel>
-                    <Button x:Name="AddEntryButton" HorizontalAlignment="Right" Style="{StaticResource AccentButtonStyle}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="CompactVisualState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="AddEntryButtonFontIcon.Margin" Value="2,0,0,0" />
+                        <Setter Target="AddEntryButtonTextBlock.Visibility" Value="Collapsed" />
+                        <Setter Target="EditEntryButtonFontIcon.Margin" Value="2,0,0,0" />
+                        <Setter Target="EditEntryButtonTextBlock.Visibility" Value="Collapsed" />
+                        <Setter Target="DeleteEntryButtonFontIcon.Margin" Value="2,0,0,0" />
+                        <Setter Target="DeleteEntryButtonTextBlock.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Compact3VisualState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="300" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="AddEntryButtonFontIcon.Margin" Value="2,0,0,0" />
+                        <Setter Target="AddEntryButtonTextBlock.Visibility" Value="Collapsed" />
+                        <Setter Target="EditEntryButtonFontIcon.Margin" Value="2,0,0,0" />
+                        <Setter Target="EditEntryButtonTextBlock.Visibility" Value="Collapsed" />
+                        <Setter Target="DeleteEntryButtonFontIcon.Margin" Value="2,0,0,0" />
+                        <Setter Target="DeleteEntryButtonTextBlock.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="StandardVisualState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="482" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="EditEntryButtonFontIcon.Margin" Value="2,0,0,0" />
+                        <Setter Target="EditEntryButtonTextBlock.Visibility" Value="Collapsed" />
+                        <Setter Target="DeleteEntryButtonFontIcon.Margin" Value="2,0,0,0" />
+                        <Setter Target="DeleteEntryButtonTextBlock.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Standard2VisualState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters />
+                </VisualState>
+                <VisualState x:Name="CompactPaneVisualState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="936" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RootSplitView.IsPaneOpen" Value="True" />
+                        <Setter Target="AllEntriesButton.Visibility" Value="Collapsed" />
+                        <Setter Target="AddEntryButtonFontIcon.Margin" Value="2,0,0,0" />
+                        <Setter Target="AddEntryButtonTextBlock.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="StandardPaneVisualState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1212" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RootSplitView.IsPaneOpen" Value="True" />
+                        <Setter Target="AllEntriesButton.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <SplitView x:Name="RootSplitView" PaneBackground="{ThemeResource SystemFillColorNeutralBackground}"
+           IsPaneOpen="False" CompactPaneLength="32" DisplayMode="Inline">
+            <SplitView.Pane>
+                <Grid x:Name="PaneGrid" Padding="20,24,20,12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" MinHeight="55" MaxHeight="80" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <RelativePanel Grid.Row="0" x:Name="EntryListDetailsStackPanel">
+                        <StackPanel x:Name="DateChooseStackPanel"  Orientation="Horizontal">
+                            <ComboBox x:Name="YearSelectionComboBox" Width="80" SelectionChanged="YearSelectionComboBox_SelectionChanged" Margin="0,0,4,0"/>
+                            <ComboBox x:Name="MonthSelectionComboBox" Width="200" SelectionChanged="MonthSelectionComboBox_SelectionChanged"/>
+                        </StackPanel>
+                        <Button x:Name="AddEntryButton" Style="{StaticResource AccentButtonStyle}" RelativePanel.AlignRightWithPanel="True">
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon x:Name="AddEntryButtonFontIcon" Glyph="&#xE710;" Margin="0,0,4,0"/>
+                                <TextBlock x:Name="AddEntryButtonTextBlock">Dodaj nowy wpis</TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </RelativePanel>
+                    <ScrollView Grid.Row="1" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+                        <ListView x:Name="MonthEntriesListView" ItemsSource="{Binding Source={StaticResource EntriesCollection}}" SelectionChanged="MonthEntriesListView_SelectionChanged" ItemClick="MonthEntriesListView_ItemClick" IsItemClickEnabled="True">
+                            <ListView.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Key}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GroupStyle.HeaderTemplate>
+                                </GroupStyle>
+                            </ListView.GroupStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="structure:Entry">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{x:Bind DurationRange}" Margin="0,0,10,0"/>
+                                        <FontIcon Glyph="{x:Bind FontIcon}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ScrollView>
+                </Grid>
+            </SplitView.Pane>
+            <Grid Background="{ThemeResource FlyoutBackgroundThemeBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" MaxHeight="30"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Padding="8,8,0,0">
+                    <Button x:Name="AllEntriesButton" Click="AllEntriesButton_Click" Visibility="Visible">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xE710;" Margin="0,0,4,0"/>
-                            <TextBlock>Dodaj nowy wpis</TextBlock>
+                            <FontIcon Glyph="&#xE72B;" Margin="0,0,4,0"/>
+                            <TextBlock>Wszystkie wpisy</TextBlock>
                         </StackPanel>
                     </Button>
                 </Grid>
-            </Grid>
-            <StackPanel Grid.Row="1">
-                <ListView x:Name="MonthEntriesListView" ItemsSource="{Binding Source={StaticResource EntriesCollection}}" SelectionChanged="MonthEntriesListView_SelectionChanged" ItemClick="MonthEntriesListView_ItemClick">
-                    <ListView.GroupStyle>
-                        <GroupStyle>
-                            <GroupStyle.HeaderTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Key}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </GroupStyle.HeaderTemplate>
-                        </GroupStyle>
-                    </ListView.GroupStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="structure:Entry">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{x:Bind DurationRange}" Margin="0,0,10,0"/>
-                                <FontIcon Glyph="{x:Bind FontIcon}" />
+                <Grid Grid.Row="1" Padding="20,0,20,12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" VerticalAlignment="Center">
+                        <TextBlock Text="Szczegóły wpisu" Style="{StaticResource TitleTextBlockStyle}" />
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button x:Name="MoneyEntryButton" Click="MoneyEntryButton_Click" Margin="0,0,8,0">
+                                <FontIcon Glyph="&#xE825;"/>
+                            </Button>
+                            <TeachingTip x:Name="MoneyEntryTeachingTip" Target="{x:Bind MoneyEntryButton}" Title="Opłata" Subtitle="0,00 PLN">
+                            </TeachingTip>
+                            <Button x:Name="EditEntryButton" Click="EditEntryButton_Click" Margin="0,0,8,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon x:Name="EditEntryButtonFontIcon" Glyph="&#xE70F;" Margin="0,0,4,0"/>
+                                    <TextBlock x:Name="EditEntryButtonTextBlock">Edytuj</TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="DeleteEntryButton">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon x:Name="DeleteEntryButtonFontIcon" Glyph="&#xE74D;" Margin="0,0,4,0"/>
+                                    <TextBlock x:Name="DeleteEntryButtonTextBlock">Usuń</TextBlock>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                    <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <StackPanel  HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                                <FontIcon Glyph="&#xE787;" Margin="0,0,4,0"/>
+                                <TextBlock Text="Data" />
                             </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackPanel>
-        </Grid>
-        <Grid Grid.Column="1">
-            <Line x:Name="VerticalSeparatorLine" Stroke="Gray" X1="0" Y1="0" X2="0" Y2="500" StrokeThickness="1"/>
-        </Grid>
-        <Grid Grid.Column="2" Padding="20,12,20,20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="60" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0" VerticalAlignment="Center">
-                <TextBlock Text="Szczegóły wpisu" Style="{StaticResource TitleTextBlockStyle}" />
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button x:Name="MoneyEntryButton" Click="MoneyEntryButton_Click" Margin="0,0,8,0">
-                        <FontIcon Glyph="&#xE825;"/>
-                    </Button>
-                    <TeachingTip x:Name="MoneyEntryTeachingTip" Target="{x:Bind MoneyEntryButton}"
-                        Title="Opłata"
-                        Subtitle="0,00 PLN">
-                    </TeachingTip>
-                    <Button x:Name="EditEntryButton" Click="EditEntryButton_Click" Margin="0,0,8,0">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xE70F;" Margin="0,0,4,0"/>
-                            <TextBlock>Edytuj</TextBlock>
+                            <TextBlock x:Name="DateTextBox"  Text="1 stycznia 2024" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                                <FontIcon Glyph="&#xE916;" Margin="0,0,4,0" />
+                                <TextBlock Text="Czas pracy" />
+                            </StackPanel>
+                            <TextBlock x:Name="DurationRangeTextBox" Text="09:00 - 13:00" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                                <FontIcon Glyph="&#xE8EC;" Margin="0,0,4,0" />
+                                <TextBlock Text="Rodzaj" />
+                            </StackPanel>
+                            <TextBlock x:Name="TypeTextBlock" Text="Standardowy" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+
+                            <StackPanel x:Name ="LocationStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
+                                <FontIcon Glyph="&#xE707;" Margin="0,0,4,0" />
+                                <TextBlock Text="Lokalizacja" />
+                            </StackPanel>
+                            <TextBlock x:Name="LocationTextBlock" Text="IFPiLM" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+
+                            <StackPanel x:Name="DescriptionStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
+                                <FontIcon Glyph="&#xE946;" Margin="0,0,4,0" />
+                                <TextBlock Text="Opis" />
+                            </StackPanel>
+                            <TextBox x:Name="DescriptionTextBox" AutomationProperties.Name="multi-line TextBox" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True" MinWidth="400" MaxWidth="1000"/>
                         </StackPanel>
-                    </Button>
-                    <Button x:Name="DeleteEntryButton">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xE74D;" Margin="0,0,4,0"/>
-                            <TextBlock>Usuń</TextBlock>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
+                    </ScrollView>
+                </Grid>
             </Grid>
-
-            <StackPanel Grid.Row="1" HorizontalAlignment="Left">
-                <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
-                    <FontIcon Glyph="&#xE787;" Margin="0,0,4,0"/>
-                    <TextBlock Text="Data" />
-                </StackPanel>
-                <TextBlock x:Name="DateTextBox"  Text="1 stycznia 2024" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
-
-                <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
-                    <FontIcon Glyph="&#xE916;" Margin="0,0,4,0" />
-                    <TextBlock Text="Czas pracy" />
-                </StackPanel>
-                <TextBlock x:Name="DurationRangeTextBox" Text="09:00 - 13:00" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
-
-                <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
-                    <FontIcon Glyph="&#xE8EC;" Margin="0,0,4,0" />
-                    <TextBlock Text="Rodzaj" />
-                </StackPanel>
-                <TextBlock x:Name="TypeTextBlock" Text="Standardowy" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
-
-                <StackPanel x:Name ="LocationStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
-                    <FontIcon Glyph="&#xE707;" Margin="0,0,4,0" />
-                    <TextBlock Text="Lokalizacja" />
-                </StackPanel>
-                <TextBlock x:Name="LocationTextBlock" Text="IFPiLM" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
-
-                <StackPanel x:Name="DescriptionStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
-                    <FontIcon Glyph="&#xE946;" Margin="0,0,4,0" />
-                    <TextBlock Text="Opis" />
-                </StackPanel>
-                <TextBox x:Name="DescriptionTextBox" AutomationProperties.Name="multi-line TextBox" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True" MinWidth="400" MaxWidth="1000"/>
-            </StackPanel>
-        </Grid>
+        </SplitView>
     </Grid>
 </Page>

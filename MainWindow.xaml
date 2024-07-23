@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window
+<winex:WindowEx xmlns:winex="using:WinUIEx" 
+    MinWidth="436"
     x:Class="WorkLog.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -46,4 +47,4 @@
             <Frame Margin="0,0,0,0" x:Name="ContentFrame"/>
         </NavigationView>
     </Grid>
-</Window>
+</winex:WindowEx>
