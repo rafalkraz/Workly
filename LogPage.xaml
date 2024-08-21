@@ -96,7 +96,7 @@
                             <ComboBox x:Name="YearSelectionComboBox" Width="80" SelectionChanged="YearSelectionComboBox_SelectionChanged" Margin="0,0,4,0"/>
                             <ComboBox x:Name="MonthSelectionComboBox" Width="200" SelectionChanged="MonthSelectionComboBox_SelectionChanged"/>
                         </StackPanel>
-                        <Button x:Name="AddEntryButton" Style="{StaticResource AccentButtonStyle}" RelativePanel.AlignRightWithPanel="True">
+                        <Button x:Name="AddEntryButton" Style="{StaticResource AccentButtonStyle}" RelativePanel.AlignRightWithPanel="True" Click="AddEntryButton_Click">
                             <StackPanel Orientation="Horizontal">
                                 <FontIcon x:Name="AddEntryButtonFontIcon" Glyph="&#xE710;" Margin="0,0,4,0"/>
                                 <TextBlock x:Name="AddEntryButtonTextBlock">Dodaj nowy wpis</TextBlock>
@@ -104,6 +104,7 @@
                         </Button>
                     </RelativePanel>
                     <ScrollView Grid.Row="1" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+                        <!-- LIST VIEW -->
                         <ListView x:Name="MonthEntriesListView" ItemsSource="{Binding Source={StaticResource EntriesCollection}}" SelectionChanged="MonthEntriesListView_SelectionChanged" ItemClick="MonthEntriesListView_ItemClick" IsItemClickEnabled="True">
                             <ListView.GroupStyle>
                                 <GroupStyle>
@@ -160,7 +161,7 @@
                                     <TextBlock x:Name="EditEntryButtonTextBlock">Edytuj</TextBlock>
                                 </StackPanel>
                             </Button>
-                            <Button x:Name="DeleteEntryButton">
+                            <Button x:Name="DeleteEntryButton" Click="DeleteEntryButton_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon x:Name="DeleteEntryButtonFontIcon" Glyph="&#xE74D;" Margin="0,0,4,0"/>
                                     <TextBlock x:Name="DeleteEntryButtonTextBlock">Usuń</TextBlock>

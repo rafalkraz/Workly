@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -61,18 +62,73 @@ namespace WorkLog.Structure
                 }
                 else
                 {
-                    throw new Exception();
+                    Debug.WriteLine("Ommiting file...");
                 }
             }
             Years.Reverse();
         }
 
-        public void SaveLog(Year year)
+        public bool SaveLog(Year year)
         {
             year.Months.Reverse();
+            var tempMonthList = new List<Month>();
+            foreach (var month in year.Months)
+            {
+                List<Entry> tempEntryList = month.Entries.OrderBy(entry => entry.Date).ThenBy(entry => entry.BeginTime).ToList();
+                tempMonthList.Add(new Month(month.Name, tempEntryList));
+            }
+            var tempYear = new Year(year.Name, tempMonthList);
             var options = new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
-            string jsonString = JsonSerializer.Serialize(year.Months, options);
-            File.WriteAllText($"{workLogDataPath}\\{year.Name}.json", jsonString);
+            try
+            {
+                string jsonString = JsonSerializer.Serialize(tempYear.Months, options);
+                File.WriteAllText($"{workLogDataPath}\\{year.Name}.json", jsonString);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            
+        }
+
+        public bool AddEntryToLog(Entry entry)
+        {
+            var selectedYear = Years.Find(year => year.Name == entry.Date.Year.ToString());
+            if (selectedYear != null)
+            {
+                var selectedMonth = selectedYear.Months.Find(month => month.Name == entry.Date.ToString("MM"));
+                if (selectedMonth != null)
+                { 
+                    selectedMonth.Entries.Add(entry);
+                    //selectedMonth.Entries = selectedMonth.Entries.OrderBy(date => entry.Date);
+                }
+                else selectedYear.Months.Add(new Month(entry.Date.ToString("MM"), [entry]));
+            }
+            else
+            {
+                selectedYear = new Year(entry.Date.Year.ToString(), [new Month(entry.Date.ToString("MM"), [entry])]);
+                Years.Add(selectedYear);
+            }
+
+            if (SaveLog(selectedYear))
+            {
+                BuildLog();
+                
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+            
+        }
+
+        public bool DeleteEntryFromLog(Year year, Month month, Entry entry)
+        {
+            year.Months.Find(m => m.Name == month.Name).Entries.Remove(entry);
+            return true;
         }
     }
 }

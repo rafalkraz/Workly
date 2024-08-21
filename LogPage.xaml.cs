@@ -35,18 +35,27 @@ namespace WorkLog
         public static bool editLock = false;
         public static bool isEntryAddVisible = false;
         private Window h_window;
+        private ObservableCollection<Entry> Entries;
         public LogPage()
         {
             this.InitializeComponent();
         }
 
+
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             Page_SizeChanged(null, null);
             log = await Log.GetInstance();
+            LoadEntriesToList();
+        }
+
+        public void LoadEntriesToList(Entry entry = null)
+        {
             yearList = log.Years;
             YearSelectionComboBox.ItemsSource = yearList;
             YearSelectionComboBox.SelectedItem = yearList[0];
+            //if (entry != null)
+            //{ EntriesCollection}
         }
 
         private void YearSelectionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -65,10 +74,10 @@ namespace WorkLog
             selectedMonth = (Month)MonthSelectionComboBox.SelectedItem;
             if (selectedMonth != null)
             {
-                ObservableCollection<Entry> Entries = new(selectedMonth.Entries);
+                Entries = new(selectedMonth.Entries);
                 var result =
                     from entry in Entries
-                    group entry by entry.BeginTime.Date.ToString("dd.MM") into g
+                    group entry by entry.Date.ToString("dd.MM") into g
                     orderby g.Key
                     select g;
                 EntriesCollection.Source = result;
@@ -80,40 +89,34 @@ namespace WorkLog
             if (entry == null) return;
             else
             {
-                if (!entry.IsDayOff && !entry.IsUnpaid) 
-                { 
-                    TypeTextBlock.Text = "Standardowy"; 
-                    
-                    LocationTextBlock.Visibility = Visibility.Visible;
-                    LocationStackPanel.Visibility = Visibility.Visible;
-
-                    DescriptionTextBox.Visibility = Visibility.Visible;
-                    DescriptionStackPanel.Visibility = Visibility.Visible;
-                }
-                else if (entry.IsDayOff) 
-                { 
-                    TypeTextBlock.Text = "Urlop";
-
-                    LocationTextBlock.Visibility = Visibility.Collapsed;
-                    LocationStackPanel.Visibility = Visibility.Collapsed;
-
-                    DescriptionTextBox.Visibility = Visibility.Collapsed;
-                    DescriptionStackPanel.Visibility = Visibility.Collapsed;
-                }
-                else if (entry.IsUnpaid) { 
-                    TypeTextBlock.Text = "Bezp³atne wolne";
-
-                    LocationTextBlock.Visibility = Visibility.Collapsed;
-                    LocationStackPanel.Visibility = Visibility.Collapsed;
-
-                    DescriptionTextBox.Visibility = Visibility.Collapsed;
-                    DescriptionStackPanel.Visibility = Visibility.Collapsed;
-                }
-                else
+                switch (entry.Type)
                 {
-                    throw new Exception();
+                    case 0:
+                        TypeTextBlock.Text = "Standardowy"; 
+                        LocationTextBlock.Visibility = Visibility.Visible;
+                        LocationStackPanel.Visibility = Visibility.Visible;
+                        DescriptionTextBox.Visibility = Visibility.Visible;
+                        DescriptionStackPanel.Visibility = Visibility.Visible;
+                        break;
+                    case 1:
+                        TypeTextBlock.Text = "Urlop";
+                        LocationTextBlock.Visibility = Visibility.Collapsed;
+                        LocationStackPanel.Visibility = Visibility.Collapsed;
+                        DescriptionTextBox.Visibility = Visibility.Collapsed;
+                        DescriptionStackPanel.Visibility = Visibility.Collapsed;
+                        break;
+                    case 2:
+                        TypeTextBlock.Text = "Bezp³atne wolne";
+                        LocationTextBlock.Visibility = Visibility.Collapsed;
+                        LocationStackPanel.Visibility = Visibility.Collapsed;
+                        DescriptionTextBox.Visibility = Visibility.Collapsed;
+                        DescriptionStackPanel.Visibility = Visibility.Collapsed;
+                        break;
+                    default:
+                        throw new Exception();
                 }
-                DateTextBox.Text = entry.BeginTime.ToString("dd MMMM yyyy");
+
+                DateTextBox.Text = entry.Date.ToString("dd MMMM yyyy");
                 DurationRangeTextBox.Text = $"{entry.DurationRange} (X h)";
                 LocationTextBlock.Text = entry.Localization;
                 DescriptionTextBox.Text = entry.Description;
@@ -140,7 +143,7 @@ namespace WorkLog
         {
             if (!editLock && !isEntryAddVisible)
             {
-                h_window = new HelperWindow((Entry)MonthEntriesListView.SelectedItem, HelperWindow.Action.Edit);
+                h_window = new HelperWindow(this, (Entry)MonthEntriesListView.SelectedItem, HelperWindow.Action.Edit);
                 h_window.Activate();
             }
             else
@@ -179,6 +182,48 @@ namespace WorkLog
         private void AllEntriesButton_Click(object sender, RoutedEventArgs e)
         {
             RootSplitView.IsPaneOpen = true;
+        }
+
+        private async void AddEntryButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!editLock && !isEntryAddVisible)
+            {
+                h_window = new HelperWindow(this, (Entry)MonthEntriesListView.SelectedItem, HelperWindow.Action.Add);
+                h_window.Activate();
+            }
+            else
+            {
+                ContentDialog dialog = new ContentDialog();
+
+                dialog.XamlRoot = this.XamlRoot;
+                dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
+                if (editLock) { dialog.Title = "Zakoñcz najpierw edycjê poprzedniego wpisu!"; }
+                else { dialog.Title = "Zakoñcz najpierw dodawanie nowego wpisu!"; }
+                dialog.PrimaryButtonText = "OK";
+                dialog.DefaultButton = ContentDialogButton.Primary;
+
+                var result = await dialog.ShowAsync();
+            }
+        }
+
+        private async void DeleteEntryButton_Click(object sender, RoutedEventArgs e)
+        {
+            ContentDialog dialog = new ContentDialog();
+
+            // XamlRoot must be set in the case of a ContentDialog running in a Desktop app
+            dialog.XamlRoot = this.XamlRoot;
+            dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
+            dialog.Title = "Czy na pewno chcesz usun¹æ wpis?";
+            dialog.PrimaryButtonText = "Usuñ";
+            dialog.CloseButtonText = "Anuluj";
+            dialog.DefaultButton = ContentDialogButton.Primary;
+
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                //log.DeleteEntryFromLog(selectedYear, selectedMonth, (Entry)MonthEntriesListView.SelectedItem);
+                Entries.Remove((Entry)MonthEntriesListView.SelectedItem);
+            }
         }
     }
 }

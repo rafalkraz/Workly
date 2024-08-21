@@ -18,34 +18,37 @@ namespace WorkLog
 {
     public sealed partial class EntryEditPage : Page
     {
+        private Log log;
         private Window helperWindow;
+        private LogPage parentPageReference;  
         private readonly List<string> entryTypes = ["Standardowy", "Urlop", "Bezp³atne wolne"];
-        public EntryEditPage(Entry entry, Window helperWindowReference)
+        private Entry editedEntry;
+        public EntryEditPage(LogPage parentPage, Entry entry, Window helperWindowReference)
         {
             this.InitializeComponent();
             EntryTypeComboBox.ItemsSource = entryTypes;
-            LoadEntryDetails(entry);
             helperWindow = helperWindowReference;
+            editedEntry = entry;
+            parentPageReference = parentPage;
         }
 
-        private void LoadEntryDetails(Entry entry)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            if (entry == null) return;
+            LoadEntryDetails();
+            log = await Log.GetInstance();
+        }
+
+        private void LoadEntryDetails()
+        {
+            if (editedEntry == null) EntryTypeComboBox.SelectedItem = entryTypes[0];
             else
             {
-                if (!entry.IsDayOff && !entry.IsUnpaid) { EntryTypeComboBox.SelectedItem = entryTypes[0]; }
-                else if (entry.IsDayOff) { EntryTypeComboBox.SelectedItem = entryTypes[1]; ; }
-                else if (entry.IsUnpaid) { EntryTypeComboBox.SelectedItem = entryTypes[2]; ; }
-                else
-                {
-                    throw new Exception();
-                }
-
-                EventDatePicker.Date = entry.BeginTime;
-                BeginTimePicker.Time = entry.BeginTime.TimeOfDay;
-                EndTimePicker.Time = entry.EndTime.TimeOfDay;
-                LocationTextBox.Text = entry.Localization;
-                DescriptionTextBox.Text = entry.Description;
+                EntryTypeComboBox.SelectedItem = entryTypes[editedEntry.Type];
+                EventDatePicker.Date = editedEntry.Date.ToDateTime(new TimeOnly());
+                BeginTimePicker.Time = editedEntry.BeginTime.ToTimeSpan();
+                EndTimePicker.Time = editedEntry.EndTime.ToTimeSpan();
+                LocationTextBox.Text = editedEntry.Localization;
+                DescriptionTextBox.Text = editedEntry.Description;
             }
         }
 
@@ -56,7 +59,17 @@ namespace WorkLog
 
         private void SaveEntryButton_Click(object sender, RoutedEventArgs e)
         {
+            if (editedEntry == null)
+            {
+                var newEntry = new Entry(EntryTypeComboBox.SelectedIndex, DateOnly.FromDateTime(EventDatePicker.Date.Value.Date), TimeOnly.FromTimeSpan(BeginTimePicker.Time), TimeOnly.FromTimeSpan(EndTimePicker.Time), LocationTextBox.Text, DescriptionTextBox.Text);
+                var addResult = log.AddEntryToLog(newEntry);
+                if (addResult)
+                {
+                    helperWindow.Close();
+                    parentPageReference.LoadEntriesToList(newEntry);
+                }
 
+            }
         }
 
         private void EntryTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -108,5 +121,7 @@ namespace WorkLog
             List<string> warningsList = [];
             IncorrectTimeInfoBar.Message = "Godzina zakoñczenia nie mo¿e byæ wczeœniejsza ni¿ rozpoczêcia!\nDrugi wiersz";
         }
+
+
     }
 }

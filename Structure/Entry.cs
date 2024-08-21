@@ -8,42 +8,46 @@ using System.Threading.Tasks;
 
 namespace WorkLog.Structure
 {
-    public class Entry
+    public class Entry(int type, DateOnly date, TimeOnly beginTime, TimeOnly endTime, string localization, string description)
     {
-        public Entry(DateTime beginTime, DateTime endTime, string localization, string description, bool isDayOff, bool isUnpaid)
-        {
-            BeginTime = beginTime;
-            EndTime = endTime;
-            Localization = localization;
-            Description = description;
-            IsDayOff = isDayOff;
-            IsUnpaid = isUnpaid;
-            Duration = (endTime - beginTime).TotalMinutes;
-            DurationRange = beginTime.ToString("HH:mm") + " - " + endTime.ToString("HH:mm");
-
-            if (IsDayOff)
+        // Types
+        // 0 - standard
+        // 1 - urlop
+        // 2 - bezpłatne wolne
+        public int Type { get; set; } = type;
+        public DateOnly Date { get; set; } = date;
+        public TimeOnly BeginTime { get; set; } = beginTime;
+        public TimeOnly EndTime { get; set; } = endTime;
+        public string Localization { get; set; } = localization;
+        public string Description { get; set; } = description;
+        [JsonIgnore]
+        public double Duration 
+        { 
+            get 
             {
-                FontIcon = "\uE706";
-            }
-            else if (IsUnpaid)
+                return (EndTime - BeginTime).TotalMinutes;
+            } 
+        }
+        [JsonIgnore]
+        public string DurationRange {
+            get
             {
-                FontIcon = "\uE7FD";
+                return BeginTime.ToString("HH:mm") + " - " + EndTime.ToString("HH:mm");
             }
         }
-
-        public DateTime BeginTime { get; set; }
-        public DateTime EndTime { get; set; }
-        public string Localization { get; set; }
-        public string Description { get; set; }
-        public bool IsDayOff { get; set; }
-        public bool IsUnpaid { get; set; }
         [JsonIgnore]
-        public double Duration { get; }
-        [JsonIgnore]
-        public string DurationRange { get; }
-        [JsonIgnore]
-        public string FontIcon { get; }
+        public string FontIcon 
+        {
+            get
+            {
+                return Type switch
+                {
+                    0 => "",
+                    1 => "\uE706",
+                    2 => "\uE7FD",
+                    _ => throw new Exception(),
+                };
+            }
+        }
     }
-
-
 }

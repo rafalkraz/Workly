@@ -10,7 +10,7 @@ namespace WorkLog.Structure
     public class Year(string name, List<Month> months)
     {
         public string Name { get; } = name;
-        public List<Month> Months { get; } = months;
+        public List<Month> Months { get; set; } = months;
 
         public override string ToString()
         {

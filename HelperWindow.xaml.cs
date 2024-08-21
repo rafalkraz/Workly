@@ -31,7 +31,7 @@ namespace WorkLog
             Add,
             Edit
         }
-        public HelperWindow(Entry entry, Action action)
+        public HelperWindow(LogPage parentPage, Entry entry, Action action)
         {
             this.InitializeComponent();
             
@@ -41,11 +41,12 @@ namespace WorkLog
             if (action == Action.Add)
             {
                 this.Title = "Dodawanie nowego wpisu";
+                ContentFrame.Content = new EntryEditPage(parentPage, null, this);
             }
             else
             {
                 this.Title = "Edycja wpisu";
-                ContentFrame.Content = new EntryEditPage(entry, this);
+                ContentFrame.Content = new EntryEditPage(parentPage, entry, this);
             }
             
         }
