@@ -10,7 +10,7 @@ namespace WorkLog.Structure
     public class Month(string name, List<Entry> entries)
     {
         public string Name { get; } = name;
-        public List<Entry> Entries { get; } = entries;
+        public List<Entry> Entries { get; set; } = entries;
 
         public override string ToString()
         {

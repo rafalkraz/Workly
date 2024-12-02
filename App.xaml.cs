@@ -32,6 +32,8 @@ public partial class App : Application
     public App()
     {
         this.InitializeComponent();
+        
+        DataAccess.InitializeDatabase();
     }
 
     /// <summary>

@@ -28,19 +28,19 @@ namespace WorkLog
     public sealed partial class LogPage : Page
     {
         private Log log;
-        private List<Month> monthList = [];
-        private List<Year> yearList = [];
+        //private List<Month> monthList = [];
+        //private List<Year> yearList = [];
         private Year selectedYear;
         private Month selectedMonth;
         public static bool editLock = false;
         public static bool isEntryAddVisible = false;
+        public static bool isLoading = false;
         private Window h_window;
         private ObservableCollection<Entry> Entries;
         public LogPage()
         {
             this.InitializeComponent();
         }
-
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
@@ -49,13 +49,11 @@ namespace WorkLog
             LoadEntriesToList();
         }
 
-        public void LoadEntriesToList(Entry entry = null)
+        public void LoadEntriesToList()
         {
-            yearList = log.Years;
-            YearSelectionComboBox.ItemsSource = yearList;
-            YearSelectionComboBox.SelectedItem = yearList[0];
-            //if (entry != null)
-            //{ EntriesCollection}
+            //YearSelectionComboBox.ItemsSource = log.Years;
+            //YearSelectionComboBox.SelectedItem = log.Years[0];
+            LoadEntriesFromSelectedMonth();
         }
 
         private void YearSelectionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -71,17 +69,22 @@ namespace WorkLog
 
         private void MonthSelectionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            selectedMonth = (Month)MonthSelectionComboBox.SelectedItem;
-            if (selectedMonth != null)
-            {
-                Entries = new(selectedMonth.Entries);
+            if (!isLoading) LoadEntriesFromSelectedMonth();
+        }
+
+        private void LoadEntriesFromSelectedMonth()
+        {
+            //selectedMonth = (Month)MonthSelectionComboBox.SelectedItem;
+            //if (selectedMonth != null)
+            //{
+                Entries = new(log.GetEntries());
                 var result =
                     from entry in Entries
-                    group entry by entry.Date.ToString("dd.MM") into g
-                    orderby g.Key
+                    group entry by entry.Date.ToString("dd.MM (dddd)") into g
+                    orderby g.Key descending
                     select g;
                 EntriesCollection.Source = result;
-            }
+            //}
         }
 
         private void LoadEntryDetails(Entry entry)
@@ -208,7 +211,7 @@ namespace WorkLog
 
         private async void DeleteEntryButton_Click(object sender, RoutedEventArgs e)
         {
-            ContentDialog dialog = new ContentDialog();
+            ContentDialog dialog = new();
 
             // XamlRoot must be set in the case of a ContentDialog running in a Desktop app
             dialog.XamlRoot = this.XamlRoot;
@@ -221,9 +224,13 @@ namespace WorkLog
             var result = await dialog.ShowAsync();
             if (result == ContentDialogResult.Primary)
             {
-                //log.DeleteEntryFromLog(selectedYear, selectedMonth, (Entry)MonthEntriesListView.SelectedItem);
-                Entries.Remove((Entry)MonthEntriesListView.SelectedItem);
+                isLoading = true;
+                await log.DeleteEntryFromLogAsync((Entry)MonthEntriesListView.SelectedItem);
+                LoadEntriesToList();
+                isLoading = false;
             }
         }
+
+        
     }
 }

@@ -45,8 +45,8 @@ namespace WorkLog
             {
                 EntryTypeComboBox.SelectedItem = entryTypes[editedEntry.Type];
                 EventDatePicker.Date = editedEntry.Date.ToDateTime(new TimeOnly());
-                BeginTimePicker.Time = editedEntry.BeginTime.ToTimeSpan();
-                EndTimePicker.Time = editedEntry.EndTime.ToTimeSpan();
+                //BeginTimePicker.Time = editedEntry.BeginTime.ToTimeSpan();
+                //EndTimePicker.Time = editedEntry.EndTime.ToTimeSpan();
                 LocationTextBox.Text = editedEntry.Localization;
                 DescriptionTextBox.Text = editedEntry.Description;
             }
@@ -57,18 +57,24 @@ namespace WorkLog
             helperWindow.Close();
         }
 
-        private void SaveEntryButton_Click(object sender, RoutedEventArgs e)
+        private async void SaveEntryButton_Click(object sender, RoutedEventArgs e)
         {
+            bool addResult = false;
             if (editedEntry == null)
             {
-                var newEntry = new Entry(EntryTypeComboBox.SelectedIndex, DateOnly.FromDateTime(EventDatePicker.Date.Value.Date), TimeOnly.FromTimeSpan(BeginTimePicker.Time), TimeOnly.FromTimeSpan(EndTimePicker.Time), LocationTextBox.Text, DescriptionTextBox.Text);
-                var addResult = log.AddEntryToLog(newEntry);
-                if (addResult)
-                {
-                    helperWindow.Close();
-                    parentPageReference.LoadEntriesToList(newEntry);
-                }
-
+                //var newEntry = new Entry(-1, EntryTypeComboBox.SelectedIndex, DateOnly.FromDateTime(EventDatePicker.Date.Value.Date), TimeOnly.FromTimeSpan(BeginTimePicker.Time), TimeOnly.FromTimeSpan(EndTimePicker.Time), LocationTextBox.Text, DescriptionTextBox.Text);
+                //addResult = await log.AddEntryToLogAsync(newEntry);
+            }
+            else
+            {
+                //var newEntry = new Entry(EntryTypeComboBox.SelectedIndex, DateOnly.FromDateTime(EventDatePicker.Date.Value.Date), TimeOnly.FromTimeSpan(BeginTimePicker.Time), TimeOnly.FromTimeSpan(EndTimePicker.Time), LocationTextBox.Text, DescriptionTextBox.Text);
+                //addResult = await log.EditEntryInLogAsync(editedEntry, newEntry);
+            }
+            
+            if (addResult)
+            {
+                parentPageReference.LoadEntriesToList();
+                helperWindow.Close();
             }
         }
 

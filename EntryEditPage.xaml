@@ -62,7 +62,6 @@
 
                 </Grid>
 
-
                 <StackPanel Orientation="Horizontal" Margin="0,12,0,4">
                     <FontIcon Glyph="&#xE787;" Margin="0,0,4,0"/>
                     <TextBlock Text="Data" />

@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace WorkLog.Structure
 {
-    public class Entry(int type, DateOnly date, TimeOnly beginTime, TimeOnly endTime, string localization, string description)
+    public class Entry(int entryID, int type, DateTime beginTime, DateTime endTime, string localization, string description)
     {
         // Types
         // 0 - standard
         // 1 - urlop
         // 2 - bezpłatne wolne
+        public int EntryID { get; set; } = entryID;
         public int Type { get; set; } = type;
-        public DateOnly Date { get; set; } = date;
-        public TimeOnly BeginTime { get; set; } = beginTime;
-        public TimeOnly EndTime { get; set; } = endTime;
+        public DateTime BeginTime { get; set; } = beginTime;
+        public DateTime EndTime { get; set; } = endTime;
         public string Localization { get; set; } = localization;
         public string Description { get; set; } = description;
-        [JsonIgnore]
+        public DateOnly Date = DateOnly.Parse(beginTime.ToShortDateString());
         public double Duration 
         { 
             get 
@@ -28,14 +28,12 @@ namespace WorkLog.Structure
                 return (EndTime - BeginTime).TotalMinutes;
             } 
         }
-        [JsonIgnore]
         public string DurationRange {
             get
             {
                 return BeginTime.ToString("HH:mm") + " - " + EndTime.ToString("HH:mm");
             }
         }
-        [JsonIgnore]
         public string FontIcon 
         {
             get
