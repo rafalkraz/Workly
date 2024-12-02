@@ -54,30 +54,4 @@ public sealed partial class MainWindow : WinUIEx.WindowEx
             ContentFrame.Navigate(navPageType);
         }
     }
-
-    //public void CopyData()
-    //{
-    //    string result = Assembly.GetExecutingAssembly().Location;
-    //    int index = result.LastIndexOf("\\");
-    //    string dPath = $"{result.Substring(0, index)}\\2024-07.json";
-    //    string destinationPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\WorkLog\\2024-07.json";
-    //    string destinationFolder = $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\WorkLog\\";
-    //    if (!File.Exists(destinationPath))
-    //    {
-    //        Directory.CreateDirectory(destinationFolder);
-    //        File.Copy(dPath, destinationPath, true);
-    //    }
-    //}
-
-    
-
-
-    public static ObservableCollection<Entry> Deserialize(string year)
-    {
-        string fileName = year + ".json";
-        string jsonString = File.ReadAllText($"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\WorkLog\\{year}.json");
-        ObservableCollection<Entry> result = JsonSerializer.Deserialize<ObservableCollection<Entry>>(jsonString);
-        return result;
-    }
-
 }

@@ -34,8 +34,6 @@ namespace WorkLog
         public HelperWindow(LogPage parentPage, Entry entry, Action action)
         {
             this.InitializeComponent();
-            
-
             LogPage.editLock = true;
             
             if (action == Action.Add)

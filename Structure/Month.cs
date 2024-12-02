@@ -5,23 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WorkLog.Structure
-{
-    public class Month(string name, List<Entry> entries)
-    {
-        public string Name { get; } = name;
-        public List<Entry> Entries { get; } = entries;
+namespace WorkLog.Structure;
 
-        public override string ToString()
+public class Month(string number)
+{
+    public string Number { get; } = number;
+
+    public override string ToString()
+    {
+        if (int.TryParse(Number, out var number))
         {
-            
-            if (int.TryParse(Name, out int number))
-            {
-                return CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(number);
-            }
-            else { return "err"; }
-            
-            
+            return CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(number);
         }
+        else { return "Parse error"; }
     }
 }

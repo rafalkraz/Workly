@@ -6,48 +6,46 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace WorkLog.Structure
+namespace WorkLog.Structure;
+
+public class Entry(int entryID, int type, DateTime beginTime, DateTime endTime, string localization, string description)
 {
-    public class Entry(int type, DateOnly date, TimeOnly beginTime, TimeOnly endTime, string localization, string description)
+    // Types
+    // 0 - standard
+    // 1 - urlop
+    // 2 - bezpłatne wolne
+    public int EntryID { get; set; } = entryID;
+    public int Type { get; set; } = type;
+    public DateTime BeginTime { get; set; } = beginTime;
+    public DateTime EndTime { get; set; } = endTime;
+    public string Localization { get; set; } = localization;
+    public string Description { get; set; } = description;
+    public DateOnly Date = DateOnly.Parse(beginTime.ToShortDateString());
+    public double Duration
     {
-        // Types
-        // 0 - standard
-        // 1 - urlop
-        // 2 - bezpłatne wolne
-        public int Type { get; set; } = type;
-        public DateOnly Date { get; set; } = date;
-        public TimeOnly BeginTime { get; set; } = beginTime;
-        public TimeOnly EndTime { get; set; } = endTime;
-        public string Localization { get; set; } = localization;
-        public string Description { get; set; } = description;
-        [JsonIgnore]
-        public double Duration 
-        { 
-            get 
-            {
-                return (EndTime - BeginTime).TotalMinutes;
-            } 
-        }
-        [JsonIgnore]
-        public string DurationRange {
-            get
-            {
-                return BeginTime.ToString("HH:mm") + " - " + EndTime.ToString("HH:mm");
-            }
-        }
-        [JsonIgnore]
-        public string FontIcon 
+        get
         {
-            get
+            return (EndTime - BeginTime).TotalMinutes;
+        }
+    }
+    public string DurationRange
+    {
+        get
+        {
+            return BeginTime.ToString("HH:mm") + " - " + EndTime.ToString("HH:mm");
+        }
+    }
+    public string FontIcon
+    {
+        get
+        {
+            return Type switch
             {
-                return Type switch
-                {
-                    0 => "",
-                    1 => "\uE706",
-                    2 => "\uE7FD",
-                    _ => throw new Exception(),
-                };
-            }
+                0 => "",
+                1 => "\uE706",
+                2 => "\uE7FD",
+                _ => throw new Exception(),
+            };
         }
     }
 }
