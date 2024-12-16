@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Windows.UI.StartScreen;
 
 namespace WorkLog.Structure;
 
@@ -21,11 +22,27 @@ public class Entry(int entryID, int type, DateTime beginTime, DateTime endTime, 
     public string Localization { get; set; } = localization;
     public string Description { get; set; } = description;
     public DateOnly Date = DateOnly.Parse(beginTime.ToShortDateString());
-    public double Duration
+    public string Duration
     {
         get
         {
-            return (EndTime - BeginTime).TotalMinutes;
+            var time = TimeSpan.FromMinutes((EndTime - BeginTime).TotalMinutes);
+            if (time.TotalHours >= 1)
+            {
+                if (time.Minutes != 0)
+                {
+                    return $"{time.Hours}h {time.Minutes}min";
+                }
+                else
+                {
+                    return $"{time.Hours}h";
+                }
+            }
+            else
+            {
+                return $"{time.Minutes}min";
+            }
+            //string.Format("{0:00}:{1:00}", (int)time.TotalHours, time.Minutes);
         }
     }
     public string DurationRange

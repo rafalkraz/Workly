@@ -9,7 +9,44 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <TextBlock>SalaryPage</TextBlock>
+    <Grid Padding="20,24,20,12">
+        <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" MinHeight="55" MaxHeight="80" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+        <StackPanel x:Name="DateChooseStackPanel" Orientation="Horizontal" Grid.Row="0">
+            <ComboBox x:Name="YearSelectionComboBox" Width="80" Margin="0,0,4,0"/>
+            <ComboBox x:Name="MonthSelectionComboBox" Width="200"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" Padding="0,20%,0,0">
+            <StackPanel x:Name="SalarySummaryStackPanel">
+                <TextBlock Style="{StaticResource BodyTextBlockStyle}" TextAlignment="Center">Twoje wynagrodzenie w tym miesiącu wynosi</TextBlock>
+                <TextBlock Style="{StaticResource TitleLargeTextBlockStyle}" TextAlignment="Center">0,00 PLN</TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Vertical">
+                <TextBlock>Zestawienie</TextBlock>
+                <TextBlock>Standardowy czas pracy</TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <ProgressBar Width="130" Value="0" />
+                   <TextBlock>0%</TextBlock>
+                </StackPanel>
+                <TextBlock>Kilometrówka</TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <ProgressBar Width="130" Value="0" />
+                    <TextBlock>0%</TextBlock>
+                </StackPanel>
+                <TextBlock>Urlop</TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <ProgressBar Width="130" Value="0" />
+                    <TextBlock>0%</TextBlock>
+                </StackPanel>
+                <TextBlock>Nadgodziny</TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <ProgressBar Width="130" Value="0" />
+                    <TextBlock>0%</TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+        
     </Grid>
 </Page>

@@ -7,46 +7,62 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Loaded="Page_Loaded">
     <ScrollView>
         <Grid Padding="12">
             <StackPanel>
                 <InfoBar
+                x:Name="ErrorInfoBar"
+                IsOpen="False"
+                IsClosable="False"
+                Severity="Error"
+                Title="Wystąpił problem"
+                Message="Nie udało się wprowadzić zmian. Spróbuj ponownie." />
+                <InfoBar
+                x:Name="IncorrectDateInfoBar"
+                IsOpen="False"
+                IsClosable="True"
+                Severity="Warning"
+                Title="Nieprawidłowa data"
+                Message="Wpis musi posiadać datę!" />
+                <InfoBar
                 x:Name="IncorrectTimeInfoBar"
                 IsOpen="False"
-                IsClosable="False"
+                IsClosable="True"
                 Severity="Warning"
-                Title="Nieprawidłowe dane"
+                Title="Nieprawidłowy czas pracy"
                 Message="Godzina zakończenia nie może być wcześniejsza niż rozpoczęcia!" />
                 <InfoBar
-                x:Name="LocationEmptyInfoBar"
+                x:Name="IncorrectLocalizationInfoBar"
                 IsOpen="False"
-                IsClosable="False"
+                IsClosable="True"
                 Severity="Warning"
-                Title="Nieprawidłowe dane"
-                Message="Pole lokalizacja nie może być puste" />
+                Title="Brak lokalizacji"
+                Message="Standardowy wpis wymaga podania lokalizacji!" />
                 <InfoBar
-                x:Name="DescriptionEmptyInfoBar"
+                x:Name="IncorrectDescriptionInfoBar"
                 IsOpen="False"
-                IsClosable="False"
+                IsClosable="True"
                 Severity="Warning"
-                Title="Nieprawidłowe dane"
-                Message="Pole opis nie może być puste" />
+                Title="Brak opisu"
+                Message="Standardowy wpis wymaga podania opisu!" />
                 <Grid>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
-                        <Button x:Name="CancelEntryButton" Margin="0,0,8,0" Click="CancelEntryButton_Click">
-                            <StackPanel Orientation="Horizontal">
-                                <FontIcon Glyph="&#xE711;" Margin="0,0,4,0"/>
-                                <TextBlock>Anuluj</TextBlock>
-                            </StackPanel>
-                        </Button>
-                        <Button x:Name="SaveEntryButton" Style="{StaticResource AccentButtonStyle}" Click="SaveEntryButton_Click">
-                            <StackPanel Orientation="Horizontal">
-                                <FontIcon Glyph="&#xF78C;" Margin="0,0,4,0"/>
-                                <TextBlock>Zapisz</TextBlock>
-                            </StackPanel>
-                        </Button>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Margin="0,8,0,4">
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="CancelEntryButton" Margin="0,0,8,0" Click="CancelEntryButton_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon Glyph="&#xE711;" Margin="0,0,4,0"/>
+                                    <TextBlock>Anuluj</TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="SaveEntryButton" Style="{StaticResource AccentButtonStyle}" Click="SaveEntryButton_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon Glyph="&#xF78C;" Margin="0,0,4,0"/>
+                                    <TextBlock>Zapisz</TextBlock>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <TextBlock x:Name="WorkTimeTextBlock" HorizontalAlignment="Right" Margin="0,4,0,0">Czas pracy: 0h 0min</TextBlock>
                     </StackPanel>
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
@@ -59,10 +75,7 @@
                             <x:String>Bezpłatne wolne</x:String>
                         </ComboBox>
                     </StackPanel>
-
                 </Grid>
-
-
                 <StackPanel Orientation="Horizontal" Margin="0,12,0,4">
                     <FontIcon Glyph="&#xE787;" Margin="0,0,4,0"/>
                     <TextBlock Text="Data" />

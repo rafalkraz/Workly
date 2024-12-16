@@ -103,9 +103,10 @@
                             </StackPanel>
                         </Button>
                     </RelativePanel>
+                    <TextBlock Grid.Row="1" x:Name="NoEntriesTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">Brak wpisów</TextBlock>
                     <ScrollView Grid.Row="1" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
                         <!-- LIST VIEW -->
-                        <ListView x:Name="MonthEntriesListView" ItemsSource="{Binding Source={StaticResource EntriesCollection}}" SelectionChanged="MonthEntriesListView_SelectionChanged" ItemClick="MonthEntriesListView_ItemClick" IsItemClickEnabled="True">
+                            <ListView x:Name="MonthEntriesListView" ItemsSource="{Binding Source={StaticResource EntriesCollection}}" SelectionChanged="MonthEntriesListView_SelectionChanged" ItemClick="MonthEntriesListView_ItemClick" IsItemClickEnabled="True">
                             <ListView.GroupStyle>
                                 <GroupStyle>
                                     <GroupStyle.HeaderTemplate>
@@ -148,7 +149,10 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" VerticalAlignment="Center">
-                        <TextBlock Text="Szczegóły wpisu" Style="{StaticResource TitleTextBlockStyle}" />
+                        <StackPanel>
+                            <TextBlock Text="Szczegóły wpisu" Style="{StaticResource TitleTextBlockStyle}" />
+                            <TextBlock x:Name="EntryIDTextBlock" Text="ID:" Style="{StaticResource CaptionTextBlockStyle}" />
+                        </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                             <Button x:Name="MoneyEntryButton" Click="MoneyEntryButton_Click" Margin="0,0,8,0">
                                 <FontIcon Glyph="&#xE825;"/>
@@ -169,7 +173,7 @@
                             </Button>
                         </StackPanel>
                     </Grid>
-                    <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,10,0,0">
                         <StackPanel  HorizontalAlignment="Left">
                             <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
                                 <FontIcon Glyph="&#xE787;" Margin="0,0,4,0"/>

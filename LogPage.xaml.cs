@@ -22,9 +22,6 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Windows.Globalization.DateTimeFormatting;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace WorkLog;
 
 public sealed partial class LogPage : Page
@@ -53,8 +50,33 @@ public sealed partial class LogPage : Page
     {
         if (Log.RefreshLog())
         {
+            MoneyEntryButton.IsEnabled = true;
+            EditEntryButton.IsEnabled = true;
+            DeleteEntryButton.IsEnabled = true;
+            MonthSelectionComboBox.IsEnabled = true;
+            YearSelectionComboBox.IsEnabled = true;
+            NoEntriesTextBlock.Visibility = Visibility.Collapsed;
             ChangeTimeRange(year, month);
             isChanging = false;
+        }
+        else
+        {
+            NoEntriesTextBlock.Visibility = Visibility.Visible;
+            YearSelectionComboBox.ItemsSource = null;
+            MonthSelectionComboBox.ItemsSource = null;
+            EntriesCollection.Source = null;
+            EntryIDTextBlock.Text = $"ID: -";
+            DateTextBox.Text = "-";
+            TypeTextBlock.Text = "-";
+            DurationRangeTextBox.Text = "-";
+            LocationTextBlock.Text = "-";
+            DescriptionTextBox.Text = "";
+            MoneyEntryButton.IsEnabled = false;
+            EditEntryButton.IsEnabled = false;
+            DeleteEntryButton.IsEnabled = false;
+            MonthSelectionComboBox.IsEnabled = false;
+            YearSelectionComboBox.IsEnabled = false;
+            if (MonthEntriesListView.Items.Count == 0) RootSplitView.IsPaneOpen = true;
         }
     }
 
@@ -69,8 +91,16 @@ public sealed partial class LogPage : Page
         }
         else
         {
-            selectedYear = Log.Years[0];
-            YearSelectionComboBox.SelectedItem = Log.Years[0];
+            if (Log.Years.Count >= 1)
+            {
+                selectedYear = Log.Years[0];
+                YearSelectionComboBox.SelectedItem = Log.Years[0];
+                NoEntriesTextBlock.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                NoEntriesTextBlock.Visibility = Visibility.Visible;
+            }
         }
 
         months = Log.GetMonthsList(selectedYear);
@@ -78,12 +108,39 @@ public sealed partial class LogPage : Page
         if (month != null)
         {
             selectedMonth = month;
-            MonthSelectionComboBox.SelectedItem = months[months.FindIndex(m => m.ToString() == month.ToString())];
+            var a = months.FindIndex(m => m.ToString() == month.ToString());
+            if (a < 0)
+            {
+                if (months.Count >= 1)
+                {
+                    selectedMonth = months[0];
+                    MonthSelectionComboBox.SelectedItem = months[0];
+                }
+                else
+                {
+                    RefreshEntryList();
+                    return;
+                }
+                
+            }
+            else
+            {
+                MonthSelectionComboBox.SelectedItem = months[a];
+            }
+            
         }
         else
         {
-            selectedMonth = months[0];
-            MonthSelectionComboBox.SelectedItem = months[0];
+            if (months.Count >= 1)
+            {
+                selectedMonth = months[0];
+                MonthSelectionComboBox.SelectedItem = months[0];
+            }
+            else
+            {
+                RefreshEntryList();
+                return;
+            }
         }
 
         Entries = new(Log.GetEntries(selectedYear, selectedMonth));
@@ -151,9 +208,9 @@ public sealed partial class LogPage : Page
                 default:
                     throw new Exception();
             }
-
+            EntryIDTextBlock.Text = $"ID: {entry.EntryID}";
             DateTextBox.Text = entry.Date.ToString("dd MMMM yyyy");
-            DurationRangeTextBox.Text = $"{entry.DurationRange} (X h)";
+            DurationRangeTextBox.Text = $"{entry.DurationRange} ({entry.Duration})";
             LocationTextBlock.Text = entry.Localization;
             DescriptionTextBox.Text = entry.Description;
         }
@@ -164,42 +221,43 @@ public sealed partial class LogPage : Page
         if (AllEntriesButton.Visibility == Visibility.Visible) { RootSplitView.IsPaneOpen = false; }
     }
 
-    private void SaveEntryButton_Click(object sender, RoutedEventArgs e)
-    {
-        //log.SaveLog(selectedYear);
-    }
-
     private async void EditEntryButton_Click(object sender, RoutedEventArgs e)
     {
-        //if (!editLock && !isEntryAddVisible)
-        //{
-        //    h_window = new HelperWindow(this, (Entry)MonthEntriesListView.SelectedItem, HelperWindow.Action.Edit);
-        //    h_window.Activate();
-        //}
-        //else
-        //{
-        //    ContentDialog dialog = new ContentDialog();
+        if (!editLock && !isEntryAddVisible)
+        {
+            h_window = new HelperWindow(this, (Entry)MonthEntriesListView.SelectedItem, HelperWindow.Action.Edit);
+            h_window.Activate();
+        }
+        else
+        {
+            ContentDialog dialog = new()
+            {
+                XamlRoot = this.XamlRoot,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                PrimaryButtonText = "OK",
+                DefaultButton = ContentDialogButton.Primary
+            };
+            if (editLock) { dialog.Title = "Zakoñcz najpierw edycjê poprzedniego wpisu!"; }
+            else { dialog.Title = "Zakoñcz najpierw dodawanie nowego wpisu!"; }
+            
 
-        //    dialog.XamlRoot = this.XamlRoot;
-        //    dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
-        //    if (editLock) { dialog.Title = "Zakoñcz najpierw edycjê poprzedniego wpisu!"; }
-        //    else { dialog.Title = "Zakoñcz najpierw dodawanie nowego wpisu!"; }
-        //    dialog.PrimaryButtonText = "OK";
-        //    dialog.DefaultButton = ContentDialogButton.Primary;
-
-        //    var result = await dialog.ShowAsync();
-        //}
+            var result = await dialog.ShowAsync();
+        }
 
     }
 
     private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (AllEntriesButton.Visibility == Visibility.Visible) RootSplitView.OpenPaneLength = this.ActualWidth;
+        if (AllEntriesButton.Visibility == Visibility.Visible) 
+        { 
+            RootSplitView.OpenPaneLength = this.ActualWidth; 
+            if (MonthEntriesListView.Items.Count == 0) RootSplitView.IsPaneOpen = true;
+        }
         else
         {
             var requiredPaneWidth = this.ActualWidth * 0.40;
             if (requiredPaneWidth > 1000) RootSplitView.OpenPaneLength = 1000;
-            else RootSplitView.OpenPaneLength = requiredPaneWidth; 
+            else RootSplitView.OpenPaneLength = requiredPaneWidth;
         }
     }
 
@@ -238,21 +296,21 @@ public sealed partial class LogPage : Page
 
     private async void DeleteEntryButton_Click(object sender, RoutedEventArgs e)
     {
-        //ContentDialog dialog = new ContentDialog();
+        ContentDialog dialog = new()
+        {
+            XamlRoot = this.XamlRoot,
+            Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+            Title = "Czy na pewno chcesz usun¹æ wpis?",
+            PrimaryButtonText = "Usuñ",
+            CloseButtonText = "Anuluj",
+            DefaultButton = ContentDialogButton.Primary
+        };
 
-        //// XamlRoot must be set in the case of a ContentDialog running in a Desktop app
-        //dialog.XamlRoot = this.XamlRoot;
-        //dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
-        //dialog.Title = "Czy na pewno chcesz usun¹æ wpis?";
-        //dialog.PrimaryButtonText = "Usuñ";
-        //dialog.CloseButtonText = "Anuluj";
-        //dialog.DefaultButton = ContentDialogButton.Primary;
-
-        //var result = await dialog.ShowAsync();
-        //if (result == ContentDialogResult.Primary)
-        //{
-        //    //log.DeleteEntryFromLog(selectedYear, selectedMonth, (Entry)MonthEntriesListView.SelectedItem);
-        //    Entries.Remove((Entry)MonthEntriesListView.SelectedItem);
-        //}
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            Log.DeleteEntry((Entry)MonthEntriesListView.SelectedItem);
+            ChangeTimeRange(selectedYear, selectedMonth);
+        }
     }
 }

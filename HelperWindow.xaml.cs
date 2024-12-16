@@ -16,42 +16,36 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using WorkLog.Structure;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+namespace WorkLog;
 
-namespace WorkLog
+public sealed partial class HelperWindow : WinUIEx.WindowEx
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class HelperWindow : WinUIEx.WindowEx
+    public enum Action
     {
-        public enum Action
+        Add,
+        Edit
+    }
+    public HelperWindow(LogPage parentPage, Entry entry, Action action)
+    {
+        this.InitializeComponent();
+        this.ExtendsContentIntoTitleBar = true;
+        LogPage.editLock = true;
+        
+        if (action == Action.Add)
         {
-            Add,
-            Edit
+            TitleBarTextBlock.Text = "Dodawanie nowego wpisu";
+            ContentFrame.Content = new EntryEditPage(parentPage, null, this);
         }
-        public HelperWindow(LogPage parentPage, Entry entry, Action action)
+        else
         {
-            this.InitializeComponent();
-            LogPage.editLock = true;
-            
-            if (action == Action.Add)
-            {
-                this.Title = "Dodawanie nowego wpisu";
-                ContentFrame.Content = new EntryEditPage(parentPage, null, this);
-            }
-            else
-            {
-                this.Title = "Edycja wpisu";
-                ContentFrame.Content = new EntryEditPage(parentPage, entry, this);
-            }
-            
+            TitleBarTextBlock.Text = "Edycja wpisu";
+            ContentFrame.Content = new EntryEditPage(parentPage, entry, this);
         }
+        
+    }
 
-        private void Window_Closed(object sender, WindowEventArgs args)
-        {
-            LogPage.editLock = false;
-        }
+    private void Window_Closed(object sender, WindowEventArgs args)
+    {
+        LogPage.editLock = false;
     }
 }

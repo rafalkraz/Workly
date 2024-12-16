@@ -35,24 +35,7 @@ public partial class Log
 
         }
 
-        internal static bool AddData(int type, string beginTime, string endTime, string localization, string description)
-        {
-            using var db = new SqliteConnection($"Filename={dbPath}");
-            db.Open();
-
-            var insertCommand = new SqliteCommand();
-            insertCommand.Connection = db;
-            insertCommand.CommandText = "INSERT INTO Entries VALUES (NULL, @type, @beginTime, @endTime, @localization, @description);";
-            insertCommand.Parameters.AddWithValue("@type", type);
-            insertCommand.Parameters.AddWithValue("@beginTime", beginTime);
-            insertCommand.Parameters.AddWithValue("@endTime", endTime);
-            insertCommand.Parameters.AddWithValue("@localization", localization);
-            insertCommand.Parameters.AddWithValue("@description", description);
-
-            insertCommand.ExecuteReader();
-            return true;
-
-        }
+        
 
         internal static List<Entry> GetDataFromMonth(string year, string month)
         {
@@ -133,6 +116,60 @@ public partial class Log
                 }
             }
             return months;
+        }
+
+        internal static bool AddData(int type, string beginTime, string endTime, string localization, string description)
+        {
+            using var db = new SqliteConnection($"Filename={dbPath}");
+            db.Open();
+
+            var insertCommand = new SqliteCommand();
+            insertCommand.Connection = db;
+            insertCommand.CommandText = "INSERT INTO Entries VALUES (NULL, @type, @beginTime, @endTime, @localization, @description);";
+            insertCommand.Parameters.AddWithValue("@type", type);
+            insertCommand.Parameters.AddWithValue("@beginTime", beginTime);
+            insertCommand.Parameters.AddWithValue("@endTime", endTime);
+            insertCommand.Parameters.AddWithValue("@localization", localization);
+            insertCommand.Parameters.AddWithValue("@description", description);
+
+            insertCommand.ExecuteReader();
+            return true;
+
+        }
+
+        internal static bool EditData(int entryID, int newType, string newBeginTime, string newEndTime, string newLocalization, string newDescription)
+        {
+            using var db = new SqliteConnection($"Filename={dbPath}");
+            db.Open();
+
+            var insertCommand = new SqliteCommand();
+            insertCommand.Connection = db;
+            insertCommand.CommandText = "UPDATE Entries SET Type = @newType, BeginTime = @newBeginTime, EndTime = @newEndTime, Localization = @newLocalization, Description = @newDescription WHERE EntryID = @entryID;";
+            insertCommand.Parameters.AddWithValue("@entryID", entryID);
+            insertCommand.Parameters.AddWithValue("@newType", newType);
+            insertCommand.Parameters.AddWithValue("@newBeginTime", newBeginTime);
+            insertCommand.Parameters.AddWithValue("@newEndTime", newEndTime);
+            insertCommand.Parameters.AddWithValue("@newLocalization", newLocalization);
+            insertCommand.Parameters.AddWithValue("@newDescription", newDescription);
+
+            insertCommand.ExecuteReader();
+            return true;
+
+        }
+
+        internal static bool DeleteData(int entryID)
+        {
+            using var db = new SqliteConnection($"Filename={dbPath}");
+            db.Open();
+
+            var cmd = new SqliteCommand
+            {
+                Connection = db,
+                CommandText = "DELETE FROM Entries WHERE EntryID = @entryID;"
+            };
+            cmd.Parameters.AddWithValue("@entryID", entryID);
+            cmd.ExecuteReader();
+            return true;
         }
     }
 }
