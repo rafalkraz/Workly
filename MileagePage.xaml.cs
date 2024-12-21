@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -12,20 +11,14 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using System.Collections.ObjectModel;
-using System.Text.Json;
-using Windows.Storage;
-using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 using WorkLog.Structure;
-using Microsoft.UI.Windowing;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using Windows.Globalization.DateTimeFormatting;
-using myLog = WorkLog.Structure.Log.Entries;
+using myLog = WorkLog.Structure.Log.Mileage;
 
 namespace WorkLog;
 
-public sealed partial class LogPage : Page
+public sealed partial class MileagePage : Page
 {
     private List<Month> months;
     private string selectedYear;
@@ -34,8 +27,8 @@ public sealed partial class LogPage : Page
     public static bool editLock = false;
     public static bool isEntryAddVisible = false;
     private Window h_window;
-    private ObservableCollection<Entry> Entries;
-    public LogPage()
+    private ObservableCollection<EntryMileage> Entries;
+    public MileagePage()
     {
         this.InitializeComponent();
     }
@@ -122,13 +115,13 @@ public sealed partial class LogPage : Page
                     RefreshEntryList();
                     return;
                 }
-                
+
             }
             else
             {
                 MonthSelectionComboBox.SelectedItem = months[a];
             }
-            
+
         }
         else
         {
@@ -186,7 +179,7 @@ public sealed partial class LogPage : Page
             switch (entry.Type)
             {
                 case 0:
-                    TypeTextBlock.Text = "Standardowy"; 
+                    TypeTextBlock.Text = "Standardowy";
                     LocationTextBlock.Visibility = Visibility.Visible;
                     LocationStackPanel.Visibility = Visibility.Visible;
                     DescriptionTextBox.Visibility = Visibility.Visible;
@@ -212,7 +205,7 @@ public sealed partial class LogPage : Page
                     LocationStackPanel.Visibility = Visibility.Collapsed;
                     DescriptionTextBox.Visibility = Visibility.Collapsed;
                     DescriptionStackPanel.Visibility = Visibility.Collapsed;
-                    break;     
+                    break;
                 default:
                     throw new Exception();
             }
@@ -247,7 +240,7 @@ public sealed partial class LogPage : Page
             };
             if (editLock) { dialog.Title = "Zakoñcz najpierw edycjê poprzedniego wpisu!"; }
             else { dialog.Title = "Zakoñcz najpierw dodawanie nowego wpisu!"; }
-            
+
 
             var result = await dialog.ShowAsync();
         }
@@ -256,9 +249,9 @@ public sealed partial class LogPage : Page
 
     private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (AllEntriesButton.Visibility == Visibility.Visible) 
-        { 
-            RootSplitView.OpenPaneLength = this.ActualWidth; 
+        if (AllEntriesButton.Visibility == Visibility.Visible)
+        {
+            RootSplitView.OpenPaneLength = this.ActualWidth;
             if (MonthEntriesListView.Items.Count == 0) RootSplitView.IsPaneOpen = true;
         }
         else
@@ -317,7 +310,7 @@ public sealed partial class LogPage : Page
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            myLog.DeleteEntry((Entry)MonthEntriesListView.SelectedItem);
+            myLog.DeleteEntry((EntryMileage)MonthEntriesListView.SelectedItem);
             ChangeTimeRange(selectedYear, selectedMonth);
         }
     }

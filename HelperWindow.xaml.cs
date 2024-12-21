@@ -25,22 +25,27 @@ public sealed partial class HelperWindow : WinUIEx.WindowEx
         Add,
         Edit
     }
-    public HelperWindow(LogPage parentPage, Entry entry, Action action)
+    public HelperWindow(Page parentPage, Entry entry, Action action)
     {
         this.InitializeComponent();
         this.ExtendsContentIntoTitleBar = true;
-        LogPage.editLock = true;
+
+        if (typeof(parentPage) == typeof(LogPage))
+        {
+            LogPage.editLock = true;
         
-        if (action == Action.Add)
-        {
-            TitleBarTextBlock.Text = "Dodawanie nowego wpisu";
-            ContentFrame.Content = new EntryEditPage(parentPage, null, this);
+            if (action == Action.Add)
+            {
+                TitleBarTextBlock.Text = "Dodawanie nowego wpisu";
+                ContentFrame.Content = new EntryEditPage((LogPage)parentPage, null, this);
+            }
+            else
+            {
+                TitleBarTextBlock.Text = "Edycja wpisu";
+                ContentFrame.Content = new EntryEditPage((LogPage)parentPage, entry, this);
+            }
         }
-        else
-        {
-            TitleBarTextBlock.Text = "Edycja wpisu";
-            ContentFrame.Content = new EntryEditPage(parentPage, entry, this);
-        }
+        
         
     }
 

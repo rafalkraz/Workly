@@ -71,6 +71,7 @@
                         </StackPanel>
                         <ComboBox x:Name="EntryTypeComboBox" SelectionChanged="EntryTypeComboBox_SelectionChanged">
                             <x:String>Standardowy</x:String>
+                            <x:String>Nadgodziny</x:String>
                             <x:String>Urlop</x:String>
                             <x:String>Bezpłatne wolne</x:String>
                         </ComboBox>

@@ -1,27 +1,18 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using WorkLog.Structure;
+using myLog = WorkLog.Structure.Log.Entries;
 
 namespace WorkLog;
 
 public sealed partial class EntryEditPage : Page
 {
-    private Window helperWindow;
-    private LogPage parentPageReference;  
-    private readonly List<string> entryTypes = ["Standardowy", "Urlop", "Bezp³atne wolne"];
-    private Entry editedEntry = null;
+    private readonly Window helperWindow;
+    private readonly LogPage parentPageReference;  
+    private readonly List<string> entryTypes = ["Standardowy", "Nadgodziny", "Urlop", "Bezp³atne wolne"];
+    private readonly Entry editedEntry = null;
     public EntryEditPage(LogPage parentPage, Entry entry, Window helperWindowReference)
     {
         this.InitializeComponent();
@@ -92,7 +83,7 @@ public sealed partial class EntryEditPage : Page
         else IncorrectTimeInfoBar.IsOpen = false;
 
         // Check rest of requirments if entryType = 0
-        if (EntryTypeComboBox.SelectedItem.ToString() == "Standardowy")
+        if (EntryTypeComboBox.SelectedItem.ToString() == "Standardowy" || EntryTypeComboBox.SelectedItem.ToString() == "Nadgodziny")
         {
             // Location check
             if (LocationTextBox.Text == "") 
@@ -117,7 +108,7 @@ public sealed partial class EntryEditPage : Page
 
     private void CheckType()
     {
-        if (EntryTypeComboBox.SelectedItem.ToString() == "Standardowy")
+        if (EntryTypeComboBox.SelectedItem.ToString() == "Standardowy" || EntryTypeComboBox.SelectedItem.ToString() == "Nadgodziny")
         {
             LocationStackPanel.Visibility = Visibility.Visible;
             LocationTextBox.Visibility = Visibility.Visible;
@@ -144,7 +135,7 @@ public sealed partial class EntryEditPage : Page
         {
             var beginTime = EventDatePicker.Date.Value.Date.Add(BeginTimePicker.Time);
             var endTime = EventDatePicker.Date.Value.Date.Add(EndTimePicker.Time);
-            if (EntryTypeComboBox.SelectedIndex != 0)
+            if (EntryTypeComboBox.SelectedIndex != 0 && EntryTypeComboBox.SelectedIndex != 1)
             {
                 LocationTextBox.Text = "";
                 DescriptionTextBox.Text = "";
@@ -152,14 +143,14 @@ public sealed partial class EntryEditPage : Page
             if (editedEntry == null)
             {
                 var newEntry = new Entry(0, EntryTypeComboBox.SelectedIndex, beginTime, endTime, LocationTextBox.Text, DescriptionTextBox.Text);
-                var addResult = Log.AddEntry(newEntry);
+                var addResult = myLog.AddEntry(newEntry);
                 if (addResult) SavingFinished(beginTime);
                 else ErrorInfoBar.IsOpen = true;
             }
             else
             {
                 var tempEntry = new Entry(editedEntry.EntryID, EntryTypeComboBox.SelectedIndex, beginTime, endTime, LocationTextBox.Text, DescriptionTextBox.Text);
-                var editResult = Log.EditEntry(tempEntry);
+                var editResult = myLog.EditEntry(tempEntry);
                 if (editResult) SavingFinished(beginTime);
                 else ErrorInfoBar.IsOpen = true;
             }

@@ -6,10 +6,148 @@
     xmlns:local="using:WorkLog"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <x:Double x:Key="SettingsCardSpacing">4</x:Double>
+        <Style
+            x:Key="SettingsSectionHeaderTextBlockStyle"
+            BasedOn="{StaticResource BodyStrongTextBlockStyle}"
+            TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="Margin" Value="1,20,0,4" />
+            </Style.Setters>
+        </Style>
+    </Page.Resources>
+    <ScrollView Padding="36,0,36,8">
+        <StackPanel Orientation="Vertical" Spacing="{StaticResource SettingsCardSpacing}">
+            <StackPanel.ChildrenTransitions>
+                <EntranceThemeTransition FromVerticalOffset="50" />
+                <RepositionThemeTransition IsStaggeringEnabled="False" />
+            </StackPanel.ChildrenTransitions>
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Margin="0,24,0,0">Ustawienia</TextBlock>
 
-    <Grid>
-        <TextBlock>Settings</TextBlock>
-    </Grid>
+            <!-- FINANCES -->
+            <TextBlock Text="Finanse" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
+            <controls:SettingsCard Description="Podaj wysokość swojego wynagrodzenia za 1 godzinę pracy w PLN" Header="Kwota wynagrodzenia">
+                <controls:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE825;" />
+                </controls:SettingsCard.HeaderIcon>
+                <NumberBox x:Name="StandardSalaryNumberBox" PlaceholderText="00,00" />
+            </controls:SettingsCard>
+            
+            <controls:SettingsCard Description="Podaj wysokość wynagrodzenia za 1 godzinę pracy rozliczaną jako nadgodziny w PLN" Header="Opłata za nadgodziny">
+                <controls:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE823;" />
+                </controls:SettingsCard.HeaderIcon>
+                <NumberBox x:Name="OvertimeSalaryNumberBox" PlaceholderText="00,00" />
+            </controls:SettingsCard>
+
+            <controls:SettingsCard Description="Podaj wysokość wynagrodzenia za 1 godzinę urlopu w PLN" Header="Opłata za urlop">
+                <controls:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE706;" />
+                </controls:SettingsCard.HeaderIcon>
+                <NumberBox x:Name="LeaveSalaryNumberBox" PlaceholderText="00,00" />
+            </controls:SettingsCard>
+
+            <controls:SettingsCard Description="Podaj koszt 1 km" Header="Opłata za kilometrówkę">
+                <controls:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE804;" />
+                </controls:SettingsCard.HeaderIcon>
+                <NumberBox x:Name="MileageNumberBox" PlaceholderText="0,00" />
+            </controls:SettingsCard>
+            
+            <!-- APPERANCE AND DATA -->
+            <TextBlock Text="Wygląd i dane" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
+            <controls:SettingsCard Description="Wybierz motyw, który ma używać aplikacja" Header="Motyw aplikacji">
+                <controls:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE790;" />
+                </controls:SettingsCard.HeaderIcon>
+                <ComboBox
+                        x:Name="themeMode"
+                        AutomationProperties.AutomationId="themeModeComboBox" >
+                    <ComboBoxItem Content="Light" Tag="Light" />
+                    <ComboBoxItem Content="Dark" Tag="Dark" />
+                    <ComboBoxItem Content="Use system setting" Tag="Default" />
+                </ComboBox>
+            </controls:SettingsCard>
+
+            <controls:SettingsExpander Description="Importuj i eksportuj swoje dane" Header="Zarządzanie danymi">
+                <controls:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xE912;" />
+                </controls:SettingsExpander.HeaderIcon>
+                <controls:SettingsExpander.Items>
+                    <controls:SettingsCard
+                        x:Name="dSpatialAudioCard">
+                        
+                        <controls:SettingsCard.Description>
+                            <StackPanel Orientation="Horizontal">
+                                <FontIcon Glyph="&#xE814;" Margin="0,0,4,0" FontSize="16"/>
+                                <TextBlock Text="Dotyczy tylko dziennika czasu pracy i kilometrówki" />
+                            </StackPanel>
+                            
+                        </controls:SettingsCard.Description>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
+                        x:Name="SpatialAudioCard"
+                        Header="Importuj dane">
+                        <controls:SettingsCard.Description>
+                            <TextBlock Text="Wybierz plik bazy danych, z którego chcesz wczytać dane" />
+                        </controls:SettingsCard.Description>
+                        <Button Content="Wybierz plik"/>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
+                            x:Name="aSpatialAudioCard"
+                            Header="Eksportuj dane">
+                        <controls:SettingsCard.Description>
+                            <TextBlock Text="Wybierz gdzie chcesz zapisać plik bazy danych" />
+                        </controls:SettingsCard.Description>
+                        <Button Content="Wybierz plik"/>
+                    </controls:SettingsCard>
+                </controls:SettingsExpander.Items>
+            </controls:SettingsExpander>
+            
+            <!-- ABOUT -->
+            <TextBlock Text="O aplikacji" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
+            <controls:SettingsExpander Description="2024 Rafał Krąż" Header="WorkLog">
+                <controls:SettingsExpander.HeaderIcon>
+                    <BitmapIcon ShowAsMonochrome="False" UriSource="/Assets/StoreLogo.png" />
+                </controls:SettingsExpander.HeaderIcon>
+                <TextBlock
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                IsTextSelectionEnabled="True"
+                Text="" />
+                <controls:SettingsExpander.Items>
+                    <controls:SettingsCard
+                    x:Name="bugRequestCard"
+                    Header="Zgłoś problem lub pomysł"
+                    IsClickEnabled="True">
+                        <controls:SettingsCard.ActionIcon>
+                            <FontIcon Glyph="&#xE8A7;" />
+                        </controls:SettingsCard.ActionIcon>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
+                    HorizontalContentAlignment="Left"
+                    ContentAlignment="Vertical"
+                    Header="Zależności">
+                        <StackPanel Margin="-12,0,0,0" Orientation="Vertical">
+                            <HyperlinkButton Content="Windows App SDK" NavigateUri="https://aka.ms/windowsappsdk" />
+                            <HyperlinkButton Content="Windows UI Library" NavigateUri="https://aka.ms/winui" />
+                            <HyperlinkButton Content="Windows Community controls" NavigateUri="https://aka.ms/controls/windows" />
+                        </StackPanel>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
+                    HorizontalContentAlignment="Left"
+                    ContentAlignment="Vertical"
+                    Header="THIS CODE AND INFORMATION IS PROVIDED ‘AS IS’ WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.">
+                        <StackPanel Margin="-12,0,0,0" Orientation="Vertical">
+                            <HyperlinkButton Content="Microsoft Services Agreement" NavigateUri="https://go.microsoft.com/fwlink/?LinkId=822631" />
+                            <HyperlinkButton Content="Microsoft Privacy Statement" NavigateUri="https://go.microsoft.com/fwlink/?LinkId=521839" />
+                        </StackPanel>
+                    </controls:SettingsCard>
+                </controls:SettingsExpander.Items>
+            </controls:SettingsExpander>
+        </StackPanel>
+    </ScrollView>
 </Page>

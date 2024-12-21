@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="WorkLog.LogPage"
+    x:Class="WorkLog.MileagePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:WorkLog"
@@ -15,7 +15,6 @@
         <Grid.Resources>
             <CollectionViewSource x:Name="EntriesCollection" IsSourceGrouped="True"/>
         </Grid.Resources>
-        <!-- VISUAL STATES -->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="CompactVisualState">
@@ -83,10 +82,8 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        
-        <!-- CONTENT -->
         <SplitView x:Name="RootSplitView" PaneBackground="{ThemeResource SystemFillColorNeutralBackground}"
-           IsPaneOpen="False" CompactPaneLength="32" DisplayMode="Inline">
+       IsPaneOpen="False" CompactPaneLength="32" DisplayMode="Inline">
             <SplitView.Pane>
                 <Grid x:Name="PaneGrid" Padding="20,24,20,12">
                     <Grid.RowDefinitions>
@@ -109,7 +106,7 @@
                     <TextBlock Grid.Row="1" x:Name="NoEntriesTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">Brak wpisów</TextBlock>
                     <ScrollView Grid.Row="1" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
                         <!-- LIST VIEW -->
-                            <ListView x:Name="MonthEntriesListView" ItemsSource="{Binding Source={StaticResource EntriesCollection}}" SelectionChanged="MonthEntriesListView_SelectionChanged" ItemClick="MonthEntriesListView_ItemClick" IsItemClickEnabled="True">
+                        <ListView x:Name="MonthEntriesListView" ItemsSource="{Binding Source={StaticResource EntriesCollection}}" SelectionChanged="MonthEntriesListView_SelectionChanged" ItemClick="MonthEntriesListView_ItemClick" IsItemClickEnabled="True">
                             <ListView.GroupStyle>
                                 <GroupStyle>
                                     <GroupStyle.HeaderTemplate>

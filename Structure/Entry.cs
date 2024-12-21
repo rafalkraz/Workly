@@ -13,8 +13,10 @@ public class Entry(int entryID, int type, DateTime beginTime, DateTime endTime, 
 {
     // Types
     // 0 - standard
-    // 1 - urlop
-    // 2 - bezpłatne wolne
+    // 1 - nadgodziny
+    // 2 - urlop
+    // 3 - bezpłatne wolne
+
     public int EntryID { get; set; } = entryID;
     public int Type { get; set; } = type;
     public DateTime BeginTime { get; set; } = beginTime;
@@ -45,24 +47,13 @@ public class Entry(int entryID, int type, DateTime beginTime, DateTime endTime, 
             //string.Format("{0:00}:{1:00}", (int)time.TotalHours, time.Minutes);
         }
     }
-    public string DurationRange
+    public string DurationRange => BeginTime.ToString("HH:mm") + " - " + EndTime.ToString("HH:mm");
+    public string FontIcon => Type switch
     {
-        get
-        {
-            return BeginTime.ToString("HH:mm") + " - " + EndTime.ToString("HH:mm");
-        }
-    }
-    public string FontIcon
-    {
-        get
-        {
-            return Type switch
-            {
-                0 => "",
-                1 => "\uE706",
-                2 => "\uE7FD",
-                _ => throw new Exception(),
-            };
-        }
-    }
+        0 => "",
+        1 => "\uE823",
+        2 => "\uE706",
+        3 => "\uE7FD",
+        _ => throw new Exception(),
+    };
 }

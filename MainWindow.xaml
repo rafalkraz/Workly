@@ -43,6 +43,11 @@
                         <FontIcon Glyph="&#xF000;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+                <NavigationViewItem Tag="WorkLog.MileagePage" Content="Kilometrówka">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE804;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
                 <NavigationViewItem Tag="WorkLog.SalaryPage"  Content="Kalkulator wynagrodzenia" Icon="Calculator"/>
             </NavigationView.MenuItems>
             <Frame Margin="0,0,0,0" x:Name="ContentFrame"/>
