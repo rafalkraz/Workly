@@ -14,6 +14,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using WorkLog.Interfaces;
 using WorkLog.Structure;
 
 namespace WorkLog;
@@ -25,28 +26,23 @@ public sealed partial class HelperWindow : WinUIEx.WindowEx
         Add,
         Edit
     }
-    public HelperWindow(Page parentPage, Entry entry, Action action)
+    public HelperWindow(IDataViewPage parentPage, Entry entry, Action action)
     {
         this.InitializeComponent();
         this.ExtendsContentIntoTitleBar = true;
 
-        if (typeof(parentPage) == typeof(LogPage))
-        {
             LogPage.editLock = true;
         
             if (action == Action.Add)
             {
                 TitleBarTextBlock.Text = "Dodawanie nowego wpisu";
-                ContentFrame.Content = new EntryEditPage((LogPage)parentPage, null, this);
+                ContentFrame.Content = new EntryEditPage(parentPage, null, this);
             }
             else
             {
                 TitleBarTextBlock.Text = "Edycja wpisu";
-                ContentFrame.Content = new EntryEditPage((LogPage)parentPage, entry, this);
+                ContentFrame.Content = new EntryEditPage(parentPage, entry, this);
             }
-        }
-        
-        
     }
 
     private void Window_Closed(object sender, WindowEventArgs args)

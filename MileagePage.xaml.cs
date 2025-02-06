@@ -1,24 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using WorkLog.Interfaces;
 using WorkLog.Structure;
 using myLog = WorkLog.Structure.Log.Mileage;
 
 namespace WorkLog;
 
-public sealed partial class MileagePage : Page
+public sealed partial class MileagePage : Page, IDataViewPage
 {
     private List<Month> months;
     private string selectedYear;

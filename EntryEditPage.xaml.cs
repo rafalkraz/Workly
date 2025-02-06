@@ -2,6 +2,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
+using WorkLog.Interfaces;
 using WorkLog.Structure;
 using myLog = WorkLog.Structure.Log.Entries;
 
@@ -10,10 +11,10 @@ namespace WorkLog;
 public sealed partial class EntryEditPage : Page
 {
     private readonly Window helperWindow;
-    private readonly LogPage parentPageReference;  
+    private readonly IDataViewPage parentPageReference;  
     private readonly List<string> entryTypes = ["Standardowy", "Nadgodziny", "Urlop", "Bezp³atne wolne"];
     private readonly Entry editedEntry = null;
-    public EntryEditPage(LogPage parentPage, Entry entry, Window helperWindowReference)
+    public EntryEditPage(IDataViewPage parentPage, Entry entry, Window helperWindowReference)
     {
         this.InitializeComponent();
         EntryTypeComboBox.ItemsSource = entryTypes;

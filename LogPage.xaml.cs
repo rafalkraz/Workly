@@ -22,10 +22,11 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Windows.Globalization.DateTimeFormatting;
 using myLog = WorkLog.Structure.Log.Entries;
+using WorkLog.Interfaces;
 
 namespace WorkLog;
 
-public sealed partial class LogPage : Page
+public sealed partial class LogPage : Page, IDataViewPage
 {
     private List<Month> months;
     private string selectedYear;
