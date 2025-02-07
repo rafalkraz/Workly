@@ -53,9 +53,17 @@ public sealed partial class MileagePage : Page, IDataViewPage
             EntriesCollection.Source = null;
             EntryIDTextBlock.Text = $"ID: -";
             DateTextBox.Text = "-";
+            BeginPointStackPanel.Visibility = Visibility.Collapsed;
+            BeginPointTextBlock.Visibility = Visibility.Collapsed;
+            EndPointStackPanel.Visibility = Visibility.Collapsed;
+            EndPointTextBlock.Visibility = Visibility.Collapsed;
+            LocationStackPanel.Visibility = Visibility.Collapsed;
+            LocationTextBlock.Visibility = Visibility.Collapsed;
+            DistanceStackPanel.Visibility = Visibility.Collapsed;
+            DistanceTextBlock.Visibility = Visibility.Collapsed;
+            ParkingPriceStackPanel.Visibility = Visibility.Collapsed;
+            ParkingPriceTextBlock.Visibility = Visibility.Collapsed;
             TypeTextBlock.Text = "-";
-            DurationRangeTextBox.Text = "-";
-            LocationTextBlock.Text = "-";
             DescriptionTextBox.Text = "";
             MoneyEntryButton.IsEnabled = false;
             EditEntryButton.IsEnabled = false;
@@ -160,10 +168,10 @@ public sealed partial class MileagePage : Page, IDataViewPage
 
     private void MonthEntriesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        LoadEntryDetails((Entry)MonthEntriesListView.SelectedItem);
+        LoadEntryDetails((EntryMileage)MonthEntriesListView.SelectedItem);
     }
 
-    private void LoadEntryDetails(Entry entry)
+    private void LoadEntryDetails(EntryMileage entry)
     {
         if (entry == null) return;
         else
@@ -171,41 +179,45 @@ public sealed partial class MileagePage : Page, IDataViewPage
             switch (entry.Type)
             {
                 case 0:
-                    TypeTextBlock.Text = "Standardowy";
-                    LocationTextBlock.Visibility = Visibility.Visible;
-                    LocationStackPanel.Visibility = Visibility.Visible;
-                    DescriptionTextBox.Visibility = Visibility.Visible;
-                    DescriptionStackPanel.Visibility = Visibility.Visible;
+                    TypeTextBlock.Text = "Kilometrówka";
+                    BeginPointStackPanel.Visibility = Visibility.Visible;
+                    BeginPointTextBlock.Visibility = Visibility.Visible;
+                    EndPointStackPanel.Visibility = Visibility.Visible;
+                    EndPointTextBlock.Visibility = Visibility.Visible;
+                    LocationStackPanel.Visibility = Visibility.Collapsed;
+                    LocationTextBlock.Visibility = Visibility.Collapsed;
+                    DistanceStackPanel.Visibility = Visibility.Visible;
+                    DistanceTextBlock.Visibility = Visibility.Visible;
+                    ParkingPriceStackPanel.Visibility = Visibility.Collapsed;
+                    ParkingPriceTextBlock.Visibility = Visibility.Collapsed;
+                    MoneyEntryButton.Visibility = Visibility.Visible;
                     break;
                 case 1:
-                    TypeTextBlock.Text = "Nadgodziny";
-                    LocationTextBlock.Visibility = Visibility.Visible;
+                    TypeTextBlock.Text = "Parking";
+                    BeginPointStackPanel.Visibility = Visibility.Collapsed;
+                    BeginPointTextBlock.Visibility = Visibility.Collapsed;
+                    EndPointStackPanel.Visibility = Visibility.Collapsed;
+                    EndPointTextBlock.Visibility = Visibility.Collapsed;
                     LocationStackPanel.Visibility = Visibility.Visible;
-                    DescriptionTextBox.Visibility = Visibility.Visible;
-                    DescriptionStackPanel.Visibility = Visibility.Visible;
-                    break;
-                case 2:
-                    TypeTextBlock.Text = "Urlop";
-                    LocationTextBlock.Visibility = Visibility.Collapsed;
-                    LocationStackPanel.Visibility = Visibility.Collapsed;
-                    DescriptionTextBox.Visibility = Visibility.Collapsed;
-                    DescriptionStackPanel.Visibility = Visibility.Collapsed;
-                    break;
-                case 3:
-                    TypeTextBlock.Text = "Bezp³atne wolne";
-                    LocationTextBlock.Visibility = Visibility.Collapsed;
-                    LocationStackPanel.Visibility = Visibility.Collapsed;
-                    DescriptionTextBox.Visibility = Visibility.Collapsed;
-                    DescriptionStackPanel.Visibility = Visibility.Collapsed;
+                    LocationTextBlock.Visibility = Visibility.Visible;
+                    DistanceStackPanel.Visibility = Visibility.Collapsed;
+                    DistanceTextBlock.Visibility = Visibility.Collapsed;
+                    ParkingPriceStackPanel.Visibility = Visibility.Visible;
+                    ParkingPriceTextBlock.Visibility = Visibility.Visible;
+                    MoneyEntryButton.Visibility = Visibility.Collapsed;
                     break;
                 default:
                     throw new Exception();
             }
-            EntryIDTextBlock.Text = $"ID: {entry.EntryID}";
+            EntryIDTextBlock.Text = $"ID: {entry.ID}";
             DateTextBox.Text = entry.Date.ToString("dd MMMM yyyy");
-            DurationRangeTextBox.Text = $"{entry.DurationRange} ({entry.Duration})";
-            LocationTextBlock.Text = entry.Localization;
+            BeginPointTextBlock.Text = entry.BeginPoint;
+            EndPointTextBlock.Text = entry.EndPoint;
+            LocationTextBlock.Text = entry.BeginPoint;
+            DistanceTextBlock.Text = entry.Distance.ToString() + " km";
             DescriptionTextBox.Text = entry.Description;
+            ParkingPriceTextBlock.Text = entry.ParkingPrice.ToString() + " PLN";
+            MoneyEntryTeachingTip.Subtitle = entry.ParkingPrice.ToString() + " PLN";
         }
     }
 
@@ -218,7 +230,7 @@ public sealed partial class MileagePage : Page, IDataViewPage
     {
         if (!editLock && !isEntryAddVisible)
         {
-            h_window = new HelperWindow(this, (Entry)MonthEntriesListView.SelectedItem, HelperWindow.Action.Edit);
+            h_window = new HelperWindow(this, (EntryMileage)MonthEntriesListView.SelectedItem, HelperWindow.Action.Edit);
             h_window.Activate();
         }
         else
@@ -269,7 +281,7 @@ public sealed partial class MileagePage : Page, IDataViewPage
     {
         if (!editLock && !isEntryAddVisible)
         {
-            h_window = new HelperWindow(this, (Entry)MonthEntriesListView.SelectedItem, HelperWindow.Action.Add);
+            h_window = new HelperWindow(this, (EntryMileage)MonthEntriesListView.SelectedItem, HelperWindow.Action.Add);
             h_window.Activate();
         }
         else

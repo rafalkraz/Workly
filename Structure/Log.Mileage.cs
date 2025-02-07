@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace WorkLog.Structure;
@@ -47,17 +48,19 @@ public static partial class Log
         ///</returns>
         public static bool AddEntry(EntryMileage entry)
         {
-            return DataAccess.AddDataToMileage(entry.Type, entry.Date.ToString("yyyy-MM-dd HH:mm:ss"), entry.BeginPoint, entry.EndPoint, entry.Purpose, entry.Distance.ToString(), entry.ParkingPrice.ToString());
+            var date = new DateTime(entry.Date.Year, entry.Date.Month, entry.Date.Day, 0, 0, 0);
+            return DataAccess.AddDataToMileage(entry.Type, date.ToString("yyyy-MM-dd HH:mm:ss"), entry.BeginPoint, entry.EndPoint, entry.Description, entry.Distance.ToString(), entry.ParkingPrice.ToString());
         }
 
         public static bool EditEntry(EntryMileage entry)
         {
-            return DataAccess.EditDataInMileage(entry.ID, entry.Type, entry.Date.ToString("yyyy-MM-dd HH:mm:ss"), entry.BeginPoint, entry.EndPoint, entry.Purpose, entry.Distance.ToString(), entry.ParkingPrice.ToString());
+            var date = new DateTime(entry.Date.Year, entry.Date.Month, entry.Date.Day, 0, 0, 0);
+            return DataAccess.EditDataInMileage(entry.ID, entry.Type, date.ToString("yyyy-MM-dd HH:mm:ss"), entry.BeginPoint, entry.EndPoint, entry.Description, entry.Distance.ToString(), entry.ParkingPrice.ToString());
         }
 
         public static bool DeleteEntry(EntryMileage entry)
         {
-            return DataAccess.DeleteDataFromEntries(entry.ID);
+            return DataAccess.DeleteDataFromMileage(entry.ID);
         }
     }
 }

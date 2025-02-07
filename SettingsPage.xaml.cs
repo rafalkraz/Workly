@@ -1,31 +1,63 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.ComponentModel;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+namespace WorkLog;
 
-namespace WorkLog
+public sealed partial class SettingsPage : Page
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class SettingsPage : Page
+    public SettingsPage()
     {
-        public SettingsPage()
+        this.InitializeComponent();
+    }
+
+    private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        TextBox textBox = sender as TextBox;
+        if (textBox != null)
         {
-            this.InitializeComponent();
+            // Zamieñ przecinek na kropkê
+            string text = textBox.Text.Replace(',', '.');
+
+            // Aktualizuj wartoœæ TextBox
+            textBox.Text = text;
+
+            // Ustawienie kursora na koñcu tekstu
+            textBox.SelectionStart = textBox.Text.Length;
+
+            if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out double value))
+            {
+                // Prawid³owy format liczby dziesiêtnej
+                // Ustaw wartoœæ w odpowiedniej w³aœciwoœci
+                var binding = textBox.GetBindingExpression(TextBox.TextProperty);
+                if (binding != null)
+                {
+                    binding.UpdateSource();
+                }
+            }
+            else
+            {
+                // Nieprawid³owy format, wyczyœæ pole lub ustaw odpowiedni komunikat
+                textBox.Text = string.Empty;
+            }
         }
     }
+
+    private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+    {
+        TextBox textBox = sender as TextBox;
+        if (textBox != null && string.IsNullOrEmpty(textBox.Text))
+        {
+            // Ustaw domyœln¹ wartoœæ na 0, jeœli pole jest puste
+            textBox.Text = "0";
+            var binding = textBox.GetBindingExpression(TextBox.TextProperty);
+            if (binding != null)
+            {
+                binding.UpdateSource();
+            }
+        }
+    }
+
 }

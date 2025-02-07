@@ -15,7 +15,7 @@
         <Grid.Resources>
             <CollectionViewSource x:Name="EntriesCollection" IsSourceGrouped="True"/>
         </Grid.Resources>
-        <!-- VISUAL STATES -->
+        <!--#region VisualStates-->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="CompactVisualState">
@@ -83,10 +83,11 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        
-        <!-- CONTENT -->
+        <!--#endregion-->
+        <!--#region Content-->
         <SplitView x:Name="RootSplitView" PaneBackground="{ThemeResource SystemFillColorNeutralBackground}"
            IsPaneOpen="False" CompactPaneLength="32" DisplayMode="Inline">
+            <!--#region Content.LeftSide-->
             <SplitView.Pane>
                 <Grid x:Name="PaneGrid" Padding="20,24,20,12">
                     <Grid.RowDefinitions>
@@ -133,6 +134,8 @@
                     </ScrollView>
                 </Grid>
             </SplitView.Pane>
+            <!--#endregion-->
+            <!--#region RightSide-->
             <Grid Background="{ThemeResource FlyoutBackgroundThemeBrush}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" MaxHeight="30"/>
@@ -188,7 +191,7 @@
                                 <FontIcon Glyph="&#xE916;" Margin="0,0,4,0" />
                                 <TextBlock Text="Czas pracy" />
                             </StackPanel>
-                            <TextBlock x:Name="DurationRangeTextBox" Text="09:00 - 13:00" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                            <TextBlock x:Name="DurationRangeTextBox" Text="00:00 - 00:00" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
                             <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
                                 <FontIcon Glyph="&#xE8EC;" Margin="0,0,4,0" />
@@ -211,6 +214,8 @@
                     </ScrollView>
                 </Grid>
             </Grid>
+            <!--#endregion-->
         </SplitView>
+        <!--#endregion-->
     </Grid>
 </Page>

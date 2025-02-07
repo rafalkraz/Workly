@@ -11,6 +11,14 @@
     <ScrollView>
         <Grid Padding="12">
             <StackPanel>
+                <!--#region Warnings-->
+                <InfoBar
+                x:Name="MoneyInfoBar"
+                IsOpen="False"
+                IsClosable="True"
+                Severity="Informational"
+                Title="Ponowne obliczenie należności"
+                Message="Edycja tego wpisu spowoduje ponowne obliczenie należności za tą podróż zgodnie z aktualnym przelicznikiem w ustawieniach aplikacji" />
                 <InfoBar
                 x:Name="ErrorInfoBar"
                 IsOpen="False"
@@ -33,19 +41,42 @@
                 Title="Nieprawidłowy czas pracy"
                 Message="Godzina zakończenia nie może być wcześniejsza niż rozpoczęcia!" />
                 <InfoBar
-                x:Name="IncorrectLocalizationInfoBar"
+                x:Name="IncorrectLocationInfoBar"
                 IsOpen="False"
                 IsClosable="True"
                 Severity="Warning"
                 Title="Brak lokalizacji"
-                Message="Standardowy wpis wymaga podania lokalizacji!" />
+                Message="Ten wpis wymaga podania lokalizacji!" />
+                <InfoBar
+                x:Name="IncorrectEndPointInfoBar"
+                IsOpen="False"
+                IsClosable="True"
+                Severity="Warning"
+                Title="Brak lokalizacji"
+                Message="Ten wpis wymaga podania lokalizacji końcowej!" />
+                <InfoBar
+                x:Name="IncorrectDistanceInfoBar"
+                IsOpen="False"
+                IsClosable="True"
+                Severity="Warning"
+                Title="Brak lokalizacji"
+                Message="Ten wpis wymaga podania przejechanego dystansu!" />
+                <InfoBar
+                x:Name="IncorrectParkingPriceInfoBar"
+                IsOpen="False"
+                IsClosable="True"
+                Severity="Warning"
+                Title="Brak lokalizacji"
+                Message="Ten wpis wymaga podania ceny parkingu!" />
                 <InfoBar
                 x:Name="IncorrectDescriptionInfoBar"
                 IsOpen="False"
                 IsClosable="True"
                 Severity="Warning"
                 Title="Brak opisu"
-                Message="Standardowy wpis wymaga podania opisu!" />
+                Message="Ten wpis wymaga podania opisu!" />
+                <!--#endregion-->
+                <!--#region Header-->
                 <Grid>
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Margin="0,8,0,4">
                         <StackPanel Orientation="Horizontal">
@@ -69,38 +100,70 @@
                             <FontIcon Glyph="&#xE8EC;" Margin="0,0,4,0" />
                             <TextBlock Text="Rodzaj" />
                         </StackPanel>
-                        <ComboBox x:Name="EntryTypeComboBox" SelectionChanged="EntryTypeComboBox_SelectionChanged">
-                            <x:String>Standardowy</x:String>
-                            <x:String>Nadgodziny</x:String>
-                            <x:String>Urlop</x:String>
-                            <x:String>Bezpłatne wolne</x:String>
-                        </ComboBox>
+                        <ComboBox x:Name="EntryTypeComboBox" SelectionChanged="EntryTypeComboBox_SelectionChanged" />
                     </StackPanel>
                 </Grid>
+                <!--#endregion-->
+                <!--#region Controls-->
+                <!--#region Controls.Date-->
                 <StackPanel Orientation="Horizontal" Margin="0,12,0,4">
                     <FontIcon Glyph="&#xE787;" Margin="0,0,4,0"/>
                     <TextBlock Text="Data" />
                 </StackPanel>
                 <CalendarDatePicker x:Name="EventDatePicker" PlaceholderText="Wybierz datę" DateChanged="EventDatePicker_DateChanged"/>
-                <StackPanel Orientation="Horizontal" Margin="0,12,0,4">
+                <!--#endregion-->
+                <!--#region Controls.Time-->
+                <StackPanel Orientation="Horizontal" Margin="0,12,0,4" x:Name="TimeStackPanel">
                     <FontIcon Glyph="&#xE916;" Margin="0,0,4,0" />
                     <TextBlock Text="Czas pracy" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" x:Name="TimePickersStackPanel">
                     <TimePicker x:Name="BeginTimePicker" ClockIdentifier="24HourClock" Header="Godzina rozpoczęcia" TimeChanged="BeginTimePicker_TimeChanged"/>
                     <TextBlock Padding="4,25,4,0">-</TextBlock>
                     <TimePicker x:Name="EndTimePicker" ClockIdentifier="24HourClock" Header="Godzina zakończenia" TimeChanged="EndTimePicker_TimeChanged"/>
                 </StackPanel>
+                <!--#endregion-->
+                <!--#region Controls.Location-->
                 <StackPanel x:Name ="LocationStackPanel" Orientation="Horizontal" Margin="0,12,0,4">
                     <FontIcon Glyph="&#xE707;" Margin="0,0,4,0" />
                     <TextBlock Text="Lokalizacja"/>
                 </StackPanel>
                 <TextBox x:Name="LocationTextBox" LostFocus="LocationTextBox_LostFocus"/>
+                <!--#endregion-->
+                <!--#region Controls.Points-->
+                <StackPanel x:Name ="BeginPointStackPanel" Orientation="Horizontal" Margin="0,12,0,4">
+                    <FontIcon Glyph="&#xE819;" Margin="0,0,4,0" />
+                    <TextBlock Text="Punkt początkowy" />
+                </StackPanel>
+                <TextBox x:Name="BeginPointTextBox" LostFocus="BeginPointTextBox_LostFocus" />
+                <StackPanel x:Name ="EndPointStackPanel" Orientation="Horizontal" Margin="0,12,0,4">
+                    <FontIcon Glyph="&#xE81A;" Margin="0,0,4,0" />
+                    <TextBlock Text="Punkt końcowy" />
+                </StackPanel>
+                <TextBox x:Name="EndPointTextBox" LostFocus="EndPointTextBox_LostFocus" />
+                <!--#endregion-->
+                <!--#region Controls.Distance-->
+                <StackPanel x:Name ="DistanceStackPanel" Orientation="Horizontal" Margin="0,12,0,4">
+                    <FontIcon Glyph="&#xF128;" Margin="0,0,4,0" />
+                    <TextBlock Text="Przejechany dystans (km)"/>
+                </StackPanel>
+                <NumberBox x:Name="DistanceNumberBox" LostFocus="DistanceNumberBox_LostFocus"/>
+                <!--#endregion-->
+                <!--#region Controls.ParkingPrice-->
+                <StackPanel x:Name ="ParkingPriceStackPanel" Orientation="Horizontal" Margin="0,12,0,4">
+                    <FontIcon Glyph="&#xE825;" Margin="0,0,4,0" />
+                    <TextBlock Text="Cena parkingu"/>
+                </StackPanel>
+                <NumberBox x:Name="ParkingPriceNumberBox" LostFocus="ParkingPriceNumberBox_LostFocus"/>
+                <!--#endregion-->
+                <!--#region Controls.Description-->
                 <StackPanel x:Name="DescriptionStackPanel" Orientation="Horizontal" Margin="0,12,0,4">
                     <FontIcon Glyph="&#xE946;" Margin="0,0,4,0" />
                     <TextBlock Text="Opis" />
                 </StackPanel>
                 <TextBox x:Name="DescriptionTextBox" AutomationProperties.Name="multi-line TextBox" TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="True" LostFocus="DescriptionTextBox_LostFocus"/>
+                <!--#endregion-->
+                <!--#endregion-->
             </StackPanel>
         </Grid>
     </ScrollView>

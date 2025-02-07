@@ -19,9 +19,10 @@
                 <Setter Property="Margin" Value="1,20,0,4" />
             </Style.Setters>
         </Style>
+        <local:AppSettings x:Key="AppSettings" />
     </Page.Resources>
     <ScrollView Padding="36,0,36,8">
-        <StackPanel Orientation="Vertical" Spacing="{StaticResource SettingsCardSpacing}">
+        <StackPanel Orientation="Vertical" Spacing="{StaticResource SettingsCardSpacing}" DataContext="{StaticResource AppSettings}">
             <StackPanel.ChildrenTransitions>
                 <EntranceThemeTransition FromVerticalOffset="50" />
                 <RepositionThemeTransition IsStaggeringEnabled="False" />
@@ -34,28 +35,28 @@
                 <controls:SettingsCard.HeaderIcon>
                     <FontIcon Glyph="&#xE825;" />
                 </controls:SettingsCard.HeaderIcon>
-                <NumberBox x:Name="StandardSalaryNumberBox" PlaceholderText="00,00" />
+                <TextBox x:Name="StandardSalaryNumberBox" Text="{Binding StandardSalary, Mode=TwoWay}" TextChanged="TextBox_TextChanged" LostFocus="TextBox_LostFocus" InputScope="Number" />
             </controls:SettingsCard>
             
             <controls:SettingsCard Description="Podaj wysokość wynagrodzenia za 1 godzinę pracy rozliczaną jako nadgodziny w PLN" Header="Opłata za nadgodziny">
                 <controls:SettingsCard.HeaderIcon>
                     <FontIcon Glyph="&#xE823;" />
                 </controls:SettingsCard.HeaderIcon>
-                <NumberBox x:Name="OvertimeSalaryNumberBox" PlaceholderText="00,00" />
+                <TextBox x:Name="OvertimeSalaryNumberBox" Text="{Binding OvertimeSalary, Mode=TwoWay}" TextChanged="TextBox_TextChanged" LostFocus="TextBox_LostFocus" InputScope="Number" />
             </controls:SettingsCard>
 
             <controls:SettingsCard Description="Podaj wysokość wynagrodzenia za 1 godzinę urlopu w PLN" Header="Opłata za urlop">
                 <controls:SettingsCard.HeaderIcon>
                     <FontIcon Glyph="&#xE706;" />
                 </controls:SettingsCard.HeaderIcon>
-                <NumberBox x:Name="LeaveSalaryNumberBox" PlaceholderText="00,00" />
+                <TextBox x:Name="LeaveSalaryNumberBox" Text="{Binding LeaveSalary, Mode=TwoWay}" TextChanged="TextBox_TextChanged" LostFocus="TextBox_LostFocus" InputScope="Number" />
             </controls:SettingsCard>
 
             <controls:SettingsCard Description="Podaj koszt 1 km" Header="Opłata za kilometrówkę">
                 <controls:SettingsCard.HeaderIcon>
                     <FontIcon Glyph="&#xE804;" />
                 </controls:SettingsCard.HeaderIcon>
-                <NumberBox x:Name="MileageNumberBox" PlaceholderText="0,00" />
+                <TextBox x:Name="MileageNumberBox" Text="{Binding MileageSalary, Mode=TwoWay}" TextChanged="TextBox_TextChanged" LostFocus="TextBox_LostFocus" InputScope="Number" />
             </controls:SettingsCard>
             
             <!-- APPERANCE AND DATA -->

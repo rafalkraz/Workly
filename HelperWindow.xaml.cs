@@ -26,7 +26,7 @@ public sealed partial class HelperWindow : WinUIEx.WindowEx
         Add,
         Edit
     }
-    public HelperWindow(IDataViewPage parentPage, Entry entry, Action action)
+    public HelperWindow(IDataViewPage parentPage, object entry, Action action)
     {
         this.InitializeComponent();
         this.ExtendsContentIntoTitleBar = true;

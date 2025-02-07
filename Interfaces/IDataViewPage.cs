@@ -1,9 +1,8 @@
 ﻿using WorkLog.Structure;
 
-namespace WorkLog.Interfaces
+namespace WorkLog.Interfaces;
+
+public interface IDataViewPage
 {
-    public interface IDataViewPage
-    {
-        void RefreshEntryList(string year = null, Month month = null);
-    }
+    void RefreshEntryList(string year = null, Month month = null);
 }

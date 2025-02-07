@@ -9,7 +9,7 @@ using Windows.UI.StartScreen;
 
 namespace WorkLog.Structure;
 
-public class EntryMileage(int ID, int type, DateOnly date, string beginPoint, string endPoint, string purpose, int distance, float parkingPrice)
+public class EntryMileage(int ID, int type, DateOnly date, string beginPoint, string endPoint, string description, int distance, double parkingPrice)
 {
     // Types
     // 0 - standard
@@ -20,14 +20,14 @@ public class EntryMileage(int ID, int type, DateOnly date, string beginPoint, st
     public DateOnly Date { get; set; } = date;
     public string BeginPoint { get; set; } = beginPoint;
     public string EndPoint { get; set; } = endPoint;
-    public string Purpose { get; set; } = purpose;
+    public string Description { get; set; } = description;
     public int Distance { get; set; } = distance;
-    public float ParkingPrice { get; set; } = parkingPrice;
-    public string PointsRange => BeginPoint + " ➔ " + EndPoint;
+    public double ParkingPrice { get; set; } = parkingPrice;
+    public string PointsRange => Type == 0 ? BeginPoint + " ➔ " + EndPoint : BeginPoint;
     public string FontIcon => Type switch
     {
         0 => "",
-        1 => "\uE726",
+        1 => "\uE707",
         _ => throw new Exception(),
     };
 }

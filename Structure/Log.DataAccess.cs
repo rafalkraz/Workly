@@ -35,7 +35,7 @@ public partial class Log
                 "Date TEXT NOT NULL, " +
                 "BeginPoint TEXT NOT NULL, " +
                 "EndPoint TEXT," +
-                "Purpose TEXT," +
+                "Description TEXT," +
                 "Distance TEXT," +
                 "ParkingPrice TEXT)";
 
@@ -108,11 +108,11 @@ public partial class Log
                     var entry = new EntryMileage(
                         int.Parse(query["ID"].ToString()),
                         int.Parse(query["Type"].ToString()),
-                        DateOnly.Parse(query["Date"].ToString()),
+                        DateOnly.Parse(DateTime.Parse(query["Date"].ToString()).ToShortDateString()),
                         query["BeginPoint"].ToString(),
                         query["EndPoint"].ToString(),
-                        query["Purpose"].ToString(),
-                        int.Parse(query["Disatnce"].ToString()),
+                        query["Description"].ToString(),
+                        int.Parse(query["Distance"].ToString()),
                         float.Parse(query["ParkingPrice"].ToString())
                     );
                     result.Add(entry);
@@ -158,7 +158,7 @@ public partial class Log
 
                 var selectCommand = new SqliteCommand();
                 selectCommand.Connection = db;
-                selectCommand.CommandText = $"SELECT DISTINCT strftime('%m', {column}) from {table} WHERE strftime('%Y', BeginTime) = @year;";
+                selectCommand.CommandText = $"SELECT DISTINCT strftime('%m', {column}) from {table} WHERE strftime('%Y', {column}) = @year;";
                 selectCommand.Parameters.AddWithValue("@year", year);
 
                 var query = selectCommand.ExecuteReader();
@@ -190,19 +190,19 @@ public partial class Log
 
         }
 
-        internal static bool AddDataToMileage(int type, string date, string beginPoint, string endPoint, string purpose, string distance, string parkingPrice)
+        internal static bool AddDataToMileage(int type, string date, string beginPoint, string endPoint, string description, string distance, string parkingPrice)
         {
             using var db = new SqliteConnection($"Filename={dbPath}");
             db.Open();
 
             var insertCommand = new SqliteCommand();
             insertCommand.Connection = db;
-            insertCommand.CommandText = "INSERT INTO Mileage VALUES (NULL, @type, @date, @beginPoint, @endPoint, @purpose, @distance, @parkingPrice);";
+            insertCommand.CommandText = "INSERT INTO Mileage VALUES (NULL, @type, @date, @beginPoint, @endPoint, @description, @distance, @parkingPrice);";
             insertCommand.Parameters.AddWithValue("@type", type);
             insertCommand.Parameters.AddWithValue("@date", date);
             insertCommand.Parameters.AddWithValue("@beginPoint", beginPoint);
             insertCommand.Parameters.AddWithValue("@endPoint", endPoint);
-            insertCommand.Parameters.AddWithValue("@purpose", purpose);
+            insertCommand.Parameters.AddWithValue("@description", description);
             insertCommand.Parameters.AddWithValue("@distance", distance);
             insertCommand.Parameters.AddWithValue("@parkingPrice", parkingPrice);
 
@@ -231,20 +231,20 @@ public partial class Log
 
         }
 
-        internal static bool EditDataInMileage(int ID, int newType, string newDate, string newBeginPoint, string newEndPoint, string newPurpose, string newDistance, string newParkingPrice)
+        internal static bool EditDataInMileage(int ID, int newType, string newDate, string newBeginPoint, string newEndPoint, string newDescription, string newDistance, string newParkingPrice)
         {
             using var db = new SqliteConnection($"Filename={dbPath}");
             db.Open();
 
             var insertCommand = new SqliteCommand();
             insertCommand.Connection = db;
-            insertCommand.CommandText = "UPDATE Mileage SET Type = @newType, Date = @newDate, BeginPoint = @newBeginPoint, EndPoint = @newEndPoint, Purpose = @newPurpose, Distance = @newDistance, ParkingPrice = @newParkingPrice WHERE ID = @ID;";
+            insertCommand.CommandText = "UPDATE Mileage SET Type = @newType, Date = @newDate, BeginPoint = @newBeginPoint, EndPoint = @newEndPoint, Description = @newDescription, Distance = @newDistance, ParkingPrice = @newParkingPrice WHERE ID = @ID;";
             insertCommand.Parameters.AddWithValue("@ID", ID);
             insertCommand.Parameters.AddWithValue("@newType", newType);
             insertCommand.Parameters.AddWithValue("@newDate", newDate);
             insertCommand.Parameters.AddWithValue("@newBeginPoint", newBeginPoint);
             insertCommand.Parameters.AddWithValue("@newEndPoint", newEndPoint);
-            insertCommand.Parameters.AddWithValue("@newPurpose", newPurpose);
+            insertCommand.Parameters.AddWithValue("@newDescription", newDescription);
             insertCommand.Parameters.AddWithValue("@newDistance", newDistance);
             insertCommand.Parameters.AddWithValue("@newParkingPrice", newParkingPrice);
 

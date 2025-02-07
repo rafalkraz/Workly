@@ -15,6 +15,7 @@
         <Grid.Resources>
             <CollectionViewSource x:Name="EntriesCollection" IsSourceGrouped="True"/>
         </Grid.Resources>
+        <!--#region VisualStates-->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="CompactVisualState">
@@ -82,8 +83,11 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+        <!--#endregion-->
+        <!--#region Content-->
         <SplitView x:Name="RootSplitView" PaneBackground="{ThemeResource SystemFillColorNeutralBackground}"
        IsPaneOpen="False" CompactPaneLength="32" DisplayMode="Inline">
+            <!--#region Content.LeftSide-->
             <SplitView.Pane>
                 <Grid x:Name="PaneGrid" Padding="20,24,20,12">
                     <Grid.RowDefinitions>
@@ -119,9 +123,9 @@
                                 </GroupStyle>
                             </ListView.GroupStyle>
                             <ListView.ItemTemplate>
-                                <DataTemplate x:DataType="structure:Entry">
+                                <DataTemplate x:DataType="structure:EntryMileage">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{x:Bind DurationRange}" Margin="0,0,10,0"/>
+                                        <TextBlock Text="{x:Bind PointsRange}" Margin="0,0,10,0"/>
                                         <FontIcon Glyph="{x:Bind FontIcon}" />
                                     </StackPanel>
                                 </DataTemplate>
@@ -130,6 +134,8 @@
                     </ScrollView>
                 </Grid>
             </SplitView.Pane>
+            <!--#endregion-->
+            <!--#region RightSide-->
             <Grid Background="{ThemeResource FlyoutBackgroundThemeBrush}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" MaxHeight="30"/>
@@ -182,22 +188,40 @@
                             <TextBlock x:Name="DateTextBox"  Text="1 stycznia 2024" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
                             <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
-                                <FontIcon Glyph="&#xE916;" Margin="0,0,4,0" />
-                                <TextBlock Text="Czas pracy" />
-                            </StackPanel>
-                            <TextBlock x:Name="DurationRangeTextBox" Text="09:00 - 13:00" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
-
-                            <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
                                 <FontIcon Glyph="&#xE8EC;" Margin="0,0,4,0" />
                                 <TextBlock Text="Rodzaj" />
                             </StackPanel>
                             <TextBlock x:Name="TypeTextBlock" Text="Standardowy" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+
+                            <StackPanel x:Name ="BeginPointStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
+                                <FontIcon Glyph="&#xE819;" Margin="0,0,4,0" />
+                                <TextBlock Text="Punkt początkowy" />
+                            </StackPanel>
+                            <TextBlock x:Name="BeginPointTextBlock" Text="" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+
+                            <StackPanel x:Name ="EndPointStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
+                                <FontIcon Glyph="&#xE81A;" Margin="0,0,4,0" />
+                                <TextBlock Text="Punkt końcowy" />
+                            </StackPanel>
+                            <TextBlock x:Name="EndPointTextBlock" Text="" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
                             <StackPanel x:Name ="LocationStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
                                 <FontIcon Glyph="&#xE707;" Margin="0,0,4,0" />
                                 <TextBlock Text="Lokalizacja" />
                             </StackPanel>
                             <TextBlock x:Name="LocationTextBlock" Text="IFPiLM" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+
+                            <StackPanel x:Name ="DistanceStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
+                                <FontIcon Glyph="&#xF128;" Margin="0,0,4,0" />
+                                <TextBlock Text="Przejechany dystans" />
+                            </StackPanel>
+                            <TextBlock x:Name="DistanceTextBlock" Text="0 km" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+
+                            <StackPanel x:Name ="ParkingPriceStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
+                                <FontIcon Glyph="&#xE825;" Margin="0,0,4,0" />
+                                <TextBlock Text="Opłata za parking" />
+                            </StackPanel>
+                            <TextBlock x:Name="ParkingPriceTextBlock" Text="0 PLN" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
                             <StackPanel x:Name="DescriptionStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
                                 <FontIcon Glyph="&#xE946;" Margin="0,0,4,0" />
@@ -208,6 +232,8 @@
                     </ScrollView>
                 </Grid>
             </Grid>
+            <!--#endregion-->
         </SplitView>
+        <!--#endregion-->
     </Grid>
 </Page>
