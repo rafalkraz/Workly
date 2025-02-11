@@ -96,7 +96,7 @@
                         <controls:SettingsCard.Description>
                             <TextBlock Text="Wybierz plik bazy danych, z którego chcesz wczytać dane" />
                         </controls:SettingsCard.Description>
-                        <Button Content="Wybierz plik"/>
+                        <Button x:Name="ButtonImportDB" Content="Wybierz plik" Click="ButtonImportDB_Click" />
                     </controls:SettingsCard>
                     <controls:SettingsCard
                             x:Name="aSpatialAudioCard"
@@ -104,7 +104,7 @@
                         <controls:SettingsCard.Description>
                             <TextBlock Text="Wybierz gdzie chcesz zapisać plik bazy danych" />
                         </controls:SettingsCard.Description>
-                        <Button Content="Wybierz plik"/>
+                        <Button x:Name="ButtonExportDB" Content="Wybierz plik" Click="ButtonExportDB_Click" />
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>

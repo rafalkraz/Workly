@@ -92,14 +92,12 @@ internal class AppSettings : INotifyPropertyChanged
         if (localSettings.Values.ContainsKey("MileageSalary"))
         {
             MileageSalary = Convert.ToDouble(localSettings.Values["MileageSalary"]);
-            System.Diagnostics.Debug.WriteLine($"MileageSalary loaded: {MileageSalary}");
         }
     }
 
     private void SaveToLocalSettings(string keyName, double value)
     {
         localSettings.Values[keyName] = value;
-        System.Diagnostics.Debug.WriteLine($"saved: {value}");
     }
 
 

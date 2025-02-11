@@ -85,8 +85,20 @@
         </VisualStateManager.VisualStateGroups>
         <!--#endregion-->
         <!--#region Content-->
-        <SplitView x:Name="RootSplitView" PaneBackground="{ThemeResource SystemFillColorNeutralBackground}"
-       IsPaneOpen="False" CompactPaneLength="32" DisplayMode="Inline">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <InfoBar
+            x:Name="FinancesInfoBar"
+            Grid.Row="0"
+            IsOpen="False"
+            Severity="Warning"
+            Title="Uzupełnij informacje o rozliczeniach"
+            Message="Dopóki nie uzupełnisz tych informacji w ustawieniach aplikacji, wszystkie wpisy, które dodajesz nie będą uwzględniane w Kalkulatorze wynagrodzenia." />
+            <SplitView x:Name="RootSplitView" PaneBackground="{ThemeResource SystemFillColorNeutralBackground}"
+       IsPaneOpen="False" CompactPaneLength="32" DisplayMode="Inline" Grid.Row="1">
             <!--#region Content.LeftSide-->
             <SplitView.Pane>
                 <Grid x:Name="PaneGrid" Padding="20,24,20,12">
@@ -234,6 +246,7 @@
             </Grid>
             <!--#endregion-->
         </SplitView>
+        </Grid>
         <!--#endregion-->
     </Grid>
 </Page>

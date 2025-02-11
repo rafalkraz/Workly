@@ -48,12 +48,12 @@ public static partial class Log
         ///</returns>
         public static bool AddEntry(Entry entry)
         {
-            return DataAccess.AddDataToEntries(entry.Type, entry.BeginTime.ToString("yyyy-MM-dd HH:mm:ss"), entry.EndTime.ToString("yyyy-MM-dd HH:mm:ss"), entry.Localization, entry.Description);
+            return DataAccess.AddDataToEntries(entry.Type, entry.BeginTime.ToString("yyyy-MM-dd HH:mm:ss"), entry.EndTime.ToString("yyyy-MM-dd HH:mm:ss"), entry.Localization, entry.Description, entry.Earning);
         }
 
         public static bool EditEntry(Entry entry)
         {
-            return DataAccess.EditDataInEntries(entry.EntryID, entry.Type, entry.BeginTime.ToString("yyyy-MM-dd HH:mm:ss"), entry.EndTime.ToString("yyyy-MM-dd HH:mm:ss"), entry.Localization, entry.Description);
+            return DataAccess.EditDataInEntries(entry.EntryID, entry.Type, entry.BeginTime.ToString("yyyy-MM-dd HH:mm:ss"), entry.EndTime.ToString("yyyy-MM-dd HH:mm:ss"), entry.Localization, entry.Description, entry.Earning);
         }
 
         public static bool DeleteEntry(Entry entry)

@@ -30,6 +30,11 @@ public sealed partial class MileagePage : Page, IDataViewPage
     {
         Page_SizeChanged(null, null);
         RefreshEntryList();
+        var appSettings = new AppSettings();
+        if (appSettings.MileageSalary == 0)
+        {
+            FinancesInfoBar.IsOpen = true;
+        }
     }
 
     public void RefreshEntryList(string year = null, Month month = null)
@@ -228,27 +233,8 @@ public sealed partial class MileagePage : Page, IDataViewPage
 
     private async void EditEntryButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!editLock && !isEntryAddVisible)
-        {
-            h_window = new HelperWindow(this, (EntryMileage)MonthEntriesListView.SelectedItem, HelperWindow.Action.Edit);
-            h_window.Activate();
-        }
-        else
-        {
-            ContentDialog dialog = new()
-            {
-                XamlRoot = this.XamlRoot,
-                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
-                PrimaryButtonText = "OK",
-                DefaultButton = ContentDialogButton.Primary
-            };
-            if (editLock) { dialog.Title = "Zakoñcz najpierw edycjê poprzedniego wpisu!"; }
-            else { dialog.Title = "Zakoñcz najpierw dodawanie nowego wpisu!"; }
-
-
-            var result = await dialog.ShowAsync();
-        }
-
+        h_window = new HelperWindow(this, (EntryMileage)MonthEntriesListView.SelectedItem, HelperWindow.Action.Edit);
+        h_window.Activate();
     }
 
     private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -277,26 +263,10 @@ public sealed partial class MileagePage : Page, IDataViewPage
         RootSplitView.IsPaneOpen = true;
     }
 
-    private async void AddEntryButton_Click(object sender, RoutedEventArgs e)
+    private void AddEntryButton_Click(object sender, RoutedEventArgs e)
     {
-        if (!editLock && !isEntryAddVisible)
-        {
-            h_window = new HelperWindow(this, (EntryMileage)MonthEntriesListView.SelectedItem, HelperWindow.Action.Add);
-            h_window.Activate();
-        }
-        else
-        {
-            ContentDialog dialog = new ContentDialog();
-
-            dialog.XamlRoot = this.XamlRoot;
-            dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
-            if (editLock) { dialog.Title = "Zakoñcz najpierw edycjê poprzedniego wpisu!"; }
-            else { dialog.Title = "Zakoñcz najpierw dodawanie nowego wpisu!"; }
-            dialog.PrimaryButtonText = "OK";
-            dialog.DefaultButton = ContentDialogButton.Primary;
-
-            var result = await dialog.ShowAsync();
-        }
+        h_window = new HelperWindow(this, (EntryMileage)MonthEntriesListView.SelectedItem, HelperWindow.Action.Add);
+        h_window.Activate();
     }
 
     private async void DeleteEntryButton_Click(object sender, RoutedEventArgs e)

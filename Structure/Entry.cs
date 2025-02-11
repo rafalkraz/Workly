@@ -9,7 +9,7 @@ using Windows.UI.StartScreen;
 
 namespace WorkLog.Structure;
 
-public class Entry(int entryID, int type, DateTime beginTime, DateTime endTime, string localization, string description)
+public class Entry(int entryID, int type, DateTime beginTime, DateTime endTime, string localization, string description, double earning)
 {
     // Types
     // 0 - standard
@@ -23,6 +23,7 @@ public class Entry(int entryID, int type, DateTime beginTime, DateTime endTime, 
     public DateTime EndTime { get; set; } = endTime;
     public string Localization { get; set; } = localization;
     public string Description { get; set; } = description;
+    public double Earning { get; set; } = earning;
     public DateOnly Date = DateOnly.Parse(beginTime.ToShortDateString());
     public string Duration
     {

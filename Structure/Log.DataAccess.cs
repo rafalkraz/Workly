@@ -1,25 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
+using Microsoft.UI.Xaml.Controls;
 using Windows.Storage;
 
 namespace WorkLog.Structure;
 public partial class Log
 {
+    public static readonly StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+    public static readonly string dbName = "Worklog.db";
+
     private static class DataAccess
     {
-        private static readonly string workLogDataPath = SystemDataPaths.GetDefault().ProgramData + "\\WorkLog";
-        private static readonly string dbName = "Worklog.db";
-        private static readonly string dbPath = workLogDataPath + "\\" + dbName;
+        private static StorageFile dbFile;
+
+        internal static void SetFirstStartupStatus()
+        {
+            if (!File.Exists(localFolder.Path + "\\" + dbName)) ; //IsFirstStartup = true;
+        }
 
         internal static async Task<bool> InitializeDatabase()
         {
-            
-            var workLogStorageFolder = await StorageFolder.GetFolderFromPathAsync(workLogDataPath);
-            await workLogStorageFolder.CreateFileAsync(dbName, CreationCollisionOption.OpenIfExists);
-            using var db = new SqliteConnection($"Filename={dbPath}");
+            dbFile = await localFolder.CreateFileAsync(dbName, CreationCollisionOption.OpenIfExists);
+            using var db = new SqliteConnection($"Filename={dbFile.Path}");
             db.Open();
             var entriesTableCreationCommand = "CREATE TABLE IF NOT " +
                 "EXISTS Entries (EntryID INTEGER PRIMARY KEY NOT NULL, " +
@@ -27,7 +33,8 @@ public partial class Log
                 "BeginTime TEXT NOT NULL, " +
                 "EndTime TEXT NOT NULL," +
                 "Localization TEXT," +
-                "Description TEXT)";
+                "Description TEXT," +
+                "Earning TEXT)";
 
             var mileageTableCreationCommand = "CREATE TABLE IF NOT " +
                 "EXISTS Mileage (ID INTEGER PRIMARY KEY NOT NULL, " +
@@ -52,7 +59,6 @@ public partial class Log
                 return false;
             }
             return true;
-
         }
 
         
@@ -60,7 +66,7 @@ public partial class Log
         internal static List<Entry> GetEntriesDataFromMonth(string year, string month)
         {
             var result = new List<Entry>();
-            using (var db = new SqliteConnection($"Filename={dbPath}"))
+            using (var db = new SqliteConnection($"Filename={dbFile.Path}"))
             {
                 db.Open();
 
@@ -80,7 +86,8 @@ public partial class Log
                         DateTime.Parse(query["BeginTime"].ToString()),
                         DateTime.Parse(query["EndTime"].ToString()),
                         query["Localization"].ToString(),
-                        query["Description"].ToString()
+                        query["Description"].ToString(),
+                        double.Parse(query["Earning"].ToString(), CultureInfo.InvariantCulture)
                     );
                     result.Add(entry);
                 }
@@ -91,7 +98,7 @@ public partial class Log
         internal static List<EntryMileage> GetMileageDataFromMonth(string year, string month)
         {
             var result = new List<EntryMileage>();
-            using (var db = new SqliteConnection($"Filename={dbPath}"))
+            using (var db = new SqliteConnection($"Filename={dbFile.Path}"))
             {
                 db.Open();
 
@@ -124,7 +131,7 @@ public partial class Log
         internal static List<string> GetYears(string table)
         {
             var years = new List<string>();
-            using (var db = new SqliteConnection($"Filename={dbPath}"))
+            using (var db = new SqliteConnection($"Filename={dbFile.Path}"))
             {
                 db.Open();
 
@@ -148,7 +155,7 @@ public partial class Log
         internal static List<string> GetMonths(string year, string table)
         {
             var months = new List<string>();
-            using (var db = new SqliteConnection($"Filename={dbPath}"))
+            using (var db = new SqliteConnection($"Filename={dbFile.Path}"))
             {
                 db.Open();
 
@@ -171,19 +178,20 @@ public partial class Log
             return months;
         }
 
-        internal static bool AddDataToEntries(int type, string beginTime, string endTime, string localization, string description)
+        internal static bool AddDataToEntries(int type, string beginTime, string endTime, string localization, string description, double earning)
         {
-            using var db = new SqliteConnection($"Filename={dbPath}");
+            using var db = new SqliteConnection($"Filename={dbFile.Path}");
             db.Open();
 
             var insertCommand = new SqliteCommand();
             insertCommand.Connection = db;
-            insertCommand.CommandText = "INSERT INTO Entries VALUES (NULL, @type, @beginTime, @endTime, @localization, @description);";
+            insertCommand.CommandText = "INSERT INTO Entries VALUES (NULL, @type, @beginTime, @endTime, @localization, @description, @earning);";
             insertCommand.Parameters.AddWithValue("@type", type);
             insertCommand.Parameters.AddWithValue("@beginTime", beginTime);
             insertCommand.Parameters.AddWithValue("@endTime", endTime);
             insertCommand.Parameters.AddWithValue("@localization", localization);
             insertCommand.Parameters.AddWithValue("@description", description);
+            insertCommand.Parameters.AddWithValue("@earning", earning);
 
             insertCommand.ExecuteReader();
             return true;
@@ -192,7 +200,7 @@ public partial class Log
 
         internal static bool AddDataToMileage(int type, string date, string beginPoint, string endPoint, string description, string distance, string parkingPrice)
         {
-            using var db = new SqliteConnection($"Filename={dbPath}");
+            using var db = new SqliteConnection($"Filename={dbFile.Path}");
             db.Open();
 
             var insertCommand = new SqliteCommand();
@@ -211,20 +219,21 @@ public partial class Log
 
         }
 
-        internal static bool EditDataInEntries(int entryID, int newType, string newBeginTime, string newEndTime, string newLocalization, string newDescription)
+        internal static bool EditDataInEntries(int entryID, int newType, string newBeginTime, string newEndTime, string newLocalization, string newDescription, double newEarning)
         {
-            using var db = new SqliteConnection($"Filename={dbPath}");
+            using var db = new SqliteConnection($"Filename={dbFile.Path}");
             db.Open();
 
             var insertCommand = new SqliteCommand();
             insertCommand.Connection = db;
-            insertCommand.CommandText = "UPDATE Entries SET Type = @newType, BeginTime = @newBeginTime, EndTime = @newEndTime, Localization = @newLocalization, Description = @newDescription WHERE EntryID = @entryID;";
+            insertCommand.CommandText = "UPDATE Entries SET Type = @newType, BeginTime = @newBeginTime, EndTime = @newEndTime, Localization = @newLocalization, Description = @newDescription, Earning = @newEarning WHERE EntryID = @entryID;";
             insertCommand.Parameters.AddWithValue("@entryID", entryID);
             insertCommand.Parameters.AddWithValue("@newType", newType);
             insertCommand.Parameters.AddWithValue("@newBeginTime", newBeginTime);
             insertCommand.Parameters.AddWithValue("@newEndTime", newEndTime);
             insertCommand.Parameters.AddWithValue("@newLocalization", newLocalization);
             insertCommand.Parameters.AddWithValue("@newDescription", newDescription);
+            insertCommand.Parameters.AddWithValue("@newEarning", newEarning);
 
             insertCommand.ExecuteReader();
             return true;
@@ -233,7 +242,7 @@ public partial class Log
 
         internal static bool EditDataInMileage(int ID, int newType, string newDate, string newBeginPoint, string newEndPoint, string newDescription, string newDistance, string newParkingPrice)
         {
-            using var db = new SqliteConnection($"Filename={dbPath}");
+            using var db = new SqliteConnection($"Filename={dbFile.Path}");
             db.Open();
 
             var insertCommand = new SqliteCommand();
@@ -255,7 +264,7 @@ public partial class Log
 
         internal static bool DeleteDataFromEntries(int entryID)
         {
-            using var db = new SqliteConnection($"Filename={dbPath}");
+            using var db = new SqliteConnection($"Filename={dbFile.Path}");
             db.Open();
 
             var cmd = new SqliteCommand
@@ -270,7 +279,7 @@ public partial class Log
 
         internal static bool DeleteDataFromMileage(int ID)
         {
-            using var db = new SqliteConnection($"Filename={dbPath}");
+            using var db = new SqliteConnection($"Filename={dbFile.Path}");
             db.Open();
 
             var cmd = new SqliteCommand

@@ -13,7 +13,14 @@
             <StackPanel>
                 <!--#region Warnings-->
                 <InfoBar
-                x:Name="MoneyInfoBar"
+                x:Name="MoneyInfoBar1"
+                IsOpen="False"
+                IsClosable="True"
+                Severity="Informational"
+                Title="Ponowne obliczenie należności"
+                Message="Edycja tego wpisu spowoduje ponowne obliczenie należności za czas pracy zgodnie z aktualnym przelicznikiem w ustawieniach aplikacji" />
+                <InfoBar
+                x:Name="MoneyInfoBar2"
                 IsOpen="False"
                 IsClosable="True"
                 Severity="Informational"

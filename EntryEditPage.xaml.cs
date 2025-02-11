@@ -28,6 +28,10 @@ public sealed partial class EntryEditPage : Page
             EntryTypeComboBox.ItemsSource = entryTypes;
             editedEntry = (Entry)entry;
             editedType = 0;
+            if (entry != null)
+            {
+                MoneyInfoBar1.IsOpen = true;
+            }
         }
         else if (parentPage.ToString() == "WorkLog.MileagePage") {
             EntryTypeComboBox.ItemsSource = mileageEntryTypes;
@@ -40,7 +44,7 @@ public sealed partial class EntryEditPage : Page
             }
             if (entry != null && editedMileage.Type == 0)
             {
-                MoneyInfoBar.IsOpen = true;
+                MoneyInfoBar2.IsOpen = true;
             }
         }
         
@@ -300,16 +304,34 @@ public sealed partial class EntryEditPage : Page
                         LocationTextBox.Text = "";
                         DescriptionTextBox.Text = "";
                     }
+                    var earning = 0.0;
+                    var appSettings = new AppSettings();
+                    var time = TimeSpan.FromMinutes((EndTimePicker.Time - BeginTimePicker.Time).TotalMinutes).TotalMinutes;
+                    switch (EntryTypeComboBox.SelectedIndex)
+                    {
+                        case 0:
+                            earning = appSettings.StandardSalary / 60 * time;
+                            break;
+                        case 1:
+                            earning = appSettings.OvertimeSalary / 60 * time;
+                            break;
+                        case 2:
+                            earning = appSettings.LeaveSalary / 60 * time;
+                            break;
+                        default:
+                            break;
+                    }
+                    earning = Math.Round(earning, 2);
                     if (editedEntry == null)
                     {
-                        var newEntry = new Entry(0, EntryTypeComboBox.SelectedIndex, beginTime, endTime, LocationTextBox.Text, DescriptionTextBox.Text);
+                        var newEntry = new Entry(0, EntryTypeComboBox.SelectedIndex, beginTime, endTime, LocationTextBox.Text, DescriptionTextBox.Text, earning);
                         var addResult = myLog.AddEntry(newEntry);
                         if (addResult) SavingFinished(date);
                         else ErrorInfoBar.IsOpen = true;
                     }
                     else
                     {
-                        var tempEntry = new Entry(editedEntry.EntryID, EntryTypeComboBox.SelectedIndex, beginTime, endTime, LocationTextBox.Text, DescriptionTextBox.Text);
+                        var tempEntry = new Entry(editedEntry.EntryID, EntryTypeComboBox.SelectedIndex, beginTime, endTime, LocationTextBox.Text, DescriptionTextBox.Text, earning);
                         var editResult = myLog.EditEntry(tempEntry);
                         if (editResult) SavingFinished(date);
                         else ErrorInfoBar.IsOpen = true;

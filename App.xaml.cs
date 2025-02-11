@@ -4,6 +4,8 @@ namespace WorkLog;
 
 public partial class App : Application
 {
+    public static MainWindow MainWindow = new();
+
     public App()
     {
         InitializeComponent();
@@ -12,10 +14,7 @@ public partial class App : Application
 
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        m_window = new MainWindow();
-        m_window.Activate();
-        m_window.ExtendsContentIntoTitleBar = true;
+        MainWindow.Activate();
+        MainWindow.ExtendsContentIntoTitleBar = true;
     }
-
-    private Window m_window;
 }

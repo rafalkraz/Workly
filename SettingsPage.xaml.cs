@@ -1,8 +1,11 @@
-using System.ComponentModel;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
-using System.Runtime.CompilerServices;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using WorkLog.Structure;
 
 namespace WorkLog;
 
@@ -60,4 +63,47 @@ public sealed partial class SettingsPage : Page
         }
     }
 
+    private async void ButtonImportDB_Click(object sender, RoutedEventArgs e)
+    {
+        var senderButton = sender as Button;
+        senderButton.IsEnabled = false;
+        var window = App.MainWindow;
+        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+        var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
+        WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hWnd);
+        openPicker.FileTypeFilter.Add(".db");
+
+        var file = await openPicker.PickSingleFileAsync();
+        if (file != null)
+        {
+            await file.CopyAsync(Log.localFolder, Log.dbName, NameCollisionOption.ReplaceExisting);
+        }
+        else
+        {
+
+        }
+        senderButton.IsEnabled = true;
+
+    }
+
+    private async void ButtonExportDB_Click(object sender, RoutedEventArgs e)
+    {
+        var senderButton = sender as Button;
+        senderButton.IsEnabled = false;
+        FileSavePicker savePicker = new Windows.Storage.Pickers.FileSavePicker();
+
+        var window = App.MainWindow;
+        var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+        WinRT.Interop.InitializeWithWindow.Initialize(savePicker, hWnd);
+
+        savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+        savePicker.FileTypeChoices.Add("Plik bazy danych", new List<string>() { ".db" });
+        savePicker.SuggestedFileName = "Worklog-" + DateTime.Now.ToString("yyyy-MM-dd") + ".db";
+
+        StorageFile destinationFile = await savePicker.PickSaveFileAsync();
+        StorageFile dbFile = await Log.localFolder.GetFileAsync(Log.dbName);
+        await dbFile.CopyAndReplaceAsync(destinationFile);
+   
+        senderButton.IsEnabled = true;
+    }
 }

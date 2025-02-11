@@ -85,137 +85,150 @@
         </VisualStateManager.VisualStateGroups>
         <!--#endregion-->
         <!--#region Content-->
-        <SplitView x:Name="RootSplitView" PaneBackground="{ThemeResource SystemFillColorNeutralBackground}"
-           IsPaneOpen="False" CompactPaneLength="32" DisplayMode="Inline">
-            <!--#region Content.LeftSide-->
-            <SplitView.Pane>
-                <Grid x:Name="PaneGrid" Padding="20,24,20,12">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" MinHeight="55" MaxHeight="80" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <InfoBar
+                x:Name="FinancesInfoBar"
+                Grid.Row="0"
+                IsOpen="False"
+                Severity="Warning"
+                Title="Uzupełnij informacje o rozliczeniach"
+                Message="Dopóki nie uzupełnisz tych informacji w ustawieniach aplikacji, wszystkie wpisy, które dodajesz nie będą uwzględniane w Kalkulatorze wynagrodzenia." />
+            <SplitView x:Name="RootSplitView" PaneBackground="{ThemeResource SystemFillColorNeutralBackground}"
+            IsPaneOpen="False" CompactPaneLength="32" DisplayMode="Inline" Grid.Row="1">
+                <!--#region Content.LeftSide-->
+                <SplitView.Pane>
+                    <Grid x:Name="PaneGrid" Padding="20,24,20,12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" MinHeight="55" MaxHeight="80" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
 
-                    <RelativePanel Grid.Row="0" x:Name="EntryListDetailsStackPanel">
-                        <StackPanel x:Name="DateChooseStackPanel"  Orientation="Horizontal">
-                            <ComboBox x:Name="YearSelectionComboBox" Width="80" SelectionChanged="YearSelectionComboBox_SelectionChanged" Margin="0,0,4,0"/>
-                            <ComboBox x:Name="MonthSelectionComboBox" Width="200" SelectionChanged="MonthSelectionComboBox_SelectionChanged"/>
-                        </StackPanel>
-                        <Button x:Name="AddEntryButton" Style="{StaticResource AccentButtonStyle}" RelativePanel.AlignRightWithPanel="True" Click="AddEntryButton_Click">
+                        <RelativePanel Grid.Row="0" x:Name="EntryListDetailsStackPanel">
+                            <StackPanel x:Name="DateChooseStackPanel"  Orientation="Horizontal">
+                                <ComboBox x:Name="YearSelectionComboBox" Width="80" SelectionChanged="YearSelectionComboBox_SelectionChanged" Margin="0,0,4,0"/>
+                                <ComboBox x:Name="MonthSelectionComboBox" Width="200" SelectionChanged="MonthSelectionComboBox_SelectionChanged"/>
+                            </StackPanel>
+                            <Button x:Name="AddEntryButton" Style="{StaticResource AccentButtonStyle}" RelativePanel.AlignRightWithPanel="True" Click="AddEntryButton_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon x:Name="AddEntryButtonFontIcon" Glyph="&#xE710;" Margin="0,0,4,0"/>
+                                    <TextBlock x:Name="AddEntryButtonTextBlock">Dodaj nowy wpis</TextBlock>
+                                </StackPanel>
+                            </Button>
+                        </RelativePanel>
+                        <TextBlock Grid.Row="1" x:Name="NoEntriesTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">Brak wpisów</TextBlock>
+                        <ScrollView Grid.Row="1" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+                            <!-- LIST VIEW -->
+                            <ListView x:Name="MonthEntriesListView" ItemsSource="{Binding Source={StaticResource EntriesCollection}}" SelectionChanged="MonthEntriesListView_SelectionChanged" ItemClick="MonthEntriesListView_ItemClick" IsItemClickEnabled="True">
+                                <ListView.GroupStyle>
+                                    <GroupStyle>
+                                        <GroupStyle.HeaderTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Key}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </GroupStyle.HeaderTemplate>
+                                    </GroupStyle>
+                                </ListView.GroupStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="structure:Entry">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{x:Bind DurationRange}" Margin="0,0,10,0"/>
+                                            <FontIcon Glyph="{x:Bind FontIcon}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollView>
+                    </Grid>
+                </SplitView.Pane>
+                <!--#endregion-->
+                <!--#region RightSide-->
+                <Grid Background="{ThemeResource FlyoutBackgroundThemeBrush}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" MaxHeight="30"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Padding="8,8,0,0">
+                        <Button x:Name="AllEntriesButton" Click="AllEntriesButton_Click" Visibility="Visible">
                             <StackPanel Orientation="Horizontal">
-                                <FontIcon x:Name="AddEntryButtonFontIcon" Glyph="&#xE710;" Margin="0,0,4,0"/>
-                                <TextBlock x:Name="AddEntryButtonTextBlock">Dodaj nowy wpis</TextBlock>
+                                <FontIcon Glyph="&#xE72B;" Margin="0,0,4,0"/>
+                                <TextBlock>Wszystkie wpisy</TextBlock>
                             </StackPanel>
                         </Button>
-                    </RelativePanel>
-                    <TextBlock Grid.Row="1" x:Name="NoEntriesTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">Brak wpisów</TextBlock>
-                    <ScrollView Grid.Row="1" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
-                        <!-- LIST VIEW -->
-                            <ListView x:Name="MonthEntriesListView" ItemsSource="{Binding Source={StaticResource EntriesCollection}}" SelectionChanged="MonthEntriesListView_SelectionChanged" ItemClick="MonthEntriesListView_ItemClick" IsItemClickEnabled="True">
-                            <ListView.GroupStyle>
-                                <GroupStyle>
-                                    <GroupStyle.HeaderTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding Key}" />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </GroupStyle.HeaderTemplate>
-                                </GroupStyle>
-                            </ListView.GroupStyle>
-                            <ListView.ItemTemplate>
-                                <DataTemplate x:DataType="structure:Entry">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{x:Bind DurationRange}" Margin="0,0,10,0"/>
-                                        <FontIcon Glyph="{x:Bind FontIcon}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </ScrollView>
-                </Grid>
-            </SplitView.Pane>
-            <!--#endregion-->
-            <!--#region RightSide-->
-            <Grid Background="{ThemeResource FlyoutBackgroundThemeBrush}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" MaxHeight="30"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0" Padding="8,8,0,0">
-                    <Button x:Name="AllEntriesButton" Click="AllEntriesButton_Click" Visibility="Visible">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xE72B;" Margin="0,0,4,0"/>
-                            <TextBlock>Wszystkie wpisy</TextBlock>
-                        </StackPanel>
-                    </Button>
-                </Grid>
-                <Grid Grid.Row="1" Padding="20,0,20,12">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="60" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" VerticalAlignment="Center">
-                        <StackPanel>
-                            <TextBlock Text="Szczegóły wpisu" Style="{StaticResource TitleTextBlockStyle}" />
-                            <TextBlock x:Name="EntryIDTextBlock" Text="ID:" Style="{StaticResource CaptionTextBlockStyle}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Button x:Name="MoneyEntryButton" Click="MoneyEntryButton_Click" Margin="0,0,8,0">
-                                <FontIcon Glyph="&#xE825;"/>
-                            </Button>
-                            <TeachingTip x:Name="MoneyEntryTeachingTip" Target="{x:Bind MoneyEntryButton}" Title="Opłata" Subtitle="0,00 PLN">
-                            </TeachingTip>
-                            <Button x:Name="EditEntryButton" Click="EditEntryButton_Click" Margin="0,0,8,0">
-                                <StackPanel Orientation="Horizontal">
-                                    <FontIcon x:Name="EditEntryButtonFontIcon" Glyph="&#xE70F;" Margin="0,0,4,0"/>
-                                    <TextBlock x:Name="EditEntryButtonTextBlock">Edytuj</TextBlock>
-                                </StackPanel>
-                            </Button>
-                            <Button x:Name="DeleteEntryButton" Click="DeleteEntryButton_Click">
-                                <StackPanel Orientation="Horizontal">
-                                    <FontIcon x:Name="DeleteEntryButtonFontIcon" Glyph="&#xE74D;" Margin="0,0,4,0"/>
-                                    <TextBlock x:Name="DeleteEntryButtonTextBlock">Usuń</TextBlock>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
                     </Grid>
-                    <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,10,0,0">
-                        <StackPanel  HorizontalAlignment="Left">
-                            <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
-                                <FontIcon Glyph="&#xE787;" Margin="0,0,4,0"/>
-                                <TextBlock Text="Data" />
+                    <Grid Grid.Row="1" Padding="20,0,20,12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" VerticalAlignment="Center">
+                            <StackPanel>
+                                <TextBlock Text="Szczegóły wpisu" Style="{StaticResource TitleTextBlockStyle}" />
+                                <TextBlock x:Name="EntryIDTextBlock" Text="ID:" Style="{StaticResource CaptionTextBlockStyle}" />
                             </StackPanel>
-                            <TextBlock x:Name="DateTextBox"  Text="1 stycznia 2024" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button x:Name="MoneyEntryButton" Click="MoneyEntryButton_Click" Margin="0,0,8,0">
+                                    <FontIcon Glyph="&#xE825;"/>
+                                </Button>
+                                <TeachingTip x:Name="MoneyEntryTeachingTip" Target="{x:Bind MoneyEntryButton}" Title="Opłata" Subtitle="0,00 PLN">
+                                </TeachingTip>
+                                <Button x:Name="EditEntryButton" Click="EditEntryButton_Click" Margin="0,0,8,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <FontIcon x:Name="EditEntryButtonFontIcon" Glyph="&#xE70F;" Margin="0,0,4,0"/>
+                                        <TextBlock x:Name="EditEntryButtonTextBlock">Edytuj</TextBlock>
+                                    </StackPanel>
+                                </Button>
+                                <Button x:Name="DeleteEntryButton" Click="DeleteEntryButton_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <FontIcon x:Name="DeleteEntryButtonFontIcon" Glyph="&#xE74D;" Margin="0,0,4,0"/>
+                                        <TextBlock x:Name="DeleteEntryButtonTextBlock">Usuń</TextBlock>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,10,0,0">
+                            <StackPanel  HorizontalAlignment="Left">
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                                    <FontIcon Glyph="&#xE787;" Margin="0,0,4,0"/>
+                                    <TextBlock Text="Data" />
+                                </StackPanel>
+                                <TextBlock x:Name="DateTextBox"  Text="1 stycznia 2024" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
-                                <FontIcon Glyph="&#xE916;" Margin="0,0,4,0" />
-                                <TextBlock Text="Czas pracy" />
-                            </StackPanel>
-                            <TextBlock x:Name="DurationRangeTextBox" Text="00:00 - 00:00" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                                    <FontIcon Glyph="&#xE916;" Margin="0,0,4,0" />
+                                    <TextBlock Text="Czas pracy" />
+                                </StackPanel>
+                                <TextBlock x:Name="DurationRangeTextBox" Text="00:00 - 00:00" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
-                                <FontIcon Glyph="&#xE8EC;" Margin="0,0,4,0" />
-                                <TextBlock Text="Rodzaj" />
-                            </StackPanel>
-                            <TextBlock x:Name="TypeTextBlock" Text="Standardowy" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                                    <FontIcon Glyph="&#xE8EC;" Margin="0,0,4,0" />
+                                    <TextBlock Text="Rodzaj" />
+                                </StackPanel>
+                                <TextBlock x:Name="TypeTextBlock" Text="Standardowy" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
-                            <StackPanel x:Name ="LocationStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
-                                <FontIcon Glyph="&#xE707;" Margin="0,0,4,0" />
-                                <TextBlock Text="Lokalizacja" />
-                            </StackPanel>
-                            <TextBlock x:Name="LocationTextBlock" Text="IFPiLM" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                                <StackPanel x:Name ="LocationStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
+                                    <FontIcon Glyph="&#xE707;" Margin="0,0,4,0" />
+                                    <TextBlock Text="Lokalizacja" />
+                                </StackPanel>
+                                <TextBlock x:Name="LocationTextBlock" Text="IFPiLM" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
-                            <StackPanel x:Name="DescriptionStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
-                                <FontIcon Glyph="&#xE946;" Margin="0,0,4,0" />
-                                <TextBlock Text="Opis" />
+                                <StackPanel x:Name="DescriptionStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
+                                    <FontIcon Glyph="&#xE946;" Margin="0,0,4,0" />
+                                    <TextBlock Text="Opis" />
+                                </StackPanel>
+                                <TextBox x:Name="DescriptionTextBox" AutomationProperties.Name="multi-line TextBox" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True" MinWidth="400" MaxWidth="1000"/>
                             </StackPanel>
-                            <TextBox x:Name="DescriptionTextBox" AutomationProperties.Name="multi-line TextBox" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True" MinWidth="400" MaxWidth="1000"/>
-                        </StackPanel>
-                    </ScrollView>
+                        </ScrollView>
+                    </Grid>
                 </Grid>
-            </Grid>
-            <!--#endregion-->
-        </SplitView>
+                <!--#endregion-->
+            </SplitView>
+        </Grid>
         <!--#endregion-->
     </Grid>
 </Page>
