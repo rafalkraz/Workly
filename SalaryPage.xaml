@@ -7,7 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Loaded="Page_Loaded">
 
     <Grid Padding="20,24,20,12">
         <Grid.RowDefinitions>
@@ -15,38 +16,42 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
         <StackPanel x:Name="DateChooseStackPanel" Orientation="Horizontal" Grid.Row="0">
-            <ComboBox x:Name="YearSelectionComboBox" Width="80" Margin="0,0,4,0"/>
-            <ComboBox x:Name="MonthSelectionComboBox" Width="200"/>
+            <ComboBox x:Name="YearSelectionComboBox" Width="80" Margin="0,0,4,0" SelectionChanged="YearSelectionComboBox_SelectionChanged" />
+            <ComboBox x:Name="MonthSelectionComboBox" Width="200" SelectionChanged="MonthSelectionComboBox_SelectionChanged" />
         </StackPanel>
-        <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" Padding="0,20,0,0">
-            <StackPanel x:Name="SalarySummaryStackPanel">
-                <TextBlock Style="{StaticResource BodyTextBlockStyle}" TextAlignment="Center">Twoje wynagrodzenie w tym miesiącu wynosi</TextBlock>
-                <TextBlock Style="{StaticResource TitleLargeTextBlockStyle}" TextAlignment="Center">0,00 PLN</TextBlock>
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="16,0,16,0">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" >
+            <StackPanel x:Name="SalarySummaryStackPanel" Padding="0,40,0,40">
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" TextAlignment="Center">Twoje wynagrodzenie w tym miesiącu wynosi</TextBlock>
+                <TextBlock Style="{StaticResource DisplayTextBlockStyle}" TextAlignment="Center" x:Name="SalaryTextBlock">0,00 PLN</TextBlock>
             </StackPanel>
-            <StackPanel Orientation="Vertical">
-                <TextBlock>Zestawienie</TextBlock>
-                <TextBlock>Standardowy czas pracy</TextBlock>
-                <StackPanel Orientation="Horizontal">
-                    <ProgressBar Width="130" Value="0" />
-                   <TextBlock>0%</TextBlock>
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <FontIcon Glyph="&#xE71D;" Margin="0,0,8,0"/>
+                    <TextBlock Style="{StaticResource SubtitleTextBlockStyle}">Zestawienie</TextBlock>
                 </StackPanel>
-                <TextBlock>Kilometrówka</TextBlock>
+                <TextBlock Margin="0,8,0,4">Standardowy czas pracy</TextBlock>
                 <StackPanel Orientation="Horizontal">
-                    <ProgressBar Width="130" Value="0" />
-                    <TextBlock>0%</TextBlock>
+                    <ProgressBar Width="240" Value="0" x:Name="StandardEarningProgressBar"/>
+                    <TextBlock Margin="8,0,0,0" x:Name="StandardEarningTextBlock">0%</TextBlock>
                 </StackPanel>
-                <TextBlock>Urlop</TextBlock>
+                <TextBlock Margin="0,8,0,4">Kilometrówka + Parking</TextBlock>
                 <StackPanel Orientation="Horizontal">
-                    <ProgressBar Width="130" Value="0" />
-                    <TextBlock>0%</TextBlock>
+                    <ProgressBar Width="240" Value="0" x:Name="MileageEarningProgressBar" />
+                    <TextBlock Margin="8,0,0,0" x:Name="MileageEarningTextBlock">0%</TextBlock>
                 </StackPanel>
-                <TextBlock>Nadgodziny</TextBlock>
+                <TextBlock Margin="0,8,0,4">Urlop</TextBlock>
                 <StackPanel Orientation="Horizontal">
-                    <ProgressBar Width="130" Value="0" />
-                    <TextBlock>0%</TextBlock>
+                    <ProgressBar Width="240" Value="0" x:Name="LeaveEarningProgressBar" />
+                    <TextBlock Margin="8,0,0,0" x:Name="LeaveEarningTextBlock">0%</TextBlock>
+                </StackPanel>
+                <TextBlock Margin="0,8,0,4">Nadgodziny</TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <ProgressBar Width="240" Value="0" x:Name="OvertimeEarningProgressBar"/>
+                    <TextBlock Margin="8,0,0,0" x:Name="OvertimeEarningTextBlock">0%</TextBlock>
                 </StackPanel>
             </StackPanel>
         </StackPanel>
-        
+        </ScrollView>
     </Grid>
 </Page>

@@ -31,48 +31,36 @@
 
             <!-- FINANCES -->
             <TextBlock Text="Finanse" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
-            <controls:SettingsCard Description="Podaj wysokość swojego wynagrodzenia za 1 godzinę pracy w PLN" Header="Kwota wynagrodzenia">
+            <controls:SettingsCard Description="Podaj wysokość swojego wynagrodzenia za 1 godzinę pracy w PLN" Header="Wynagrodzenie zasadnicze">
                 <controls:SettingsCard.HeaderIcon>
                     <FontIcon Glyph="&#xE825;" />
                 </controls:SettingsCard.HeaderIcon>
                 <TextBox x:Name="StandardSalaryNumberBox" Text="{Binding StandardSalary, Mode=TwoWay}" TextChanged="TextBox_TextChanged" LostFocus="TextBox_LostFocus" InputScope="Number" />
             </controls:SettingsCard>
             
-            <controls:SettingsCard Description="Podaj wysokość wynagrodzenia za 1 godzinę pracy rozliczaną jako nadgodziny w PLN" Header="Opłata za nadgodziny">
+            <controls:SettingsCard Description="Podaj wysokość wynagrodzenia za 1 godzinę pracy rozliczaną jako nadgodzina w PLN" Header="Wynagrodzenie za nadgodziny">
                 <controls:SettingsCard.HeaderIcon>
                     <FontIcon Glyph="&#xE823;" />
                 </controls:SettingsCard.HeaderIcon>
                 <TextBox x:Name="OvertimeSalaryNumberBox" Text="{Binding OvertimeSalary, Mode=TwoWay}" TextChanged="TextBox_TextChanged" LostFocus="TextBox_LostFocus" InputScope="Number" />
             </controls:SettingsCard>
 
-            <controls:SettingsCard Description="Podaj wysokość wynagrodzenia za 1 godzinę urlopu w PLN" Header="Opłata za urlop">
+            <controls:SettingsCard Description="Podaj wysokość wynagrodzenia za 1 godzinę urlopu w PLN" Header="Wynagrodzenie za urlop">
                 <controls:SettingsCard.HeaderIcon>
                     <FontIcon Glyph="&#xE706;" />
                 </controls:SettingsCard.HeaderIcon>
                 <TextBox x:Name="LeaveSalaryNumberBox" Text="{Binding LeaveSalary, Mode=TwoWay}" TextChanged="TextBox_TextChanged" LostFocus="TextBox_LostFocus" InputScope="Number" />
             </controls:SettingsCard>
 
-            <controls:SettingsCard Description="Podaj koszt 1 km" Header="Opłata za kilometrówkę">
+            <controls:SettingsCard Description="Podaj koszt zwracany przez pracodawcę w PLN, za każdy przejechany 1 km" Header="Wynagrodzenie za kilometrówkę">
                 <controls:SettingsCard.HeaderIcon>
                     <FontIcon Glyph="&#xE804;" />
                 </controls:SettingsCard.HeaderIcon>
                 <TextBox x:Name="MileageNumberBox" Text="{Binding MileageSalary, Mode=TwoWay}" TextChanged="TextBox_TextChanged" LostFocus="TextBox_LostFocus" InputScope="Number" />
             </controls:SettingsCard>
             
-            <!-- APPERANCE AND DATA -->
-            <TextBlock Text="Wygląd i dane" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
-            <controls:SettingsCard Description="Wybierz motyw, który ma używać aplikacja" Header="Motyw aplikacji">
-                <controls:SettingsCard.HeaderIcon>
-                    <FontIcon Glyph="&#xE790;" />
-                </controls:SettingsCard.HeaderIcon>
-                <ComboBox
-                        x:Name="themeMode"
-                        AutomationProperties.AutomationId="themeModeComboBox" >
-                    <ComboBoxItem Content="Light" Tag="Light" />
-                    <ComboBoxItem Content="Dark" Tag="Dark" />
-                    <ComboBoxItem Content="Use system setting" Tag="Default" />
-                </ComboBox>
-            </controls:SettingsCard>
+            <!-- DATA -->
+            <TextBlock Text="Dane" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
 
             <controls:SettingsExpander Description="Importuj i eksportuj swoje dane" Header="Zarządzanie danymi">
                 <controls:SettingsExpander.HeaderIcon>
@@ -80,18 +68,7 @@
                 </controls:SettingsExpander.HeaderIcon>
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
-                        x:Name="dSpatialAudioCard">
-                        
-                        <controls:SettingsCard.Description>
-                            <StackPanel Orientation="Horizontal">
-                                <FontIcon Glyph="&#xE814;" Margin="0,0,4,0" FontSize="16"/>
-                                <TextBlock Text="Dotyczy tylko dziennika czasu pracy i kilometrówki" />
-                            </StackPanel>
-                            
-                        </controls:SettingsCard.Description>
-                    </controls:SettingsCard>
-                    <controls:SettingsCard
-                        x:Name="SpatialAudioCard"
+                        x:Name="ImportDataCard"
                         Header="Importuj dane">
                         <controls:SettingsCard.Description>
                             <TextBlock Text="Wybierz plik bazy danych, z którego chcesz wczytać dane" />
@@ -99,19 +76,27 @@
                         <Button x:Name="ButtonImportDB" Content="Wybierz plik" Click="ButtonImportDB_Click" />
                     </controls:SettingsCard>
                     <controls:SettingsCard
-                            x:Name="aSpatialAudioCard"
+                            x:Name="ExportDataCard"
                             Header="Eksportuj dane">
                         <controls:SettingsCard.Description>
                             <TextBlock Text="Wybierz gdzie chcesz zapisać plik bazy danych" />
                         </controls:SettingsCard.Description>
-                        <Button x:Name="ButtonExportDB" Content="Wybierz plik" Click="ButtonExportDB_Click" />
+                        <Button x:Name="ButtonExportDB" Content="Zapisz plik" Click="ButtonExportDB_Click" />
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
+                    x:Name="DeleteAllDataCard"
+                    Header="Usuń dane aplikacji">
+                        <controls:SettingsCard.Description>
+                            <TextBlock Text="UWAGA! Spowoduje to usunięcie wszystkich wpisów czasu pracy oraz kilometrówki!" />
+                        </controls:SettingsCard.Description>
+                        <Button x:Name="ButtonDeleteDB" Content="Usuń wszystko" Click="ButtonDeleteDB_Click" Foreground="Red" />
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
             </controls:SettingsExpander>
             
             <!-- ABOUT -->
             <TextBlock Text="O aplikacji" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
-            <controls:SettingsExpander Description="2024 Rafał Krąż" Header="WorkLog">
+            <controls:SettingsExpander Description="2025 Rafał Krąż" Header="WorkLog">
                 <controls:SettingsExpander.HeaderIcon>
                     <BitmapIcon ShowAsMonochrome="False" UriSource="/Assets/StoreLogo.png" />
                 </controls:SettingsExpander.HeaderIcon>

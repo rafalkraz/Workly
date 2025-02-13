@@ -1,26 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using System.Collections.ObjectModel;
-using System.Text.Json;
-using Windows.Storage;
-using System.Threading.Tasks;
 using WorkLog.Structure;
-using Microsoft.UI.Windowing;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using Windows.Globalization.DateTimeFormatting;
 using myLog = WorkLog.Structure.Log.Entries;
 using WorkLog.Interfaces;
 
@@ -149,13 +133,13 @@ public sealed partial class LogPage : Page, IDataViewPage
             }
         }
 
-        Entries = new(myLog.GetEntries(selectedYear, selectedMonth));
+        Entries = new(myLog.GetEntries(selectedYear, selectedMonth, this));
         var result =
             from entry in Entries
             group entry by entry.Date.ToString("dd.MM") into g
             orderby g.Key
             select g;
-        EntriesCollection.Source = result;
+        EntriesCollection.Source = result.Reverse();
     }
 
     private void YearSelectionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -226,7 +210,7 @@ public sealed partial class LogPage : Page, IDataViewPage
             DurationRangeTextBox.Text = $"{entry.DurationRange} ({entry.Duration})";
             LocationTextBlock.Text = entry.Localization;
             DescriptionTextBox.Text = entry.Description;
-            MoneyEntryTeachingTip.Subtitle = entry.Earning + " PLN";
+            MoneyEntryTeachingTip.Subtitle = Math.Round(entry.Earning, 2).ToString("F2") + " PLN";
         }
     }
 
@@ -291,5 +275,29 @@ public sealed partial class LogPage : Page, IDataViewPage
             myLog.DeleteEntry((Entry)MonthEntriesListView.SelectedItem);
             ChangeTimeRange(selectedYear, selectedMonth);
         }
+    }
+
+    public async void ShowDataError(string title, string content)
+    {
+        YearSelectionComboBox.ItemsSource = null;
+        MonthSelectionComboBox.ItemsSource = null;
+        YearSelectionComboBox.IsEnabled = false;
+        MonthSelectionComboBox.IsEnabled = false;
+        AddEntryButton.IsEnabled = false;
+        MoneyEntryButton.IsEnabled = false;
+        EditEntryButton.IsEnabled = false;
+        DeleteEntryButton.IsEnabled = false;
+        NoEntriesTextBlock.Visibility = Visibility.Visible;
+        NoEntriesTextBlock.Text = "B³¹d bazy danych";
+        ContentDialog dialog = new()
+        {
+            XamlRoot = this.XamlRoot,
+            Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+            Title = title,
+            Content = content,
+            CloseButtonText = "OK",
+            DefaultButton = ContentDialogButton.Close
+        };
+        await dialog.ShowAsync();
     }
 }

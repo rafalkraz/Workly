@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
-using Microsoft.UI.Xaml.Controls;
 using Windows.Storage;
+using Windows.UI.Popups;
+using WinUIEx.Messaging;
+using WorkLog.Interfaces;
 
 namespace WorkLog.Structure;
 public partial class Log
@@ -16,11 +17,6 @@ public partial class Log
     private static class DataAccess
     {
         private static StorageFile dbFile;
-
-        internal static void SetFirstStartupStatus()
-        {
-            if (!File.Exists(localFolder.Path + "\\" + dbName)) ; //IsFirstStartup = true;
-        }
 
         internal static async Task<bool> InitializeDatabase()
         {
@@ -53,17 +49,17 @@ public partial class Log
             {
                 createEntriesTable.ExecuteReader();
                 createMileageTable.ExecuteReader();
+                db.Close();
             }
             catch (Exception)
             {
+                db.Close();
                 return false;
             }
             return true;
         }
 
-        
-
-        internal static List<Entry> GetEntriesDataFromMonth(string year, string month)
+        internal static List<Entry> GetEntriesDataFromMonth(string year, string month, IDataViewPage sender)
         {
             var result = new List<Entry>();
             using (var db = new SqliteConnection($"Filename={dbFile.Path}"))
@@ -77,25 +73,35 @@ public partial class Log
                 selectCommand.Parameters.AddWithValue("@month", month);
 
                 var query = selectCommand.ExecuteReader();
-
-                while (query.Read())
+                try
                 {
-                    var entry = new Entry(
-                        int.Parse(query["EntryID"].ToString()),
-                        int.Parse(query["Type"].ToString()),
-                        DateTime.Parse(query["BeginTime"].ToString()),
-                        DateTime.Parse(query["EndTime"].ToString()),
-                        query["Localization"].ToString(),
-                        query["Description"].ToString(),
-                        double.Parse(query["Earning"].ToString(), CultureInfo.InvariantCulture)
-                    );
-                    result.Add(entry);
+                    while (query.Read())
+                    {
+                        var entry = new Entry(
+                            int.Parse(query["EntryID"].ToString()),
+                            int.Parse(query["Type"].ToString()),
+                            DateTime.Parse(query["BeginTime"].ToString()),
+                            DateTime.Parse(query["EndTime"].ToString()),
+                            query["Localization"].ToString(),
+                            query["Description"].ToString(),
+                            double.Parse(query["Earning"].ToString(), CultureInfo.InvariantCulture)
+                        );
+                        result.Add(entry);
+                    }
+                    db.Close();
                 }
+                catch (Exception)
+                {
+                    sender.ShowDataError("Wystąpił krytyczny błąd!", "Nie udało się odczytać bazy danych lub jest ona uszkodzona.\nSpróbuj później lub przejdź do ustawień i wybierz opcję \"Usuń dane aplikacji\".");
+                    db.Close();
+                    return [];
+                }
+                
             }
             return result;
         }
 
-        internal static List<EntryMileage> GetMileageDataFromMonth(string year, string month)
+        internal static List<EntryMileage> GetMileageDataFromMonth(string year, string month, IDataViewPage sender)
         {
             var result = new List<EntryMileage>();
             using (var db = new SqliteConnection($"Filename={dbFile.Path}"))
@@ -109,20 +115,29 @@ public partial class Log
                 selectCommand.Parameters.AddWithValue("@month", month);
 
                 var query = selectCommand.ExecuteReader();
-
-                while (query.Read())
+                try 
+                { 
+                    while (query.Read())
+                    {
+                        var entry = new EntryMileage(
+                            int.Parse(query["ID"].ToString()),
+                            int.Parse(query["Type"].ToString()),
+                            DateOnly.Parse(DateTime.Parse(query["Date"].ToString()).ToShortDateString()),
+                            query["BeginPoint"].ToString(),
+                            query["EndPoint"].ToString(),
+                            query["Description"].ToString(),
+                            int.Parse(query["Distance"].ToString()),
+                            float.Parse(query["ParkingPrice"].ToString())
+                        );
+                        result.Add(entry);
+                    }
+                    db.Close();
+                }
+                catch (Exception)
                 {
-                    var entry = new EntryMileage(
-                        int.Parse(query["ID"].ToString()),
-                        int.Parse(query["Type"].ToString()),
-                        DateOnly.Parse(DateTime.Parse(query["Date"].ToString()).ToShortDateString()),
-                        query["BeginPoint"].ToString(),
-                        query["EndPoint"].ToString(),
-                        query["Description"].ToString(),
-                        int.Parse(query["Distance"].ToString()),
-                        float.Parse(query["ParkingPrice"].ToString())
-                    );
-                    result.Add(entry);
+                    sender.ShowDataError("Wystąpił krytyczny błąd!", "Nie udało się odczytać bazy danych lub jest ona uszkodzona.\nSpróbuj później lub przejdź do ustawień i wybierz opcję \"Usuń dane aplikacji\".");
+                    db.Close();
+                    return [];
                 }
             }
             return result;
@@ -148,6 +163,7 @@ public partial class Log
                 {
                     years.Add(query.GetString(0));
                 }
+                db.Close();
             }
             return years;
         }
@@ -174,6 +190,7 @@ public partial class Log
                 {
                     months.Add(query.GetString(0));
                 }
+                db.Close();
             }
             return months;
         }
@@ -194,6 +211,7 @@ public partial class Log
             insertCommand.Parameters.AddWithValue("@earning", earning);
 
             insertCommand.ExecuteReader();
+            db.Close();
             return true;
 
         }
@@ -215,6 +233,7 @@ public partial class Log
             insertCommand.Parameters.AddWithValue("@parkingPrice", parkingPrice);
 
             insertCommand.ExecuteReader();
+            db.Close();
             return true;
 
         }
@@ -236,6 +255,7 @@ public partial class Log
             insertCommand.Parameters.AddWithValue("@newEarning", newEarning);
 
             insertCommand.ExecuteReader();
+            db.Close();
             return true;
 
         }
@@ -258,6 +278,7 @@ public partial class Log
             insertCommand.Parameters.AddWithValue("@newParkingPrice", newParkingPrice);
 
             insertCommand.ExecuteReader();
+            db.Close();
             return true;
 
         }
@@ -274,6 +295,7 @@ public partial class Log
             };
             cmd.Parameters.AddWithValue("@entryID", entryID);
             cmd.ExecuteReader();
+            db.Close();
             return true;
         }
 
@@ -289,6 +311,22 @@ public partial class Log
             };
             cmd.Parameters.AddWithValue("@ID", ID);
             cmd.ExecuteReader();
+            db.Close();
+            return true;
+        }
+
+        internal static bool DropTables()
+        {
+            using var db = new SqliteConnection($"Filename={dbFile.Path}");
+            db.Open();
+
+            var cmd = new SqliteCommand
+            {
+                Connection = db,
+                CommandText = "DROP TABLE IF EXISTS Entries; DROP TABLE IF EXISTS Mileage;"
+            };
+            cmd.ExecuteReader();
+            db.Close();
             return true;
         }
     }

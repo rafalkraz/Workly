@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using WorkLog.Structure;
@@ -74,14 +76,31 @@ public sealed partial class SettingsPage : Page
         openPicker.FileTypeFilter.Add(".db");
 
         var file = await openPicker.PickSingleFileAsync();
-        if (file != null)
+        try
         {
-            await file.CopyAsync(Log.localFolder, Log.dbName, NameCollisionOption.ReplaceExisting);
+            if (file != null)
+            {
+                await file.CopyAsync(Log.localFolder, Log.dbName, NameCollisionOption.ReplaceExisting);
+                ContentDialog dialog = new ContentDialog();
+                dialog.XamlRoot = this.XamlRoot;
+                dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
+                dialog.Title = "Sukces!\nBaza danych zosta³a zaimportowana";
+                dialog.CloseButtonText = "OK";
+                dialog.DefaultButton = ContentDialogButton.Close;
+                var result = await dialog.ShowAsync();
+            }
         }
-        else
+        catch (Exception)
         {
-
+            ContentDialog dialog = new ContentDialog();
+            dialog.XamlRoot = this.XamlRoot;
+            dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
+            dialog.Title = "Wyst¹pi³ b³¹d!\nNie uda³o siê zaimportowaæ bazy danych";
+            dialog.CloseButtonText = "OK";
+            dialog.DefaultButton = ContentDialogButton.Close;
+            var result = await dialog.ShowAsync();
         }
+        
         senderButton.IsEnabled = true;
 
     }
@@ -102,8 +121,87 @@ public sealed partial class SettingsPage : Page
 
         StorageFile destinationFile = await savePicker.PickSaveFileAsync();
         StorageFile dbFile = await Log.localFolder.GetFileAsync(Log.dbName);
-        await dbFile.CopyAndReplaceAsync(destinationFile);
+        try
+        {
+            if (destinationFile != null)
+            {
+                await dbFile.CopyAndReplaceAsync(destinationFile);
+                ContentDialog dialog = new()
+                {
+                    XamlRoot = this.XamlRoot,
+                    Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                    Title = "Sukces!",
+                    Content = "Baza danych zosta³a wyeksportowana",
+                    CloseButtonText = "OK",
+                    DefaultButton = ContentDialogButton.Close
+                };
+                var result = await dialog.ShowAsync();
+            }
+        }
+        catch (Exception)
+        {
+            ContentDialog dialog = new()
+            {
+                XamlRoot = this.XamlRoot,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                Title = "Wyst¹pi³ b³¹d!",
+                Content = "Nie uda³o siê wyeksportowaæ bazy danych",
+                CloseButtonText = "OK",
+                DefaultButton = ContentDialogButton.Close
+            };
+            await dialog.ShowAsync();
+        }
+        
    
         senderButton.IsEnabled = true;
+    }
+
+    private async void ButtonDeleteDB_Click(object sender, RoutedEventArgs e)
+    {
+        ContentDialog dialog = new()
+        {
+            XamlRoot = this.XamlRoot,
+            Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+            Title = "UWAGA!\nCzy na pewno chcesz usun¹æ wszystkie dane aplikacji?",
+            Content = "Tej czynnoœci nie da siê cofn¹æ!",
+            PrimaryButtonText = "USUÑ WSZYSTKO",
+            CloseButtonText = "Anuluj",
+            DefaultButton = ContentDialogButton.Primary
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            try
+            {
+                Log.DropTables();
+                ContentDialog dialog2 = new()
+                {
+                    XamlRoot = this.XamlRoot,
+                    Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                    Title = "Wszystkie dane zosta³y pomyœlnie usuniête",
+                    Content = "Aplikacja zostanie teraz zamkniêta",
+                    CloseButtonText = "OK",
+                    DefaultButton = ContentDialogButton.Close
+                };
+                await dialog2.ShowAsync();
+                Application.Current.Exit();
+            }
+            catch (Exception)
+            {
+                ContentDialog dialog2 = new()
+                {
+                    XamlRoot = this.XamlRoot,
+                    Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                    Title = "Wyst¹pi³ b³¹d",
+                    Content = "Aplikacja zostanie teraz zamkniêta",
+                    CloseButtonText = "OK",
+                    DefaultButton = ContentDialogButton.Close
+                };
+                await dialog2.ShowAsync();
+                throw;
+            }
+        }
+        
     }
 }

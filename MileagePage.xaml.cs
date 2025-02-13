@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Windows.UI.Popups;
 using WorkLog.Interfaces;
 using WorkLog.Structure;
 using myLog = WorkLog.Structure.Log.Mileage;
@@ -142,13 +143,13 @@ public sealed partial class MileagePage : Page, IDataViewPage
             }
         }
 
-        Entries = new(myLog.GetEntries(selectedYear, selectedMonth));
+        Entries = new(myLog.GetEntries(selectedYear, selectedMonth, this));
         var result =
             from entry in Entries
             group entry by entry.Date.ToString("dd.MM") into g
             orderby g.Key
             select g;
-        EntriesCollection.Source = result;
+        EntriesCollection.Source = result.Reverse();
     }
 
     private void YearSelectionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -221,8 +222,8 @@ public sealed partial class MileagePage : Page, IDataViewPage
             LocationTextBlock.Text = entry.BeginPoint;
             DistanceTextBlock.Text = entry.Distance.ToString() + " km";
             DescriptionTextBox.Text = entry.Description;
-            ParkingPriceTextBlock.Text = entry.ParkingPrice.ToString() + " PLN";
-            MoneyEntryTeachingTip.Subtitle = entry.ParkingPrice.ToString() + " PLN";
+            ParkingPriceTextBlock.Text = Math.Round(entry.ParkingPrice, 2).ToString("F2") + " PLN";
+            MoneyEntryTeachingTip.Subtitle = Math.Round(entry.ParkingPrice, 2).ToString("F2") + " PLN";
         }
     }
 
@@ -287,5 +288,29 @@ public sealed partial class MileagePage : Page, IDataViewPage
             myLog.DeleteEntry((EntryMileage)MonthEntriesListView.SelectedItem);
             ChangeTimeRange(selectedYear, selectedMonth);
         }
+    }
+
+    public async void ShowDataError(string title, string content)
+    {
+        YearSelectionComboBox.ItemsSource = null;
+        MonthSelectionComboBox.ItemsSource = null;
+        YearSelectionComboBox.IsEnabled = false;
+        MonthSelectionComboBox.IsEnabled = false;
+        AddEntryButton.IsEnabled = false;
+        MoneyEntryButton.IsEnabled = false;
+        EditEntryButton.IsEnabled = false;
+        DeleteEntryButton.IsEnabled = false;
+        NoEntriesTextBlock.Visibility = Visibility.Visible;
+        NoEntriesTextBlock.Text = "B³¹d bazy danych";
+        ContentDialog dialog = new()
+        {
+            XamlRoot = this.XamlRoot,
+            Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+            Title = title,
+            Content = content,
+            CloseButtonText = "OK",
+            DefaultButton = ContentDialogButton.Close
+        };
+        await dialog.ShowAsync();
     }
 }

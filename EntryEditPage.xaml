@@ -52,36 +52,37 @@
                 IsOpen="False"
                 IsClosable="True"
                 Severity="Warning"
-                Title="Brak lokalizacji"
-                Message="Ten wpis wymaga podania lokalizacji!" />
+                Title="Brak lokalizacji"/>
+                <InfoBar
+                x:Name="IncorrectBeginPointInfoBar"
+                IsOpen="False"
+                IsClosable="True"
+                Severity="Warning"
+                Title="Brak lokalizacji początkowej"/>
                 <InfoBar
                 x:Name="IncorrectEndPointInfoBar"
                 IsOpen="False"
                 IsClosable="True"
                 Severity="Warning"
-                Title="Brak lokalizacji"
-                Message="Ten wpis wymaga podania lokalizacji końcowej!" />
+                Title="Brak lokalizacji końcowej"/>
                 <InfoBar
                 x:Name="IncorrectDistanceInfoBar"
                 IsOpen="False"
                 IsClosable="True"
                 Severity="Warning"
-                Title="Brak lokalizacji"
-                Message="Ten wpis wymaga podania przejechanego dystansu!" />
+                Title="Brak przejechanego dystansu"/>
                 <InfoBar
                 x:Name="IncorrectParkingPriceInfoBar"
                 IsOpen="False"
                 IsClosable="True"
                 Severity="Warning"
-                Title="Brak lokalizacji"
-                Message="Ten wpis wymaga podania ceny parkingu!" />
+                Title="Brak ceny parkingu"/>
                 <InfoBar
                 x:Name="IncorrectDescriptionInfoBar"
                 IsOpen="False"
                 IsClosable="True"
                 Severity="Warning"
-                Title="Brak opisu"
-                Message="Ten wpis wymaga podania opisu!" />
+                Title="Brak opisu"/>
                 <!--#endregion-->
                 <!--#region Header-->
                 <Grid>
@@ -117,7 +118,7 @@
                     <FontIcon Glyph="&#xE787;" Margin="0,0,4,0"/>
                     <TextBlock Text="Data" />
                 </StackPanel>
-                <CalendarDatePicker x:Name="EventDatePicker" PlaceholderText="Wybierz datę" DateChanged="EventDatePicker_DateChanged"/>
+                <CalendarDatePicker x:Name="EventDatePicker" PlaceholderText="Wybierz datę" DateChanged="EventDatePicker_DateChanged" FirstDayOfWeek="Monday"/>
                 <!--#endregion-->
                 <!--#region Controls.Time-->
                 <StackPanel Orientation="Horizontal" Margin="0,12,0,4" x:Name="TimeStackPanel">

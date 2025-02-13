@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.UI.Xaml.Controls;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WorkLog.Interfaces;
 
 namespace WorkLog.Structure;
 
@@ -35,9 +37,9 @@ public static partial class Log
             return months;
         }
 
-        public static List<Entry> GetEntries(string year, Month month)
+        public static List<Entry> GetEntries(string year, Month month, IDataViewPage sender)
         {
-            return DataAccess.GetEntriesDataFromMonth(year, month.Number);
+            return DataAccess.GetEntriesDataFromMonth(year, month.Number, sender);
         }
 
         ///<summary>

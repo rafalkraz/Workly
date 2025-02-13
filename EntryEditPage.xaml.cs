@@ -173,10 +173,10 @@ public sealed partial class EntryEditPage : Page
                 // BeginPoint check
                 if (BeginPointTextBox.Text == "")
                 {
-                    IncorrectLocationInfoBar.IsOpen = true;
+                    IncorrectBeginPointInfoBar.IsOpen = true;
                     isProblem = true;
                 }
-                else IncorrectLocationInfoBar.IsOpen = false;
+                else IncorrectBeginPointInfoBar.IsOpen = false;
 
                 // EndPoint check
                 if (EndPointTextBox.Text == "")
@@ -194,16 +194,17 @@ public sealed partial class EntryEditPage : Page
                 }
                 else IncorrectDistanceInfoBar.IsOpen = false;
 
-                // Description check
-                if (DescriptionTextBox.Text == "")
-                {
-                    IncorrectDescriptionInfoBar.IsOpen = true;
-                    isProblem = true;
-                }
-                else IncorrectDescriptionInfoBar.IsOpen = false;
             }
             else if (EntryTypeComboBox.SelectedItem.ToString() == "Parking")
             {
+                // ParkingPrice check
+                if (LocationTextBox.Text == "")
+                {
+                    IncorrectLocationInfoBar.IsOpen = true;
+                    isProblem = true;
+                }
+                else IncorrectLocationInfoBar.IsOpen = false;
+
                 // ParkingPrice check
                 if (ParkingPriceNumberBox.Text == "")
                 {
@@ -354,18 +355,18 @@ public sealed partial class EntryEditPage : Page
                         parkingPrice = ParkingPriceNumberBox.Text == "" ? 0.0 : float.Parse(ParkingPriceNumberBox.Text);
                         BeginPointTextBox.Text = LocationTextBox.Text;
                     }
-                    
+                    parkingPrice = Math.Round(parkingPrice, 2);
                     if (editedMileage == null)
                     {
                         var newEntry = new EntryMileage(0, EntryTypeComboBox.SelectedIndex, date, BeginPointTextBox.Text, EndPointTextBox.Text, DescriptionTextBox.Text, distance, parkingPrice);
-                        var addResult = WorkLog.Structure.Log.Mileage.AddEntry(newEntry);
+                        var addResult = Log.Mileage.AddEntry(newEntry);
                         if (addResult) SavingFinished(date);
                         else ErrorInfoBar.IsOpen = true;
                     }
                     else
                     {
                         var tempEntry = new EntryMileage(editedMileage.ID, EntryTypeComboBox.SelectedIndex, date, BeginPointTextBox.Text, EndPointTextBox.Text, DescriptionTextBox.Text, distance, parkingPrice);
-                        var editResult = WorkLog.Structure.Log.Mileage.EditEntry(tempEntry);
+                        var editResult = Log.Mileage.EditEntry(tempEntry);
                         if (editResult) SavingFinished(date);
                         else ErrorInfoBar.IsOpen = true;
                     }
@@ -387,6 +388,7 @@ public sealed partial class EntryEditPage : Page
         IncorrectLocationInfoBar.IsOpen = false;
         IncorrectParkingPriceInfoBar.IsOpen = false;
         IncorrectDistanceInfoBar.IsOpen = false;
+        IncorrectBeginPointInfoBar.IsOpen = false;
         IncorrectEndPointInfoBar.IsOpen = false;
     }
 
@@ -450,7 +452,7 @@ public sealed partial class EntryEditPage : Page
 
     private void BeginPointTextBox_LostFocus(object sender, RoutedEventArgs e)
     {
-        IncorrectLocationInfoBar.IsOpen = false;
+        IncorrectBeginPointInfoBar.IsOpen = false;
     }
 
     private void EndPointTextBox_LostFocus(object sender, RoutedEventArgs e)

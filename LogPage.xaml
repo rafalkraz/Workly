@@ -148,7 +148,7 @@
                 </SplitView.Pane>
                 <!--#endregion-->
                 <!--#region RightSide-->
-                <Grid Background="{ThemeResource FlyoutBackgroundThemeBrush}">
+                <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" MaxHeight="30"/>
                         <RowDefinition Height="*"/>
@@ -169,13 +169,13 @@
                         <Grid Grid.Row="0" VerticalAlignment="Center">
                             <StackPanel>
                                 <TextBlock Text="Szczegóły wpisu" Style="{StaticResource TitleTextBlockStyle}" />
-                                <TextBlock x:Name="EntryIDTextBlock" Text="ID:" Style="{StaticResource CaptionTextBlockStyle}" />
+                                <TextBlock x:Name="EntryIDTextBlock" Text="ID: -" Style="{StaticResource CaptionTextBlockStyle}" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                 <Button x:Name="MoneyEntryButton" Click="MoneyEntryButton_Click" Margin="0,0,8,0">
                                     <FontIcon Glyph="&#xE825;"/>
                                 </Button>
-                                <TeachingTip x:Name="MoneyEntryTeachingTip" Target="{x:Bind MoneyEntryButton}" Title="Opłata" Subtitle="0,00 PLN">
+                                <TeachingTip x:Name="MoneyEntryTeachingTip" Target="{x:Bind MoneyEntryButton}" Title="Wynagrodzenie za wpis" Subtitle="0,00 PLN">
                                 </TeachingTip>
                                 <Button x:Name="EditEntryButton" Click="EditEntryButton_Click" Margin="0,0,8,0">
                                     <StackPanel Orientation="Horizontal">
@@ -197,25 +197,25 @@
                                     <FontIcon Glyph="&#xE787;" Margin="0,0,4,0"/>
                                     <TextBlock Text="Data" />
                                 </StackPanel>
-                                <TextBlock x:Name="DateTextBox"  Text="1 stycznia 2024" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                                <TextBlock x:Name="DateTextBox"  Text="-" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
                                 <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
                                     <FontIcon Glyph="&#xE916;" Margin="0,0,4,0" />
                                     <TextBlock Text="Czas pracy" />
                                 </StackPanel>
-                                <TextBlock x:Name="DurationRangeTextBox" Text="00:00 - 00:00" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                                <TextBlock x:Name="DurationRangeTextBox" Text="-" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
                                 <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
                                     <FontIcon Glyph="&#xE8EC;" Margin="0,0,4,0" />
                                     <TextBlock Text="Rodzaj" />
                                 </StackPanel>
-                                <TextBlock x:Name="TypeTextBlock" Text="Standardowy" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                                <TextBlock x:Name="TypeTextBlock" Text="-" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
                                 <StackPanel x:Name ="LocationStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
                                     <FontIcon Glyph="&#xE707;" Margin="0,0,4,0" />
                                     <TextBlock Text="Lokalizacja" />
                                 </StackPanel>
-                                <TextBlock x:Name="LocationTextBlock" Text="IFPiLM" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                                <TextBlock x:Name="LocationTextBlock" Text="-" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
                                 <StackPanel x:Name="DescriptionStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
                                     <FontIcon Glyph="&#xE946;" Margin="0,0,4,0" />

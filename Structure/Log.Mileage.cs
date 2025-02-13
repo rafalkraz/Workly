@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using WorkLog.Interfaces;
 
 namespace WorkLog.Structure;
 
@@ -35,9 +36,9 @@ public static partial class Log
             return months;
         }
 
-        public static List<EntryMileage> GetEntries(string year, Month month)
+        public static List<EntryMileage> GetEntries(string year, Month month, IDataViewPage sender)
         {
-            return DataAccess.GetMileageDataFromMonth(year, month.Number);
+            return DataAccess.GetMileageDataFromMonth(year, month.Number, sender);
         }
 
         ///<summary>
