@@ -150,6 +150,7 @@ public sealed partial class MileagePage : Page, IDataViewPage
             orderby g.Key
             select g;
         EntriesCollection.Source = result.Reverse();
+        isChanging = false;
     }
 
     private void YearSelectionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -157,7 +158,6 @@ public sealed partial class MileagePage : Page, IDataViewPage
         if (!isChanging)
         {
             ChangeTimeRange(YearSelectionComboBox.SelectedItem.ToString());
-            isChanging = false;
         }
     }
 
@@ -166,7 +166,6 @@ public sealed partial class MileagePage : Page, IDataViewPage
         if (!isChanging)
         {
             ChangeTimeRange(selectedYear, (Month)MonthSelectionComboBox.SelectedItem);
-            isChanging = false;
         }
     }
 

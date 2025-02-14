@@ -23,7 +23,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
             </Grid.ColumnDefinitions>
-            <Image x:Name="TitleBarIcon" Source="ms-appx:///Assets/StoreLogo.png"
+            <Image x:Name="TitleBarIcon" Source="ms-appx:///Assets/Calendar.scale-200.png"
        Grid.Column="1"
        HorizontalAlignment="Left"
        Width="16" Height="16"
@@ -36,7 +36,7 @@
            Margin="28,0,0,0"/>
         </Grid>
         <NavigationView x:Name="mainNavigation" SelectionChanged="mainNavigation_SelectionChanged" IsBackButtonVisible="Collapsed"
-                        Grid.Row="1" Loaded="mainNavigation_Loaded" PaneDisplayMode="Top">
+                        Grid.Row="1" PaneDisplayMode="Top">
             <NavigationView.MenuItems>
                 <NavigationViewItem Tag="WorkLog.LogPage" Content="Dziennik pracy">
                     <NavigationViewItem.Icon>

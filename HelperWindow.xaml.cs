@@ -14,6 +14,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using WinUIEx;
 using WorkLog.Interfaces;
 using WorkLog.Structure;
 
@@ -30,6 +31,8 @@ public sealed partial class HelperWindow : WinUIEx.WindowEx
     {
         this.InitializeComponent();
         this.ExtendsContentIntoTitleBar = true;
+        this.Title = "Wpis";
+        this.SetIcon(@"Assets\Calendar.ico");
 
             LogPage.editLock = true;
         

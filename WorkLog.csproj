@@ -13,14 +13,60 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <DefaultLanguage>pl-PL</DefaultLanguage>
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <PackageIcon>calendar3.png</PackageIcon>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Remove="Assets\Calendar.altform-lightunplated_targetsize-16.png" />
+    <Content Remove="Assets\Calendar.altform-lightunplated_targetsize-24.png" />
+    <Content Remove="Assets\Calendar.altform-lightunplated_targetsize-256.png" />
+    <Content Remove="Assets\Calendar.altform-lightunplated_targetsize-32.png" />
+    <Content Remove="Assets\Calendar.altform-lightunplated_targetsize-48.png" />
+    <Content Remove="Assets\Calendar.altform-unplated_targetsize-16.png" />
+    <Content Remove="Assets\Calendar.altform-unplated_targetsize-24.png" />
+    <Content Remove="Assets\Calendar.altform-unplated_targetsize-256.png" />
+    <Content Remove="Assets\Calendar.altform-unplated_targetsize-32.png" />
+    <Content Remove="Assets\Calendar.altform-unplated_targetsize-48.png" />
+    <Content Remove="Assets\calendar1.ico" />
+    <Content Remove="Assets\Calendar2.altform-lightunplated_targetsize-16.png" />
+    <Content Remove="Assets\Calendar2.altform-lightunplated_targetsize-24.png" />
+    <Content Remove="Assets\Calendar2.altform-lightunplated_targetsize-256.png" />
+    <Content Remove="Assets\Calendar2.altform-lightunplated_targetsize-32.png" />
+    <Content Remove="Assets\Calendar2.altform-lightunplated_targetsize-48.png" />
+    <Content Remove="Assets\Calendar2.altform-unplated_targetsize-16.png" />
+    <Content Remove="Assets\Calendar2.altform-unplated_targetsize-24.png" />
+    <Content Remove="Assets\Calendar2.altform-unplated_targetsize-256.png" />
+    <Content Remove="Assets\Calendar2.altform-unplated_targetsize-32.png" />
+    <Content Remove="Assets\Calendar2.altform-unplated_targetsize-48.png" />
+    <Content Remove="Assets\Calendar2.scale-125.png" />
+    <Content Remove="Assets\Calendar2.scale-150.png" />
+    <Content Remove="Assets\Calendar2.targetsize-16.png" />
+    <Content Remove="Assets\Calendar2.targetsize-24.png" />
+    <Content Remove="Assets\Calendar2.targetsize-256.png" />
+    <Content Remove="Assets\Calendar2.targetsize-32.png" />
+    <Content Remove="Assets\Calendar2.targetsize-48.png" />
+    <Content Remove="Assets\Calendar3.altform-lightunplated_targetsize-16.png" />
+    <Content Remove="Assets\Calendar3.altform-lightunplated_targetsize-24.png" />
+    <Content Remove="Assets\Calendar3.altform-lightunplated_targetsize-256.png" />
+    <Content Remove="Assets\Calendar3.altform-lightunplated_targetsize-32.png" />
+    <Content Remove="Assets\Calendar3.altform-lightunplated_targetsize-48.png" />
+    <Content Remove="Assets\Calendar3.altform-unplated_targetsize-16.png" />
+    <Content Remove="Assets\Calendar3.altform-unplated_targetsize-24.png" />
+    <Content Remove="Assets\Calendar3.altform-unplated_targetsize-256.png" />
+    <Content Remove="Assets\Calendar3.altform-unplated_targetsize-32.png" />
+    <Content Remove="Assets\Calendar3.altform-unplated_targetsize-48.png" />
+    <Content Remove="Assets\calendar3.ico" />
+    <Content Remove="Assets\Calendar3.scale-125.png" />
+    <Content Remove="Assets\Calendar3.targetsize-16.png" />
+    <Content Remove="Assets\Calendar3.targetsize-24.png" />
+    <Content Remove="Assets\Calendar3.targetsize-256.png" />
+    <Content Remove="Assets\Calendar3.targetsize-48.png" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +98,25 @@
     <CustomAdditionalCompileInputs Remove="LogPage.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\Calendar.scale-100.png" />
+    <None Remove="Assets\Calendar.scale-125.png" />
+    <None Remove="Assets\Calendar.scale-150.png" />
+    <None Remove="Assets\Calendar.scale-200.png" />
+    <None Remove="Assets\Calendar.scale-400.png" />
+    <None Remove="Assets\Calendar.targetsize-16.png" />
+    <None Remove="Assets\Calendar.targetsize-24.png" />
+    <None Remove="Assets\Calendar.targetsize-256.png" />
+    <None Remove="Assets\Calendar.targetsize-256_altform-unplated.png" />
+    <None Remove="Assets\Calendar.targetsize-32.png" />
+    <None Remove="Assets\Calendar.targetsize-32_altform-unplated.png" />
+    <None Remove="Assets\Calendar.targetsize-48.png" />
+    <None Remove="Assets\Calendar2.scale-100.png" />
+    <None Remove="Assets\Calendar2.scale-200.png" />
+    <None Remove="Assets\Calendar2.scale-400.png" />
+    <None Remove="Assets\Calendar3.scale-100.png" />
+    <None Remove="Assets\Calendar3.scale-150.png" />
+    <None Remove="Assets\Calendar3.scale-400.png" />
+    <None Remove="Assets\calendar3.targetsize-32.png" />
     <None Remove="EntryEditPage.xaml" />
     <None Remove="HelperWindow.xaml" />
     <None Remove="LogPage.xaml" />

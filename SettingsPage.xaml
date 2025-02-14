@@ -98,7 +98,7 @@
             <TextBlock Text="O aplikacji" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
             <controls:SettingsExpander Description="2025 Rafał Krąż" Header="WorkLog">
                 <controls:SettingsExpander.HeaderIcon>
-                    <BitmapIcon ShowAsMonochrome="False" UriSource="/Assets/StoreLogo.png" />
+                    <BitmapIcon ShowAsMonochrome="False" UriSource="/Assets/Calendar.scale-200.png" />
                 </controls:SettingsExpander.HeaderIcon>
                 <TextBlock
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
