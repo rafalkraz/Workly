@@ -3,11 +3,11 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using Windows.Storage;
-using WorkLog.Interfaces;
-using WorkLog.Structure;
-using myLog = WorkLog.Structure.Log.Entries;
+using Workly.Interfaces;
+using Workly.Structure;
+using myLog = Workly.Structure.Log.Entries;
 
-namespace WorkLog;
+namespace Workly;
 
 public sealed partial class EntryEditPage : Page
 {

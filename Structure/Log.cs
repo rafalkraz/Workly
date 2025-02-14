@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace WorkLog.Structure;
+namespace Workly.Structure;
 
 public static partial class Log
 {

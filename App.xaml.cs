@@ -1,6 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 
-namespace WorkLog;
+namespace Workly;
 
 public partial class App : Application
 {

@@ -15,10 +15,10 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using WinUIEx;
-using WorkLog.Interfaces;
-using WorkLog.Structure;
+using Workly.Interfaces;
+using Workly.Structure;
 
-namespace WorkLog;
+namespace Workly;
 
 public sealed partial class HelperWindow : WinUIEx.WindowEx
 {

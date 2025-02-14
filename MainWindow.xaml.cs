@@ -5,7 +5,7 @@ using Windows.ApplicationModel;
 using Windows.Storage;
 using WinUIEx;
 
-namespace WorkLog;
+namespace Workly;
 
 public sealed partial class MainWindow : WinUIEx.WindowEx
 {

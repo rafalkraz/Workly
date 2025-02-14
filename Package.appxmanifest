@@ -15,8 +15,8 @@
   <mp:PhoneIdentity PhoneProductId="9388efdd-7bc2-46d3-9131-5d6dba843fe3" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>WorkLog</DisplayName>
-    <PublisherDisplayName>rafal</PublisherDisplayName>
+    <DisplayName>Workly</DisplayName>
+    <PublisherDisplayName>Rafał Krąż</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -34,8 +34,8 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="WorkLog"
-        Description="WorkLog"
+        DisplayName="Workly"
+        Description="Workly"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Calendar.png">

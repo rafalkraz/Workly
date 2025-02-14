@@ -3,10 +3,10 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WorkLog.Interfaces;
-using WorkLog.Structure;
+using Workly.Interfaces;
+using Workly.Structure;
 
-namespace WorkLog
+namespace Workly
 {
     public sealed partial class SalaryPage : Page, IDataViewPage
     {

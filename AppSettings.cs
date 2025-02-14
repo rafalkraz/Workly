@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.Storage;
 
-namespace WorkLog;
+namespace Workly;
 internal class AppSettings : INotifyPropertyChanged
 {
     private ApplicationDataContainer localSettings;

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WorkLog.Interfaces;
+using Workly.Interfaces;
 
-namespace WorkLog.Structure;
+namespace Workly.Structure;
 
 public static partial class Log
 {

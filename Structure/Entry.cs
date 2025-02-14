@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Windows.UI.StartScreen;
 
-namespace WorkLog.Structure;
+namespace Workly.Structure;
 
 public class Entry(int entryID, int type, DateTime beginTime, DateTime endTime, string localization, string description, double earning)
 {

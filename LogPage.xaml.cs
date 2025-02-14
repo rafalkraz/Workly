@@ -4,11 +4,11 @@ using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.ObjectModel;
-using WorkLog.Structure;
-using myLog = WorkLog.Structure.Log.Entries;
-using WorkLog.Interfaces;
+using Workly.Structure;
+using myLog = Workly.Structure.Log.Entries;
+using Workly.Interfaces;
 
-namespace WorkLog;
+namespace Workly;
 
 public sealed partial class LogPage : Page, IDataViewPage
 {

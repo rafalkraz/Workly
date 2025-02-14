@@ -6,9 +6,9 @@ using Microsoft.Data.Sqlite;
 using Windows.Storage;
 using Windows.UI.Popups;
 using WinUIEx.Messaging;
-using WorkLog.Interfaces;
+using Workly.Interfaces;
 
-namespace WorkLog.Structure;
+namespace Workly.Structure;
 public partial class Log
 {
     public static readonly StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;

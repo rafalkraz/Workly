@@ -1,9 +1,9 @@
 {
   "profiles": {
-    "WorkLog (Package)": {
+    "Workly (Package)": {
       "commandName": "MsixPackage"
     },
-    "WorkLog (Unpackaged)": {
+    "Workly (Unpackaged)": {
       "commandName": "Project"
     }
   }

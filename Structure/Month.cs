@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WorkLog.Structure;
+namespace Workly.Structure;
 
 public class Month(string number) : IEquatable<Month>, IComparable<Month>
 {

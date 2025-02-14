@@ -1,6 +1,6 @@
-﻿using WorkLog.Structure;
+﻿using Workly.Structure;
 
-namespace WorkLog.Interfaces;
+namespace Workly.Interfaces;
 
 public interface IDataViewPage
 {

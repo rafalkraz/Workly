@@ -7,9 +7,9 @@ using Microsoft.UI.Xaml.Controls;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using WorkLog.Structure;
+using Workly.Structure;
 
-namespace WorkLog;
+namespace Workly;
 
 public sealed partial class SettingsPage : Page
 {

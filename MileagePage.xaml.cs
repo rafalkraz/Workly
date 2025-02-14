@@ -5,11 +5,11 @@ using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Popups;
-using WorkLog.Interfaces;
-using WorkLog.Structure;
-using myLog = WorkLog.Structure.Log.Mileage;
+using Workly.Interfaces;
+using Workly.Structure;
+using myLog = Workly.Structure.Log.Mileage;
 
-namespace WorkLog;
+namespace Workly;
 
 public sealed partial class MileagePage : Page, IDataViewPage
 {

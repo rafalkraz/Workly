@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="WorkLog.SettingsPage"
+    x:Class="Workly.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:WorkLog"
+    xmlns:local="using:Workly"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
@@ -96,7 +96,7 @@
             
             <!-- ABOUT -->
             <TextBlock Text="O aplikacji" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
-            <controls:SettingsExpander Description="2025 Rafał Krąż" Header="WorkLog">
+            <controls:SettingsExpander Description="2025 Rafał Krąż" Header="Workly">
                 <controls:SettingsExpander.HeaderIcon>
                     <BitmapIcon ShowAsMonochrome="False" UriSource="/Assets/Calendar.scale-200.png" />
                 </controls:SettingsExpander.HeaderIcon>
