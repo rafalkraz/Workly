@@ -8,7 +8,7 @@ public static partial class Log
 {
     public static async void PrepareLogs()
     {
-        await DataAccess.InitializeDatabase();
+        await DataAccess.InitializeDatabaseAsync();
     }
 
     public static bool DropTables()

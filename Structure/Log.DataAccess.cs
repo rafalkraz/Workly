@@ -4,8 +4,6 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Windows.Storage;
-using Windows.UI.Popups;
-using WinUIEx.Messaging;
 using Workly.Interfaces;
 
 namespace Workly.Structure;
@@ -17,8 +15,13 @@ public partial class Log
     private static class DataAccess
     {
         private static StorageFile dbFile;
-
-        internal static async Task<bool> InitializeDatabase()
+        /// <summary>
+        /// Opens (if necessary, creates) database file with Entries and Mileage tables
+        /// </summary>
+        /// <returns>
+        /// true, if tables reading (creation) was successful; otherwise, false
+        /// </returns>
+        internal static async Task<bool> InitializeDatabaseAsync()
         {
             dbFile = await localFolder.CreateFileAsync(dbName, CreationCollisionOption.OpenIfExists);
             using var db = new SqliteConnection($"Filename={dbFile.Path}");
@@ -59,6 +62,13 @@ public partial class Log
             return true;
         }
 
+        /// <summary>
+        /// Gets entries from Entries table, that meet the given criteria for time
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="sender"></param>
+        /// <returns></returns>
         internal static List<Entry> GetEntriesDataFromMonth(string year, string month, IDataViewPage sender)
         {
             var result = new List<Entry>();
@@ -66,9 +76,11 @@ public partial class Log
             {
                 db.Open();
 
-                var selectCommand = new SqliteCommand();
-                selectCommand.Connection = db;
-                selectCommand.CommandText = "SELECT * from Entries WHERE strftime('%Y', BeginTime) = @year AND strftime('%m', BeginTime) = @month;";
+                var selectCommand = new SqliteCommand
+                {
+                    Connection = db,
+                    CommandText = "SELECT * from Entries WHERE strftime('%Y', BeginTime) = @year AND strftime('%m', BeginTime) = @month;"
+                };
                 selectCommand.Parameters.AddWithValue("@year", year);
                 selectCommand.Parameters.AddWithValue("@month", month);
 
@@ -108,9 +120,11 @@ public partial class Log
             {
                 db.Open();
 
-                var selectCommand = new SqliteCommand();
-                selectCommand.Connection = db;
-                selectCommand.CommandText = "SELECT * from Mileage WHERE strftime('%Y', Date) = @year AND strftime('%m', Date) = @month;";
+                var selectCommand = new SqliteCommand
+                {
+                    Connection = db,
+                    CommandText = "SELECT * from Mileage WHERE strftime('%Y', Date) = @year AND strftime('%m', Date) = @month;"
+                };
                 selectCommand.Parameters.AddWithValue("@year", year);
                 selectCommand.Parameters.AddWithValue("@month", month);
 
@@ -154,9 +168,11 @@ public partial class Log
                 if (table == "Entries") column = "BeginTime";
                 else if (table == "Mileage") column = "Date";
 
-                var selectCommand = new SqliteCommand();
-                selectCommand.Connection = db;
-                selectCommand.CommandText = $"SELECT DISTINCT strftime('%Y', {column}) from {table};";
+                var selectCommand = new SqliteCommand
+                {
+                    Connection = db,
+                    CommandText = $"SELECT DISTINCT strftime('%Y', {column}) from {table};"
+                };
                 var query = selectCommand.ExecuteReader();
 
                 while (query.Read())
@@ -179,9 +195,11 @@ public partial class Log
                 if (table == "Entries") column = "BeginTime";
                 else if (table == "Mileage") column = "Date";
 
-                var selectCommand = new SqliteCommand();
-                selectCommand.Connection = db;
-                selectCommand.CommandText = $"SELECT DISTINCT strftime('%m', {column}) from {table} WHERE strftime('%Y', {column}) = @year;";
+                var selectCommand = new SqliteCommand
+                {
+                    Connection = db,
+                    CommandText = $"SELECT DISTINCT strftime('%m', {column}) from {table} WHERE strftime('%Y', {column}) = @year;"
+                };
                 selectCommand.Parameters.AddWithValue("@year", year);
 
                 var query = selectCommand.ExecuteReader();
@@ -200,9 +218,11 @@ public partial class Log
             using var db = new SqliteConnection($"Filename={dbFile.Path}");
             db.Open();
 
-            var insertCommand = new SqliteCommand();
-            insertCommand.Connection = db;
-            insertCommand.CommandText = "INSERT INTO Entries VALUES (NULL, @type, @beginTime, @endTime, @localization, @description, @earning);";
+            var insertCommand = new SqliteCommand
+            {
+                Connection = db,
+                CommandText = "INSERT INTO Entries VALUES (NULL, @type, @beginTime, @endTime, @localization, @description, @earning);"
+            };
             insertCommand.Parameters.AddWithValue("@type", type);
             insertCommand.Parameters.AddWithValue("@beginTime", beginTime);
             insertCommand.Parameters.AddWithValue("@endTime", endTime);
@@ -221,9 +241,11 @@ public partial class Log
             using var db = new SqliteConnection($"Filename={dbFile.Path}");
             db.Open();
 
-            var insertCommand = new SqliteCommand();
-            insertCommand.Connection = db;
-            insertCommand.CommandText = "INSERT INTO Mileage VALUES (NULL, @type, @date, @beginPoint, @endPoint, @description, @distance, @parkingPrice);";
+            var insertCommand = new SqliteCommand
+            {
+                Connection = db,
+                CommandText = "INSERT INTO Mileage VALUES (NULL, @type, @date, @beginPoint, @endPoint, @description, @distance, @parkingPrice);"
+            };
             insertCommand.Parameters.AddWithValue("@type", type);
             insertCommand.Parameters.AddWithValue("@date", date);
             insertCommand.Parameters.AddWithValue("@beginPoint", beginPoint);
@@ -243,9 +265,11 @@ public partial class Log
             using var db = new SqliteConnection($"Filename={dbFile.Path}");
             db.Open();
 
-            var insertCommand = new SqliteCommand();
-            insertCommand.Connection = db;
-            insertCommand.CommandText = "UPDATE Entries SET Type = @newType, BeginTime = @newBeginTime, EndTime = @newEndTime, Localization = @newLocalization, Description = @newDescription, Earning = @newEarning WHERE EntryID = @entryID;";
+            var insertCommand = new SqliteCommand
+            {
+                Connection = db,
+                CommandText = "UPDATE Entries SET Type = @newType, BeginTime = @newBeginTime, EndTime = @newEndTime, Localization = @newLocalization, Description = @newDescription, Earning = @newEarning WHERE EntryID = @entryID;"
+            };
             insertCommand.Parameters.AddWithValue("@entryID", entryID);
             insertCommand.Parameters.AddWithValue("@newType", newType);
             insertCommand.Parameters.AddWithValue("@newBeginTime", newBeginTime);
@@ -265,9 +289,11 @@ public partial class Log
             using var db = new SqliteConnection($"Filename={dbFile.Path}");
             db.Open();
 
-            var insertCommand = new SqliteCommand();
-            insertCommand.Connection = db;
-            insertCommand.CommandText = "UPDATE Mileage SET Type = @newType, Date = @newDate, BeginPoint = @newBeginPoint, EndPoint = @newEndPoint, Description = @newDescription, Distance = @newDistance, ParkingPrice = @newParkingPrice WHERE ID = @ID;";
+            var insertCommand = new SqliteCommand
+            {
+                Connection = db,
+                CommandText = "UPDATE Mileage SET Type = @newType, Date = @newDate, BeginPoint = @newBeginPoint, EndPoint = @newEndPoint, Description = @newDescription, Distance = @newDistance, ParkingPrice = @newParkingPrice WHERE ID = @ID;"
+            };
             insertCommand.Parameters.AddWithValue("@ID", ID);
             insertCommand.Parameters.AddWithValue("@newType", newType);
             insertCommand.Parameters.AddWithValue("@newDate", newDate);

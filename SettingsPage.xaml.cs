@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Workly.Structure;
@@ -23,19 +20,12 @@ public sealed partial class SettingsPage : Page
         TextBox textBox = sender as TextBox;
         if (textBox != null)
         {
-            // Zamieñ przecinek na kropkê
             string text = textBox.Text.Replace(',', '.');
-
-            // Aktualizuj wartoœæ TextBox
             textBox.Text = text;
-
-            // Ustawienie kursora na koñcu tekstu
             textBox.SelectionStart = textBox.Text.Length;
 
             if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out double value))
             {
-                // Prawid³owy format liczby dziesiêtnej
-                // Ustaw wartoœæ w odpowiedniej w³aœciwoœci
                 var binding = textBox.GetBindingExpression(TextBox.TextProperty);
                 if (binding != null)
                 {
@@ -44,7 +34,6 @@ public sealed partial class SettingsPage : Page
             }
             else
             {
-                // Nieprawid³owy format, wyczyœæ pole lub ustaw odpowiedni komunikat
                 textBox.Text = string.Empty;
             }
         }
@@ -55,7 +44,6 @@ public sealed partial class SettingsPage : Page
         TextBox textBox = sender as TextBox;
         if (textBox != null && string.IsNullOrEmpty(textBox.Text))
         {
-            // Ustaw domyœln¹ wartoœæ na 0, jeœli pole jest puste
             textBox.Text = "0";
             var binding = textBox.GetBindingExpression(TextBox.TextProperty);
             if (binding != null)
@@ -81,24 +69,30 @@ public sealed partial class SettingsPage : Page
             if (file != null)
             {
                 await file.CopyAsync(Log.localFolder, Log.dbName, NameCollisionOption.ReplaceExisting);
-                ContentDialog dialog = new ContentDialog();
-                dialog.XamlRoot = this.XamlRoot;
-                dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
-                dialog.Title = "Sukces!\nBaza danych zosta³a zaimportowana";
-                dialog.CloseButtonText = "OK";
-                dialog.DefaultButton = ContentDialogButton.Close;
-                var result = await dialog.ShowAsync();
+                ContentDialog dialog = new()
+                {
+                    XamlRoot = this.XamlRoot,
+                    Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                    Title = "Sukces!",
+                    Content = "Baza danych zosta³a zaimportowana",
+                    CloseButtonText = "OK",
+                    DefaultButton = ContentDialogButton.Close
+                };
+                await dialog.ShowAsync();
             }
         }
         catch (Exception)
         {
-            ContentDialog dialog = new ContentDialog();
-            dialog.XamlRoot = this.XamlRoot;
-            dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
-            dialog.Title = "Wyst¹pi³ b³¹d!\nNie uda³o siê zaimportowaæ bazy danych";
-            dialog.CloseButtonText = "OK";
-            dialog.DefaultButton = ContentDialogButton.Close;
-            var result = await dialog.ShowAsync();
+            ContentDialog dialog = new()
+            {
+                XamlRoot = this.XamlRoot,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                Title = "Wyst¹pi³ b³¹d!",
+                Content = "Nie uda³o siê zaimportowaæ bazy danych",
+                CloseButtonText = "OK",
+                DefaultButton = ContentDialogButton.Close
+            };
+            await dialog.ShowAsync();
         }
         
         senderButton.IsEnabled = true;
@@ -109,14 +103,14 @@ public sealed partial class SettingsPage : Page
     {
         var senderButton = sender as Button;
         senderButton.IsEnabled = false;
-        FileSavePicker savePicker = new Windows.Storage.Pickers.FileSavePicker();
+        FileSavePicker savePicker = new();
 
         var window = App.MainWindow;
         var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
         WinRT.Interop.InitializeWithWindow.Initialize(savePicker, hWnd);
 
         savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-        savePicker.FileTypeChoices.Add("Plik bazy danych", new List<string>() { ".db" });
+        savePicker.FileTypeChoices.Add("Plik bazy danych", [".db"]);
         savePicker.SuggestedFileName = "Worklog-" + DateTime.Now.ToString("yyyy-MM-dd") + ".db";
 
         StorageFile destinationFile = await savePicker.PickSaveFileAsync();
@@ -135,7 +129,7 @@ public sealed partial class SettingsPage : Page
                     CloseButtonText = "OK",
                     DefaultButton = ContentDialogButton.Close
                 };
-                var result = await dialog.ShowAsync();
+                await dialog.ShowAsync();
             }
         }
         catch (Exception)
@@ -151,8 +145,6 @@ public sealed partial class SettingsPage : Page
             };
             await dialog.ShowAsync();
         }
-        
-   
         senderButton.IsEnabled = true;
     }
 
@@ -203,5 +195,10 @@ public sealed partial class SettingsPage : Page
             }
         }
         
+    }
+
+    private async void BugRequestCard_Click(object sender, RoutedEventArgs e)
+    {
+        await Windows.System.Launcher.LaunchUriAsync(new Uri("mailto:rafalkraz@gmail.com?subject=WorklyBugOrFeatureReport"));
     }
 }
