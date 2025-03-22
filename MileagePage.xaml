@@ -119,10 +119,9 @@
                             </StackPanel>
                         </Button>
                     </RelativePanel>
-                    <TextBlock Grid.Row="1" x:Name="NoEntriesTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">Brak wpisów</TextBlock>
-                    <ScrollView Grid.Row="1" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+                        <TextBlock Grid.Row="1" x:Name="NoEntriesTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">Brak wpisów</TextBlock>
                         <!-- LIST VIEW -->
-                        <ListView x:Name="MonthEntriesListView" ItemsSource="{Binding Source={StaticResource EntriesCollection}}" SelectionChanged="MonthEntriesListView_SelectionChanged" ItemClick="MonthEntriesListView_ItemClick" IsItemClickEnabled="True">
+                        <ListView x:Name="MonthEntriesListView" Grid.Row="1" ItemsSource="{Binding Source={StaticResource EntriesCollection}}" SelectionChanged="MonthEntriesListView_SelectionChanged" ItemClick="MonthEntriesListView_ItemClick" IsItemClickEnabled="True">
                             <ListView.GroupStyle>
                                 <GroupStyle>
                                     <GroupStyle.HeaderTemplate>
@@ -143,8 +142,7 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                    </ScrollView>
-                </Grid>
+                    </Grid>
             </SplitView.Pane>
             <!--#endregion-->
             <!--#region RightSide-->

@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Windows.UI.Popups;
 using Workly.Interfaces;
 using Workly.Structure;
 using myLog = Workly.Structure.Log.Mileage;
@@ -27,7 +26,7 @@ public sealed partial class MileagePage : Page, IDataViewPage
     }
 
 
-    private async void Page_Loaded(object sender, RoutedEventArgs e)
+    private void Page_Loaded(object sender, RoutedEventArgs e)
     {
         Page_SizeChanged(null, null);
         RefreshEntryList();
@@ -231,7 +230,7 @@ public sealed partial class MileagePage : Page, IDataViewPage
         if (AllEntriesButton.Visibility == Visibility.Visible) { RootSplitView.IsPaneOpen = false; }
     }
 
-    private async void EditEntryButton_Click(object sender, RoutedEventArgs e)
+    private void EditEntryButton_Click(object sender, RoutedEventArgs e)
     {
         h_window = new HelperWindow(this, (EntryMileage)MonthEntriesListView.SelectedItem, HelperWindow.Action.Edit);
         h_window.Activate();

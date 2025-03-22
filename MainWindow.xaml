@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <winex:WindowEx xmlns:winex="using:WinUIEx" 
-    MinWidth="436"
+    MinWidth="535"
     Width="1400"            
     x:Class="Workly.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"

@@ -23,7 +23,7 @@ public sealed partial class EntryEditPage : Page
     public EntryEditPage(IDataViewPage parentPage, object entry, Window helperWindowReference)
     {
         this.InitializeComponent();
-        if (parentPage.ToString() == "WorkLog.LogPage")
+        if (parentPage.ToString() == "Workly.LogPage")
         {
             EntryTypeComboBox.ItemsSource = entryTypes;
             editedEntry = (Entry)entry;
@@ -33,7 +33,7 @@ public sealed partial class EntryEditPage : Page
                 MoneyInfoBar1.IsOpen = true;
             }
         }
-        else if (parentPage.ToString() == "WorkLog.MileagePage") {
+        else if (parentPage.ToString() == "Workly.MileagePage") {
             EntryTypeComboBox.ItemsSource = mileageEntryTypes;
             
             editedMileage = (EntryMileage)entry;
@@ -52,7 +52,7 @@ public sealed partial class EntryEditPage : Page
         parentPageReference = parentPage;
     }
 
-    private async void Page_Loaded(object sender, RoutedEventArgs e)
+    private void Page_Loaded(object sender, RoutedEventArgs e)
     {
         LoadEntryDetails();
     }
@@ -410,10 +410,11 @@ public sealed partial class EntryEditPage : Page
     }
 
     /// <summary>
-    /// 
+    /// Checks the validity of work time and calculates and displays the work time
+    /// based on the BeginTimePicker and EndTimePicker values.
     /// </summary>
     /// <returns>
-    /// 0, if work time is correct; 1, if beginTime > endTime; 2, if work time is incorrect or null
+    /// 0, if work time is correct; 1, if the beginTime ia greater than endTime; 2, if work time is invalid or null
     /// </returns>
     private int CheckTime()
     {

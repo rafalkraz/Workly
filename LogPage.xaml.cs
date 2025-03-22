@@ -25,7 +25,7 @@ public sealed partial class LogPage : Page, IDataViewPage
         this.InitializeComponent();
     }
 
-    private async void Page_Loaded(object sender, RoutedEventArgs e)
+    private void Page_Loaded(object sender, RoutedEventArgs e)
     {
         Page_SizeChanged(null, null);
         RefreshEntryList();
@@ -139,7 +139,8 @@ public sealed partial class LogPage : Page, IDataViewPage
             group entry by entry.Date.ToString("dd.MM") into g
             orderby g.Key
             select g;
-        EntriesCollection.Source = result.Reverse();
+        var reversedResult = result.Reverse();
+        EntriesCollection.Source = reversedResult;
         isChanging = false;
     }
 
