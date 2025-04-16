@@ -9,7 +9,7 @@
 
   <Identity
     Name="9388efdd-7bc2-46d3-9131-5d6dba843fe3"
-    Publisher="CN=rafal"
+    Publisher="CN=Rafał Krąż"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="9388efdd-7bc2-46d3-9131-5d6dba843fe3" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
