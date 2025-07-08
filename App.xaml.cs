@@ -12,7 +12,7 @@ public partial class App : Application
         Structure.Log.PrepareLogs();
     }
 
-    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         MainWindow.Activate();
         MainWindow.ExtendsContentIntoTitleBar = true;

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<winex:WindowEx xmlns:winex="using:WinUIEx" 
-    MinWidth="535"
-    Width="1400"            
+<Window          
     x:Class="Workly.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -53,4 +51,4 @@
             <Frame Margin="0,0,0,0" x:Name="ContentFrame"/>
         </NavigationView>
     </Grid>
-</winex:WindowEx>
+</Window>
