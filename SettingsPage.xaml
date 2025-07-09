@@ -122,6 +122,7 @@
                             <HyperlinkButton Content="Windows App SDK" NavigateUri="https://aka.ms/windowsappsdk" />
                             <HyperlinkButton Content="Windows UI Library" NavigateUri="https://github.com/microsoft/microsoft-ui-xaml" />
                             <HyperlinkButton Content="Windows Community controls" NavigateUri="https://aka.ms/toolkit/docs" />
+                            <HyperlinkButton Content="WinUIEx Package" NavigateUri="https://github.com/dotMorten/WinUIEx" />
                         </StackPanel>
                     </controls:SettingsCard>
                     <controls:SettingsCard
