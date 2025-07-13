@@ -8,11 +8,11 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="9388efdd-7bc2-46d3-9131-5d6dba843fe3"
-    Publisher="CN=Rafał Krąż"
+    Name="RafaKr.Workly"
+    Publisher="CN=470DAECF-6883-4578-8A1B-B292AC28A8B8"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="9388efdd-7bc2-46d3-9131-5d6dba843fe3" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="ec7ece43-8880-47a2-9fd0-10d2454c985e" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>Workly</DisplayName>
@@ -40,7 +40,7 @@
         Square44x44Logo="Assets\Calendar.png" Square150x150Logo="Assets\Square150x150Logo.png">
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
         <uap:DefaultTile Square71x71Logo="Assets\SmallTile.png" Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\LargeTile.png"/>
-        <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badge"/>
+        <uap:LockScreen Notification="badge" BadgeLogo="Assets\StoreLogo.png"/>
       </uap:VisualElements>
     </Application>
   </Applications>
