@@ -194,11 +194,10 @@ public sealed partial class SettingsPage : Page
                 throw;
             }
         }
-        
     }
 
     private async void BugRequestCard_Click(object sender, RoutedEventArgs e)
     {
-        await Windows.System.Launcher.LaunchUriAsync(new Uri("mailto:rafalkraz@gmail.com?subject=WorklyBugOrFeatureReport"));
+        await Windows.System.Launcher.LaunchUriAsync(new Uri("mailto:dev.rkraz@gmail.com?subject=Workly-BugOrFeatureReport"));
     }
 }

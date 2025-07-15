@@ -50,6 +50,9 @@ Aplikacja Workly obsługuje import i eksport bazy danych w formacie `.db`, co um
 - [WinUIEx Package](https://github.com/dotMorten/WinUIEx)
 - [Microsoft SQLite](https://learn.microsoft.com/en-us/dotnet/standard/data/sqlite/?tabs=net-cli)
 
+**Uznanie autorstwa**
+- [Ikona aplikacji - Calendar icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/calendar)
+
 ## 🕓 Historia wersji
 
 | Wersja | Data wydania | Zmiany                                                                    |

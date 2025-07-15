@@ -97,14 +97,14 @@
             <!--#endregion-->
             <!--#region About -->
             <TextBlock Text="O aplikacji" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
-            <controls:SettingsExpander Description="2025 Rafał Krąż" Header="Workly">
+            <controls:SettingsExpander Description="© 2025 Rafał Krąż" Header="Workly">
                 <controls:SettingsExpander.HeaderIcon>
                     <BitmapIcon ShowAsMonochrome="False" UriSource="/Assets/Calendar.scale-200.png" />
                 </controls:SettingsExpander.HeaderIcon>
                 <TextBlock
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 IsTextSelectionEnabled="True"
-                Text="1.0" />
+                Text="1.0.1" />
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
                     x:Name="BugRequestCard"
@@ -123,6 +123,7 @@
                             <HyperlinkButton Content="Windows UI Library" NavigateUri="https://github.com/microsoft/microsoft-ui-xaml" />
                             <HyperlinkButton Content="Windows Community controls" NavigateUri="https://aka.ms/toolkit/docs" />
                             <HyperlinkButton Content="WinUIEx Package" NavigateUri="https://github.com/dotMorten/WinUIEx" />
+                            <HyperlinkButton Content="Microsoft SQLite" NavigateUri="https://learn.microsoft.com/en-us/dotnet/standard/data/sqlite/?tabs=net-cli" />
                         </StackPanel>
                     </controls:SettingsCard>
                     <controls:SettingsCard
@@ -131,6 +132,14 @@
                     Header="Uznanie autorstwa">
                         <StackPanel Margin="-12,0,0,0" Orientation="Vertical">
                             <HyperlinkButton Content="Ikona aplikacji - Calendar icons created by Freepik - Flaticon" NavigateUri="https://www.flaticon.com/free-icons/calendar" />
+                        </StackPanel>
+                    </controls:SettingsCard>
+                    <controls:SettingsCard
+                    HorizontalContentAlignment="Left"
+                    ContentAlignment="Vertical"
+                    Header="Kod źródłowy i licencja">
+                        <StackPanel Margin="-12,0,0,0" Orientation="Vertical">
+                            <HyperlinkButton Content="GitHub" NavigateUri="https://github.com/rafalkraz/Workly" />
                         </StackPanel>
                     </controls:SettingsCard>
                 </controls:SettingsExpander.Items>
