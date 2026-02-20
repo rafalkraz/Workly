@@ -6,6 +6,7 @@
     xmlns:local="using:Workly"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
     <ScrollView>
@@ -129,6 +130,11 @@
                     <TimePicker x:Name="BeginTimePicker" ClockIdentifier="24HourClock" Header="Godzina rozpoczęcia" TimeChanged="BeginTimePicker_TimeChanged"/>
                     <TextBlock Padding="4,25,4,0">-</TextBlock>
                     <TimePicker x:Name="EndTimePicker" ClockIdentifier="24HourClock" Header="Godzina zakończenia" TimeChanged="EndTimePicker_TimeChanged"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" x:Name="TimeTextBoxesStackPanel">
+                    <TextBox x:Name="BeginTimeTextBox" Header="Godzina rozpoczęcia"  ui:TextBoxExtensions.CustomMask="2:[0-2],5:[0-5]" ui:TextBoxExtensions.Mask="29:59" Width="132" LostFocus="BeginTimeTextBox_LostFocus"/>
+                    <TextBlock Padding="4,32,4,0">-</TextBlock>
+                    <TextBox x:Name="EndTimeTextBox" Header="Godzina zakończenia"  ui:TextBoxExtensions.CustomMask="2:[0-2],5:[0-5]" ui:TextBoxExtensions.Mask="29:59" Width="132" LostFocus="EndTimeTextBox_LostFocus"/>
                 </StackPanel>
                 <!--#endregion-->
                 <!--#region Controls.Location-->

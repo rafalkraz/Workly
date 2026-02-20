@@ -11,6 +11,7 @@ internal class AppSettings : INotifyPropertyChanged
     private double _overtimeSalary;
     private double _leaveSalary;
     private double _mileageSalary;
+    private int _timePickerType;
 
     public AppSettings() 
     {
@@ -75,6 +76,20 @@ internal class AppSettings : INotifyPropertyChanged
         }
     }
 
+    // 0: TextBox, 1: TimePicker
+    public int TimePickerType { 
+        get => _timePickerType;
+        set
+        {
+            if(_timePickerType != value)
+            {
+                _timePickerType = value;
+                OnPropertyChanged();
+                SaveToLocalSettings("TimePickerType", value);
+            }
+        }
+    }
+
     private void LoadFromLocalSettings()
     {
         if (localSettings.Values.ContainsKey("StandardSalary"))
@@ -92,6 +107,10 @@ internal class AppSettings : INotifyPropertyChanged
         if (localSettings.Values.ContainsKey("MileageSalary"))
         {
             MileageSalary = Convert.ToDouble(localSettings.Values["MileageSalary"]);
+        }
+        if (localSettings.Values.ContainsKey("TimePickerType"))
+        {
+            TimePickerType = Convert.ToInt32(localSettings.Values["TimePickerType"]);
         }
     }
 

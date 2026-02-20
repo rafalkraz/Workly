@@ -63,6 +63,17 @@
             <!--#region Data -->
             <TextBlock Text="Dane" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
 
+            <controls:SettingsCard Description="Możesz wybrać wygodniejszy dla siebie sposób wprowadzania czasu w aplikacji" Header="Wprowadzanie czasu">
+                <controls:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE815;" />
+                </controls:SettingsCard.HeaderIcon>
+                <ComboBox SelectedIndex="{Binding TimePickerType, Mode=TwoWay}">
+                    <ComboBoxItem>Pole tekstowe</ComboBoxItem>
+                    <ComboBoxItem>Selektor czasu</ComboBoxItem>
+                </ComboBox>
+            </controls:SettingsCard>
+
+
             <controls:SettingsExpander Description="Importuj i eksportuj swoje dane" Header="Zarządzanie danymi">
                 <controls:SettingsExpander.HeaderIcon>
                     <FontIcon Glyph="&#xE912;" />

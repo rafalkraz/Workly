@@ -17,6 +17,10 @@ public sealed partial class EntryEditPage : Page
 
     private readonly List<string> entryTypes = ["Standardowy", "Nadgodziny", "Urlop", "Bezp³atne wolne"];
     private readonly List<string> mileageEntryTypes = ["Kilometrówka", "Parking"];
+    private readonly AppSettings appSettings = new();
+
+    private TimeSpan? beginTime;
+    private TimeSpan? endTime;
 
     private enum EntrySourceType
     {
@@ -84,13 +88,20 @@ public sealed partial class EntryEditPage : Page
                 
                 if (editedEntry == null)
                 {
+                    //Type
                     EntryTypeComboBox.SelectedItem = entryTypes[0];
+
+                    //Date
                     EventDatePicker.Date = DateTime.Now;
-                    BeginTimePicker.Time = DateTime.Now.TimeOfDay;
-                    EndTimePicker.Time = DateTime.Now.TimeOfDay + TimeSpan.FromMinutes(15);
+
+                    // Time
+                    TimeSpan timeNow = DateTime.Now.TimeOfDay;
+                    beginTime = timeNow;
+                    endTime = timeNow + TimeSpan.FromMinutes(15);
                 }
                 else
                 {
+                    // Type
                     try
                     {
                         EntryTypeComboBox.SelectedItem = entryTypes[editedEntry.Type];
@@ -99,12 +110,33 @@ public sealed partial class EntryEditPage : Page
                     {
                         EntryTypeComboBox.SelectedItem = entryTypes[0];
                     }
+
+                    // Date
                     EventDatePicker.Date = editedEntry.Date.ToDateTime(new TimeOnly());
-                    BeginTimePicker.Time = editedEntry.BeginTime.TimeOfDay;
-                    EndTimePicker.Time = editedEntry.EndTime.TimeOfDay;
+
+                    // Time
+                    beginTime = editedEntry.BeginTime.TimeOfDay;
+                    endTime = editedEntry.EndTime.TimeOfDay;
+
+                    // Location
                     LocationTextBox.Text = editedEntry.Localization;
+
+                    // Description
                     DescriptionTextBox.Text = editedEntry.Description;
                 }
+
+                // Set time on controls
+                if (appSettings.TimePickerType == 0)
+                {
+                    BeginTimeTextBox.Text = beginTime.ToString();
+                    EndTimeTextBox.Text = endTime.ToString();
+                }
+                else if (appSettings.TimePickerType == 1)
+                {
+                    BeginTimePicker.Time = (TimeSpan)beginTime;
+                    EndTimePicker.Time = (TimeSpan)endTime;
+                }
+
                 break;
             case EntrySourceType.Mileage:
                 if (editedMileage == null)
@@ -133,6 +165,7 @@ public sealed partial class EntryEditPage : Page
                 break;
         }
         CheckType();
+        CheckTime();
     }
 
     private bool CheckForm()
@@ -242,6 +275,10 @@ public sealed partial class EntryEditPage : Page
 
     private void CheckType()
     {
+        if (appSettings.TimePickerType == 0) TimePickersStackPanel.Visibility = Visibility.Collapsed;
+        else if (appSettings.TimePickerType == 1) TimeTextBoxesStackPanel.Visibility = Visibility.Collapsed;
+        else throw new Exception("Cannot determine TimePicker type!");
+
         if (EntryTypeComboBox.SelectedItem != null)
         {
             switch (sourceType)
@@ -274,7 +311,7 @@ public sealed partial class EntryEditPage : Page
                     TimeStackPanel.Visibility = Visibility.Collapsed;
                     TimePickersStackPanel.Visibility = Visibility.Collapsed;
                     WorkTimeTextBlock.Visibility = Visibility.Collapsed;
-                    
+
                     if (EntryTypeComboBox.SelectedItem.ToString() == "Parking")
                     {
                         BeginPointStackPanel.Visibility = Visibility.Collapsed;
@@ -319,16 +356,32 @@ public sealed partial class EntryEditPage : Page
             switch (sourceType)
             {
                 case EntrySourceType.Log:
-                    var beginTime = EventDatePicker.Date.Value.Date.Add(BeginTimePicker.Time);
-                    var endTime = EventDatePicker.Date.Value.Date.Add(EndTimePicker.Time);
+
+                    DateTime beginDateTime;
+                    DateTime endDateTime;
+
+                    if (appSettings.TimePickerType == 0)
+                    {
+                        beginDateTime = EventDatePicker.Date.Value.Date.Add(TimeSpan.Parse(BeginTimeTextBox.Text.ToString()));
+                        endDateTime = EventDatePicker.Date.Value.Date.Add(TimeSpan.Parse(EndTimeTextBox.Text.ToString()));
+                    }
+                    else if (appSettings.TimePickerType == 1)
+                    {
+                        beginDateTime = EventDatePicker.Date.Value.Date.Add(BeginTimePicker.Time);
+                        endDateTime = EventDatePicker.Date.Value.Date.Add(EndTimePicker.Time);
+                    }
+                    else
+                    {
+                        throw new Exception("Nie mo¿na okreœliæ typu TimePickera!");
+                    }
+
                     if (EntryTypeComboBox.SelectedIndex != 0 && EntryTypeComboBox.SelectedIndex != 1)
                     {
                         LocationTextBox.Text = "";
                         DescriptionTextBox.Text = "";
                     }
                     var earning = 0.0;
-                    var appSettings = new AppSettings();
-                    var time = TimeSpan.FromMinutes((EndTimePicker.Time - BeginTimePicker.Time).TotalMinutes).TotalMinutes;
+                    var time = TimeSpan.FromMinutes(((TimeSpan)endTime - (TimeSpan)beginTime).TotalMinutes).TotalMinutes;
                     switch (EntryTypeComboBox.SelectedIndex)
                     {
                         case 0:
@@ -352,7 +405,7 @@ public sealed partial class EntryEditPage : Page
                         _ => editedEntry.EntryID,
                     };
 
-                    var entry = new Entry(requestedID, EntryTypeComboBox.SelectedIndex, beginTime, endTime, LocationTextBox.Text, DescriptionTextBox.Text, earning);
+                    var entry = new Entry(requestedID, EntryTypeComboBox.SelectedIndex, beginDateTime, endDateTime, LocationTextBox.Text, DescriptionTextBox.Text, earning);
 
                     if (mode == EditMode.Edit)
                     {
@@ -436,15 +489,37 @@ public sealed partial class EntryEditPage : Page
         IncorrectDateInfoBar.IsOpen = false;
     }
 
+    // Time controls
+
     private void BeginTimePicker_TimeChanged(object sender, TimePickerValueChangedEventArgs e)
     {
         IncorrectTimeInfoBar.IsOpen = false;
+        beginTime = BeginTimePicker.Time;
         CheckTime();
     }
 
     private void EndTimePicker_TimeChanged(object sender, TimePickerValueChangedEventArgs e)
     {
         IncorrectTimeInfoBar.IsOpen = false;
+        endTime = EndTimePicker.Time;
+        CheckTime();
+    }
+
+    private void BeginTimeTextBox_LostFocus(object sender, RoutedEventArgs e)
+    {
+        IncorrectTimeInfoBar.IsOpen = false;
+        TimeSpan time;
+        if (TimeSpan.TryParse(BeginTimeTextBox.Text, out time)) beginTime = time;
+        else beginTime = null;
+        CheckTime();
+    }
+
+    private void EndTimeTextBox_LostFocus(object sender, RoutedEventArgs e)
+    {
+        IncorrectTimeInfoBar.IsOpen = false;
+        TimeSpan time;
+        if (TimeSpan.TryParse(EndTimeTextBox.Text, out time)) endTime = time;
+        else endTime = null;
         CheckTime();
     }
 
@@ -457,26 +532,33 @@ public sealed partial class EntryEditPage : Page
     /// </returns>
     private int CheckTime()
     {
-        if (BeginTimePicker.Time <= EndTimePicker.Time)
-        {
-            var time = TimeSpan.FromMinutes((EndTimePicker.Time - BeginTimePicker.Time).TotalMinutes);
-            if (time.TotalHours >= 1)
-            {
-                if (time.Minutes != 0) WorkTimeTextBlock.Text = $"Czas pracy: {time.Hours}h {time.Minutes}min";
-                else WorkTimeTextBlock.Text = $"Czas pracy: {time.Hours}h";
-            }
-            else WorkTimeTextBlock.Text = $"Czas pracy: {time.Minutes}min";
-            return 0;
-        }
-        else if (BeginTimePicker.Time > EndTimePicker.Time)
-        {
-            WorkTimeTextBlock.Text = $"Czas pracy: ?";
-            return 1;
-        }
-        else
+        if (beginTime == null || endTime == null)
         {
             WorkTimeTextBlock.Text = $"Czas pracy: ?";
             return 2;
+        }
+        else {
+            if (beginTime <= endTime)
+            {
+                var time = TimeSpan.FromMinutes(((TimeSpan)endTime - (TimeSpan)beginTime).TotalMinutes);
+                if (time.TotalHours >= 1)
+                {
+                    if (time.Minutes != 0) WorkTimeTextBlock.Text = $"Czas pracy: {time.Hours}h {time.Minutes}min";
+                    else WorkTimeTextBlock.Text = $"Czas pracy: {time.Hours}h";
+                }
+                else WorkTimeTextBlock.Text = $"Czas pracy: {time.Minutes}min";
+                return 0;
+            }
+            else if (beginTime > endTime)
+            {
+                WorkTimeTextBlock.Text = $"Czas pracy: ?";
+                return 1;
+            }
+            else
+            {
+                WorkTimeTextBlock.Text = $"Czas pracy: ?";
+                return 2;
+            }
         }
     }
 
