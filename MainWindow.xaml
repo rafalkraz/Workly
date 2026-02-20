@@ -48,7 +48,7 @@
                         <FontIcon Glyph="&#xE804;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Tag="Workly.SalaryPage"  Content="Kalkulator wynagrodzenia" Icon="Calculator"/>
+                <NavigationViewItem Tag="Workly.SalaryPage"  Content="Wynagrodzenie" Icon="Calculator"/>
             </NavigationView.MenuItems>
             <Frame Margin="0,0,0,0" x:Name="ContentFrame"/>
         </NavigationView>

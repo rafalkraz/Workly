@@ -140,7 +140,12 @@ public sealed partial class LogPage : Page, IDataViewPage
             from entry in Entries
             group entry by entry.Date.ToString("dd.MM") into g
             orderby g.Key
-            select g;
+            select new
+            {
+                Date = g.Key,
+                Entries = g.ToList(),
+                TotalDuration = g.Sum(e => e.DurationRaw),
+            };
         var reversedResult = result.Reverse();
         EntriesCollection.Source = reversedResult;
         isChanging = false;

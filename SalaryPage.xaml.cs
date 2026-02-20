@@ -2,7 +2,9 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using Workly.Converters;
 using Workly.Interfaces;
 using Workly.Structure;
 
@@ -103,6 +105,8 @@ namespace Workly
                 sum = Math.Round(sum, 2);
                 SalaryTextBlock.Text = sum.ToString("F2") + " PLN";
 
+                MinutesToDurationConverter converter = new();
+                Chart1TextBlock.Text = "Standardowy czas pracy (" + converter.Convert(entryList.Where(entry => entry.Type == 0).Sum(entry => entry.DurationRaw), null, null, CultureInfo.CurrentCulture.ToString()) + ")";
                 var salaryFromStandardEntries = entryList.Where(entry => entry.Type == 0).Sum(entry => entry.Earning);
                 var percentageOfStandardEntries = Math.Round(salaryFromStandardEntries / sum * 100, 2);
                 StandardEarningProgressBar.Value = percentageOfStandardEntries;
@@ -113,15 +117,19 @@ namespace Workly
                 MileageEarningProgressBar.Value = percentageOfMileageEntries;
                 MileageEarningTextBlock.Text = percentageOfMileageEntries + "%";
 
+                Chart3TextBlock.Text = "Urlop (" + converter.Convert(entryList.Where(entry => entry.Type == 2).Sum(entry => entry.DurationRaw), null, null, CultureInfo.CurrentCulture.ToString()) + ")";
                 var salaryFromLeaveEntries = entryList.Where(entry => entry.Type == 2).Sum(entry => entry.Earning);
                 var percentageOfLeaveEntries = Math.Round(salaryFromLeaveEntries / sum * 100, 2);
                 LeaveEarningProgressBar.Value = percentageOfLeaveEntries;
                 LeaveEarningTextBlock.Text = percentageOfLeaveEntries + "%";
 
+                Chart4TextBlock.Text = "Nadgodziny (" + converter.Convert(entryList.Where(entry => entry.Type == 3).Sum(entry => entry.DurationRaw), null, null, CultureInfo.CurrentCulture.ToString()) + ")";
                 var salaryFromOvertimeEntries = entryList.Where(entry => entry.Type == 1).Sum(entry => entry.Earning);
                 var percentageOfOvertimeEntries = Math.Round(salaryFromOvertimeEntries / sum * 100, 2);
                 OvertimeEarningProgressBar.Value = percentageOfOvertimeEntries;
                 OvertimeEarningTextBlock.Text = percentageOfOvertimeEntries + "%";
+
+                ChartTimeSummaryTextBlock.Text = "£¹czny zaraportowany czas: " + converter.Convert(entryList.Sum(entry => entry.DurationRaw), null, null, CultureInfo.CurrentCulture.ToString());
             }
             catch (Exception)
             {

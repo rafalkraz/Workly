@@ -49,6 +49,7 @@ public class Entry(int entryID, int type, DateTime beginTime, DateTime endTime, 
         }
     }
     public string DurationRange => BeginTime.ToString("HH:mm") + " - " + EndTime.ToString("HH:mm");
+    public long DurationRaw => (long)(EndTime - BeginTime).TotalMinutes;
     public string FontIcon => Type switch
     {
         0 => "",

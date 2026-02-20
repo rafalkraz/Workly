@@ -7,13 +7,15 @@
     xmlns:structure="using:Workly.Structure"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:Workly.Converters"
     mc:Ignorable="d"
     Loaded="Page_Loaded"
     SizeChanged="Page_SizeChanged">
 
     <Grid x:Name="ContentGrid">
         <Grid.Resources>
-            <CollectionViewSource x:Name="EntriesCollection" IsSourceGrouped="True"/>
+            <converters:MinutesToDurationConverter x:Key="MinutesToDurationConverter"/>
+            <CollectionViewSource x:Name="EntriesCollection" IsSourceGrouped="True" ItemsPath="Entries"/>
         </Grid.Resources>
         <!--#region VisualStates-->
         <VisualStateManager.VisualStateGroups>
@@ -140,9 +142,14 @@
                                 <GroupStyle>
                                     <GroupStyle.HeaderTemplate>
                                         <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding Key}" />
-                                            </StackPanel>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{Binding Date}" />
+                                                <TextBlock Grid.Column="1" Text="{Binding TotalDuration, Converter={StaticResource MinutesToDurationConverter}}" FontSize="14" VerticalAlignment="Bottom" Padding="12,0,0,1"/>
+                                            </Grid>
                                         </DataTemplate>
                                     </GroupStyle.HeaderTemplate>
                                 </GroupStyle>
