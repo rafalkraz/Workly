@@ -70,13 +70,13 @@
                 IsOpen="False"
                 IsClosable="True"
                 Severity="Warning"
-                Title="Brak przejechanego dystansu"/>
+                Title="Brak przejechanego dystansu lub wprowadzono liczbę niecałkowitą"/>
                 <InfoBar
                 x:Name="IncorrectParkingPriceInfoBar"
                 IsOpen="False"
                 IsClosable="True"
                 Severity="Warning"
-                Title="Brak ceny parkingu"/>
+                Title="Brak ceny parkingu lub wprowadzono niepoprawną liczbę"/>
                 <InfoBar
                 x:Name="IncorrectDescriptionInfoBar"
                 IsOpen="False"

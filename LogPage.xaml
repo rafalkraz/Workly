@@ -18,50 +18,45 @@
         <!--#region VisualStates-->
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
-                <VisualState x:Name="CompactVisualState">
+                <VisualState x:Name="Compact0VisualState">
+                    <!-- Compact view; compact size of all buttons; not used because window minsize is set -->
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="AddEntryButtonFontIcon.Margin" Value="2,0,0,0" />
                         <Setter Target="AddEntryButtonTextBlock.Visibility" Value="Collapsed" />
+                        <Setter Target="DuplicateEntryButtonFontIcon.Margin" Value="2,0,0,0" />
+                        <Setter Target="DuplicateEntryButtonTextBlock.Visibility" Value="Collapsed" />
                         <Setter Target="EditEntryButtonFontIcon.Margin" Value="2,0,0,0" />
                         <Setter Target="EditEntryButtonTextBlock.Visibility" Value="Collapsed" />
                         <Setter Target="DeleteEntryButtonFontIcon.Margin" Value="2,0,0,0" />
                         <Setter Target="DeleteEntryButtonTextBlock.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="Compact3VisualState">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="300" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="AddEntryButtonFontIcon.Margin" Value="2,0,0,0" />
-                        <Setter Target="AddEntryButtonTextBlock.Visibility" Value="Collapsed" />
-                        <Setter Target="EditEntryButtonFontIcon.Margin" Value="2,0,0,0" />
-                        <Setter Target="EditEntryButtonTextBlock.Visibility" Value="Collapsed" />
-                        <Setter Target="DeleteEntryButtonFontIcon.Margin" Value="2,0,0,0" />
-                        <Setter Target="DeleteEntryButtonTextBlock.Visibility" Value="Collapsed" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="StandardVisualState">
+                <VisualState x:Name="Compact1VisualState">
+                    <!-- Compact view; compact size of entry buttons-->
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="482" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="DuplicateEntryButtonFontIcon.Margin" Value="2,0,0,0" />
+                        <Setter Target="DuplicateEntryButtonTextBlock.Visibility" Value="Collapsed" />
                         <Setter Target="EditEntryButtonFontIcon.Margin" Value="2,0,0,0" />
                         <Setter Target="EditEntryButtonTextBlock.Visibility" Value="Collapsed" />
                         <Setter Target="DeleteEntryButtonFontIcon.Margin" Value="2,0,0,0" />
                         <Setter Target="DeleteEntryButtonTextBlock.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="Standard2VisualState">
+                <VisualState x:Name="Compact2VisualState">
+                    <!-- Compact view; normal size of all buttons  -->
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="600" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters />
                 </VisualState>
-                <VisualState x:Name="CompactPaneVisualState">
+                <VisualState x:Name="Normal1VisualState">
+                    <!-- Normal view; compact size of all buttons -->
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="936" />
                     </VisualState.StateTriggers>
@@ -70,9 +65,28 @@
                         <Setter Target="AllEntriesButton.Visibility" Value="Collapsed" />
                         <Setter Target="AddEntryButtonFontIcon.Margin" Value="2,0,0,0" />
                         <Setter Target="AddEntryButtonTextBlock.Visibility" Value="Collapsed" />
+                        <Setter Target="DuplicateEntryButtonFontIcon.Margin" Value="2,0,0,0" />
+                        <Setter Target="DuplicateEntryButtonTextBlock.Visibility" Value="Collapsed" />
+                        <Setter Target="EditEntryButtonFontIcon.Margin" Value="2,0,0,0" />
+                        <Setter Target="EditEntryButtonTextBlock.Visibility" Value="Collapsed" />
+                        <Setter Target="DeleteEntryButtonFontIcon.Margin" Value="2,0,0,0" />
+                        <Setter Target="DeleteEntryButtonTextBlock.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="StandardPaneVisualState">
+                <VisualState x:Name="Normal2VisualState">
+                    <!-- Normal view; normal size of entry buttons -->
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="970" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RootSplitView.IsPaneOpen" Value="True" />
+                        <Setter Target="AllEntriesButton.Visibility" Value="Collapsed" />
+                        <Setter Target="AddEntryButtonFontIcon.Margin" Value="2,0,0,0" />
+                        <Setter Target="AddEntryButtonTextBlock.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Normal3VisualState">
+                    <!-- Normal view; normal size of all buttons -->
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="1212" />
                     </VisualState.StateTriggers>
@@ -175,6 +189,12 @@
                                 </Button>
                                 <TeachingTip x:Name="MoneyEntryTeachingTip" Target="{x:Bind MoneyEntryButton}" Title="Wynagrodzenie za wpis" Subtitle="0,00 PLN">
                                 </TeachingTip>
+                                <Button x:Name="DuplicateEntryButton" Click="DuplicateEntryButton_Click" Margin="0,0,8,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <FontIcon x:Name="DuplicateEntryButtonFontIcon" Glyph="&#xE8C8;" Margin="0,0,4,0"/>
+                                        <TextBlock x:Name="DuplicateEntryButtonTextBlock">Duplikuj</TextBlock>
+                                    </StackPanel>
+                                </Button>
                                 <Button x:Name="EditEntryButton" Click="EditEntryButton_Click" Margin="0,0,8,0">
                                     <StackPanel Orientation="Horizontal">
                                         <FontIcon x:Name="EditEntryButtonFontIcon" Glyph="&#xE70F;" Margin="0,0,4,0"/>

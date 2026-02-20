@@ -11,57 +11,76 @@ namespace Workly;
 
 public sealed partial class EntryEditPage : Page
 {
-    private readonly Window helperWindow;
-    private readonly IDataViewPage parentPageReference;
-    private ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+    private readonly Window helperWindowRef;
+    private readonly IDataViewPage parentPageRef;
+    private readonly ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+
     private readonly List<string> entryTypes = ["Standardowy", "Nadgodziny", "Urlop", "Bezp³atne wolne"];
     private readonly List<string> mileageEntryTypes = ["Kilometrówka", "Parking"];
-    private int editedType = -1; // 0 - worklog entry, 1 - mileage entry
-    private readonly Entry editedEntry = null;
-    private readonly EntryMileage editedMileage = null;
 
-    public EntryEditPage(IDataViewPage parentPage, object entry, Window helperWindowReference)
+    private enum EntrySourceType
+    {
+        Unknown = -1, Log = 0, Mileage = 1
+    }
+    public enum EditMode
+    {
+        Create = 0, Edit = 1, Duplicate = 2
+    }
+
+    private EntrySourceType sourceType = EntrySourceType.Unknown;
+    private readonly EditMode mode;
+
+    private Entry? editedEntry = null;
+    private EntryMileage? editedMileage = null;
+
+    public EntryEditPage(Window helperWindowRef, IDataViewPage parentPageRef, EditMode mode, Entry templateEntry)
     {
         this.InitializeComponent();
-        if (parentPage.ToString() == "Workly.LogPage")
-        {
-            EntryTypeComboBox.ItemsSource = entryTypes;
-            editedEntry = (Entry)entry;
-            editedType = 0;
-            if (entry != null)
-            {
-                MoneyInfoBar1.IsOpen = true;
-            }
-        }
-        else if (parentPage.ToString() == "Workly.MileagePage") {
-            EntryTypeComboBox.ItemsSource = mileageEntryTypes;
-            
-            editedMileage = (EntryMileage)entry;
-            editedType = 1;
-            if (entry != null)
-            {
-                EntryTypeComboBox.IsEnabled = false;
-            }
-            if (entry != null && editedMileage.Type == 0)
-            {
-                MoneyInfoBar2.IsOpen = true;
-            }
-        }
-        
-        helperWindow = helperWindowReference;
-        parentPageReference = parentPage;
+        EntryTypeComboBox.ItemsSource = entryTypes;
+        if (mode != EditMode.Create) editedEntry = templateEntry;
+        sourceType = EntrySourceType.Log;
+        this.mode = mode;
+        this.helperWindowRef = helperWindowRef;
+        this.parentPageRef = parentPageRef;
+    }
+
+    public EntryEditPage(Window helperWindowRef, IDataViewPage parentPageRef, EditMode mode, EntryMileage templateEntry)
+    {
+        this.InitializeComponent();
+        EntryTypeComboBox.ItemsSource = mileageEntryTypes;
+        if (mode != EditMode.Create) editedMileage = templateEntry;
+        sourceType = EntrySourceType.Mileage;
+        this.mode = mode;
+        this.helperWindowRef = helperWindowRef;
+        this.parentPageRef = parentPageRef;
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
+        ValidateWarnings();
         LoadEntryDetails();
+    }
+
+    private void ValidateWarnings() {
+        if (sourceType == EntrySourceType.Log && mode == EditMode.Edit) {
+            MoneyInfoBar1.IsOpen = true;
+        }
+
+        if (sourceType == EntrySourceType.Mileage && mode == EditMode.Edit) {
+            EntryTypeComboBox.IsEnabled = false;
+        }
+
+        if (sourceType == EntrySourceType.Mileage && mode == EditMode.Edit && editedMileage.Type == 0)
+        {
+            MoneyInfoBar2.IsOpen = true;
+        }
     }
 
     private void LoadEntryDetails()
     {
-        switch (editedType)
+        switch (sourceType)
         {
-            case 0:
+            case EntrySourceType.Log:
                 
                 if (editedEntry == null)
                 {
@@ -87,7 +106,7 @@ public sealed partial class EntryEditPage : Page
                     DescriptionTextBox.Text = editedEntry.Description;
                 }
                 break;
-            case 1:
+            case EntrySourceType.Mileage:
                 if (editedMileage == null)
                 {
                     EntryTypeComboBox.SelectedItem = mileageEntryTypes[0];
@@ -108,7 +127,7 @@ public sealed partial class EntryEditPage : Page
                     EndPointTextBox.Text = editedMileage.EndPoint;
                     LocationTextBox.Text = editedMileage.BeginPoint;
                     DistanceNumberBox.Text = editedMileage.Distance.ToString();
-                    ParkingPriceNumberBox.Text = editedMileage.ParkingPrice.ToString();
+                    ParkingPriceNumberBox.Text = double.Round(editedMileage.ParkingPrice, 2).ToString();
                     DescriptionTextBox.Text = editedMileage.Description;
                 }
                 break;
@@ -127,7 +146,7 @@ public sealed partial class EntryEditPage : Page
         }
         else IncorrectDateInfoBar.IsOpen = false;
 
-        if (editedType == 0)
+        if (sourceType == EntrySourceType.Log)
         {
             // Time check
             var checkTimeResult = CheckTime();
@@ -166,7 +185,7 @@ public sealed partial class EntryEditPage : Page
             }
         }
 
-        if (editedType == 1)
+        if (sourceType == EntrySourceType.Mileage)
         {
             if (EntryTypeComboBox.SelectedItem.ToString() == "Kilometrówka")
             {
@@ -187,17 +206,20 @@ public sealed partial class EntryEditPage : Page
                 else IncorrectEndPointInfoBar.IsOpen = false;
 
                 // Distance check
-                if (DistanceNumberBox.Text == "")
+                if (DistanceNumberBox.Text == "" || !int.TryParse(DistanceNumberBox.Text, out _))
                 {
                     IncorrectDistanceInfoBar.IsOpen = true;
                     isProblem = true;
+
                 }
                 else IncorrectDistanceInfoBar.IsOpen = false;
+
+                
 
             }
             else if (EntryTypeComboBox.SelectedItem.ToString() == "Parking")
             {
-                // ParkingPrice check
+                // Location check
                 if (LocationTextBox.Text == "")
                 {
                     IncorrectLocationInfoBar.IsOpen = true;
@@ -206,7 +228,7 @@ public sealed partial class EntryEditPage : Page
                 else IncorrectLocationInfoBar.IsOpen = false;
 
                 // ParkingPrice check
-                if (ParkingPriceNumberBox.Text == "")
+                if (ParkingPriceNumberBox.Text == "" || !(double.Parse(ParkingPriceNumberBox.Text) == double.Round(double.Parse(ParkingPriceNumberBox.Text), 2)))
                 {
                     IncorrectParkingPriceInfoBar.IsOpen = true;
                     isProblem = true;
@@ -222,9 +244,9 @@ public sealed partial class EntryEditPage : Page
     {
         if (EntryTypeComboBox.SelectedItem != null)
         {
-            switch (editedType)
+            switch (sourceType)
             {
-                case 0:
+                case EntrySourceType.Log:
                     DistanceStackPanel.Visibility = Visibility.Collapsed;
                     DistanceNumberBox.Visibility = Visibility.Collapsed;
                     BeginPointStackPanel.Visibility = Visibility.Collapsed;
@@ -248,7 +270,7 @@ public sealed partial class EntryEditPage : Page
                         DescriptionTextBox.Visibility = Visibility.Collapsed;
                     }
                     break;
-                case 1:
+                case EntrySourceType.Mileage:
                     TimeStackPanel.Visibility = Visibility.Collapsed;
                     TimePickersStackPanel.Visibility = Visibility.Collapsed;
                     WorkTimeTextBlock.Visibility = Visibility.Collapsed;
@@ -284,10 +306,9 @@ public sealed partial class EntryEditPage : Page
         }
     }
     
-
     private void CancelEntryButton_Click(object sender, RoutedEventArgs e)
     {
-        helperWindow.Close();
+        helperWindowRef.Close();
     }
 
     private void SaveEntryButton_Click(object sender, RoutedEventArgs e)
@@ -295,9 +316,9 @@ public sealed partial class EntryEditPage : Page
         if (CheckForm())
         {
             var date = DateOnly.Parse(EventDatePicker.Date.Value.ToString("dd.MM.yyyy"));
-            switch (editedType)
+            switch (sourceType)
             {
-                case 0:
+                case EntrySourceType.Log:
                     var beginTime = EventDatePicker.Date.Value.Date.Add(BeginTimePicker.Time);
                     var endTime = EventDatePicker.Date.Value.Date.Add(EndTimePicker.Time);
                     if (EntryTypeComboBox.SelectedIndex != 0 && EntryTypeComboBox.SelectedIndex != 1)
@@ -323,22 +344,31 @@ public sealed partial class EntryEditPage : Page
                             break;
                     }
                     earning = Math.Round(earning, 2);
-                    if (editedEntry == null)
+
+                    var requestedID = mode switch
                     {
-                        var newEntry = new Entry(0, EntryTypeComboBox.SelectedIndex, beginTime, endTime, LocationTextBox.Text, DescriptionTextBox.Text, earning);
-                        var addResult = myLog.AddEntry(newEntry);
-                        if (addResult) SavingFinished(date);
+                        EditMode.Create => 0,
+                        EditMode.Duplicate => 0,
+                        _ => editedEntry.EntryID,
+                    };
+
+                    var entry = new Entry(requestedID, EntryTypeComboBox.SelectedIndex, beginTime, endTime, LocationTextBox.Text, DescriptionTextBox.Text, earning);
+
+                    if (mode == EditMode.Edit)
+                    {
+                        var editResult = myLog.EditEntry(entry);
+                        if (editResult) SavingFinished(date);
                         else ErrorInfoBar.IsOpen = true;
                     }
                     else
                     {
-                        var tempEntry = new Entry(editedEntry.EntryID, EntryTypeComboBox.SelectedIndex, beginTime, endTime, LocationTextBox.Text, DescriptionTextBox.Text, earning);
-                        var editResult = myLog.EditEntry(tempEntry);
-                        if (editResult) SavingFinished(date);
+                        var addResult = myLog.AddEntry(entry);
+                        if (addResult) SavingFinished(date);
                         else ErrorInfoBar.IsOpen = true;
                     }
                     break;
-                case 1:
+
+                case EntrySourceType.Mileage:
                     var parkingPrice = 0.0;
                     var distance = DistanceNumberBox.Text == "" ? 0 : int.Parse(DistanceNumberBox.Text);
 
@@ -356,19 +386,28 @@ public sealed partial class EntryEditPage : Page
                         BeginPointTextBox.Text = LocationTextBox.Text;
                     }
                     parkingPrice = Math.Round(parkingPrice, 2);
-                    if (editedMileage == null)
+
+                    var requestedMileageID = mode switch
                     {
-                        var newEntry = new EntryMileage(0, EntryTypeComboBox.SelectedIndex, date, BeginPointTextBox.Text, EndPointTextBox.Text, DescriptionTextBox.Text, distance, parkingPrice);
-                        var addResult = Log.Mileage.AddEntry(newEntry);
-                        if (addResult) SavingFinished(date);
+                        EditMode.Create => 0,
+                        EditMode.Duplicate => 0,
+                        _ => editedMileage.ID,
+                    };
+
+                    var entryMileage = new EntryMileage(requestedMileageID, EntryTypeComboBox.SelectedIndex, date, BeginPointTextBox.Text, EndPointTextBox.Text, DescriptionTextBox.Text, distance, parkingPrice);
+
+                    if (mode == EditMode.Edit)
+                    {
+                        var editResult = Log.Mileage.EditEntry(entryMileage);
+                        if (editResult) SavingFinished(date);
                         else ErrorInfoBar.IsOpen = true;
                     }
                     else
                     {
-                        var tempEntry = new EntryMileage(editedMileage.ID, EntryTypeComboBox.SelectedIndex, date, BeginPointTextBox.Text, EndPointTextBox.Text, DescriptionTextBox.Text, distance, parkingPrice);
-                        var editResult = Log.Mileage.EditEntry(tempEntry);
-                        if (editResult) SavingFinished(date);
+                        var addResult = Log.Mileage.AddEntry(entryMileage);
+                        if (addResult) SavingFinished(date);
                         else ErrorInfoBar.IsOpen = true;
+
                     }
                     break;
             }
@@ -377,8 +416,8 @@ public sealed partial class EntryEditPage : Page
 
     private void SavingFinished(DateOnly beginTime)
     {
-        helperWindow.Close();
-        parentPageReference.RefreshEntryList(beginTime.ToString("yyyy"), new Month(beginTime.ToString("MM")));
+        helperWindowRef.Close();
+        parentPageRef.RefreshEntryList(beginTime.ToString("yyyy"), new Month(beginTime.ToString("MM")));
     }
 
     private void EntryTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -10,7 +10,7 @@
   <Identity
     Name="RafaKr.Workly"
     Publisher="CN=470DAECF-6883-4578-8A1B-B292AC28A8B8"
-    Version="1.0.0.0" />
+    Version="1.0.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="ec7ece43-8880-47a2-9fd0-10d2454c985e" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

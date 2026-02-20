@@ -42,6 +42,7 @@ public sealed partial class MileagePage : Page, IDataViewPage
         if (myLog.RefreshLog())
         {
             MoneyEntryButton.IsEnabled = true;
+            DuplicateEntryButton.IsEnabled = true;
             EditEntryButton.IsEnabled = true;
             DeleteEntryButton.IsEnabled = true;
             MonthSelectionComboBox.IsEnabled = true;
@@ -71,6 +72,7 @@ public sealed partial class MileagePage : Page, IDataViewPage
             TypeTextBlock.Text = "-";
             DescriptionTextBox.Text = "";
             MoneyEntryButton.IsEnabled = false;
+            DuplicateEntryButton.IsEnabled = false;
             EditEntryButton.IsEnabled = false;
             DeleteEntryButton.IsEnabled = false;
             MonthSelectionComboBox.IsEnabled = false;
@@ -286,6 +288,12 @@ public sealed partial class MileagePage : Page, IDataViewPage
             myLog.DeleteEntry((EntryMileage)MonthEntriesListView.SelectedItem);
             ChangeTimeRange(selectedYear, selectedMonth);
         }
+    }
+
+    private void DuplicateEntryButton_Click(object sender, RoutedEventArgs e)
+    {
+        h_window = new HelperWindow(this, (EntryMileage)MonthEntriesListView.SelectedItem, HelperWindow.Action.Duplicate);
+        h_window.Activate();
     }
 
     public async void ShowDataError(string title, string content)

@@ -41,6 +41,7 @@ public sealed partial class LogPage : Page, IDataViewPage
         if (myLog.RefreshLog())
         {
             MoneyEntryButton.IsEnabled = true;
+            DuplicateEntryButton.IsEnabled = true;
             EditEntryButton.IsEnabled = true;
             DeleteEntryButton.IsEnabled = true;
             MonthSelectionComboBox.IsEnabled = true;
@@ -62,6 +63,7 @@ public sealed partial class LogPage : Page, IDataViewPage
             LocationTextBlock.Text = "-";
             DescriptionTextBox.Text = "";
             MoneyEntryButton.IsEnabled = false;
+            DuplicateEntryButton.IsEnabled = false;
             EditEntryButton.IsEnabled = false;
             DeleteEntryButton.IsEnabled = false;
             MonthSelectionComboBox.IsEnabled = false;
@@ -159,8 +161,6 @@ public sealed partial class LogPage : Page, IDataViewPage
             ChangeTimeRange(selectedYear, (Month)MonthSelectionComboBox.SelectedItem);
         }
     }
-
-    // SELECT ENTRY FROM LIST
 
     private void MonthEntriesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -275,6 +275,12 @@ public sealed partial class LogPage : Page, IDataViewPage
             myLog.DeleteEntry((Entry)MonthEntriesListView.SelectedItem);
             ChangeTimeRange(selectedYear, selectedMonth);
         }
+    }
+
+    private void DuplicateEntryButton_Click(object sender, RoutedEventArgs e)
+    {
+        h_window = new HelperWindow(this, (Entry)MonthEntriesListView.SelectedItem, HelperWindow.Action.Duplicate);
+        h_window.Activate();
     }
 
     public async void ShowDataError(string title, string content)
