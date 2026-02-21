@@ -15,7 +15,7 @@ public sealed partial class EntryEditPage : Page
     private readonly IDataViewPage parentPageRef;
     private readonly ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
-    private readonly List<string> entryTypes = ["Standardowy", "Nadgodziny", "Urlop", "Bezp³atne wolne"];
+    private readonly List<string> entryTypes = ["Standardowy", "Nadgodziny", "Urlop", "Urlop bezp³atny"];
     private readonly List<string> mileageEntryTypes = ["Kilometrówka", "Parking"];
     private readonly AppSettings appSettings = new();
 

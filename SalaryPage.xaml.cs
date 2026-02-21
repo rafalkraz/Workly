@@ -99,62 +99,60 @@ public sealed partial class SalaryPage : Page, IDataViewPage
 
     private void CalculateSalary()
     {
-        //try
-        //{
-        if (YearSelectionComboBox.SelectedItem == null || MonthSelectionComboBox.SelectedItem == null) return;
-        var entryList = Log.Entries.GetEntries(YearSelectionComboBox.SelectedItem.ToString(), (Month)MonthSelectionComboBox.SelectedItem, this);
-        if (YearSelectionComboBox.SelectedItem == null || MonthSelectionComboBox.SelectedItem == null) return;
-        var mileageList = Log.Mileage.GetEntries(YearSelectionComboBox.SelectedItem.ToString(), (Month)MonthSelectionComboBox.SelectedItem, this);
-
-        if (!isProblem)
+        try
         {
-            // Calculate total salary
-            var sum = entryList.Sum(entry => entry.Earning);
-            sum += mileageList.Sum(entry => entry.ParkingPrice);
-            sum = Math.Round(sum, 2);
-            SalaryTextBlock.Text = sum.ToString("F2") + " PLN";
+            if (YearSelectionComboBox.SelectedItem == null || MonthSelectionComboBox.SelectedItem == null) return;
+            var entryList = Log.Entries.GetEntries(YearSelectionComboBox.SelectedItem.ToString(), (Month)MonthSelectionComboBox.SelectedItem, this);
+            if (YearSelectionComboBox.SelectedItem == null || MonthSelectionComboBox.SelectedItem == null) return;
+            var mileageList = Log.Mileage.GetEntries(YearSelectionComboBox.SelectedItem.ToString(), (Month)MonthSelectionComboBox.SelectedItem, this);
 
-            // Calculate standard entries
-            Chart1TextBlock.Text = GetSumOfTime("Standardowy czas pracy", 0, entryList);
-            var salaryFromStandardEntries = entryList.Where(entry => entry.Type == 0).Sum(entry => entry.Earning);
-            var percentageOfStandardEntries = CalculateRoundedPercentage(salaryFromStandardEntries, sum);
-            StandardEarningProgressBar.Value = percentageOfStandardEntries;
-            StandardEarningTextBlock.Text = percentageOfStandardEntries + "%";
+            if (!isProblem)
+            {
+                // Calculate total salary
+                var sum = entryList.Sum(entry => entry.Earning);
+                sum += mileageList.Sum(entry => entry.ParkingPrice);
+                sum = Math.Round(sum, 2);
+                SalaryTextBlock.Text = sum.ToString("F2") + " PLN";
 
-            // Calculate mileage entries
-            var salaryFromMileageEntries = mileageList.Sum(entry => entry.ParkingPrice);
-            var percentageOfMileageEntries = CalculateRoundedPercentage(salaryFromMileageEntries, sum);
-            MileageEarningProgressBar.Value = percentageOfMileageEntries;
-            MileageEarningTextBlock.Text = percentageOfMileageEntries + "%";
+                // Calculate standard entries
+                Chart1TextBlock.Text = GetSumOfTime("Standardowy czas pracy", 0, entryList);
+                var salaryFromStandardEntries = entryList.Where(entry => entry.Type == 0).Sum(entry => entry.Earning);
+                var percentageOfStandardEntries = CalculateRoundedPercentage(salaryFromStandardEntries, sum);
+                StandardEarningProgressBar.Value = percentageOfStandardEntries;
+                StandardEarningTextBlock.Text = percentageOfStandardEntries + "%";
 
-            // Calculate leave entries
-            Chart3TextBlock.Text = GetSumOfTime("Urlop", 2, entryList);
-            var salaryFromLeaveEntries = entryList.Where(entry => entry.Type == 2).Sum(entry => entry.Earning);
-            var percentageOfLeaveEntries = CalculateRoundedPercentage(salaryFromLeaveEntries, sum);
-            LeaveEarningProgressBar.Value = percentageOfLeaveEntries;
-            LeaveEarningTextBlock.Text = percentageOfLeaveEntries + "%";
+                // Calculate mileage entries
+                var salaryFromMileageEntries = mileageList.Sum(entry => entry.ParkingPrice);
+                var percentageOfMileageEntries = CalculateRoundedPercentage(salaryFromMileageEntries, sum);
+                MileageEarningProgressBar.Value = percentageOfMileageEntries;
+                MileageEarningTextBlock.Text = percentageOfMileageEntries + "%";
 
-            // Calculate overtime entries
-            Chart4TextBlock.Text = GetSumOfTime("Nadgodziny", 1, entryList);
-            var salaryFromOvertimeEntries = entryList.Where(entry => entry.Type == 1).Sum(entry => entry.Earning);
-            var percentageOfOvertimeEntries = CalculateRoundedPercentage(salaryFromOvertimeEntries, sum);
-            OvertimeEarningProgressBar.Value = percentageOfOvertimeEntries;
-            OvertimeEarningTextBlock.Text = percentageOfOvertimeEntries + "%";
+                // Calculate leave entries
+                Chart3TextBlock.Text = GetSumOfTime("Urlop", 2, entryList);
+                var salaryFromLeaveEntries = entryList.Where(entry => entry.Type == 2).Sum(entry => entry.Earning);
+                var percentageOfLeaveEntries = CalculateRoundedPercentage(salaryFromLeaveEntries, sum);
+                LeaveEarningProgressBar.Value = percentageOfLeaveEntries;
+                LeaveEarningTextBlock.Text = percentageOfLeaveEntries + "%";
 
-            // Calculate unpaid leave
-            Chart5TextBlock.Text = GetSumOfTime("Bezp³atne wolne", 3, entryList);
+                // Calculate overtime entries
+                Chart4TextBlock.Text = GetSumOfTime("Nadgodziny", 1, entryList);
+                var salaryFromOvertimeEntries = entryList.Where(entry => entry.Type == 1).Sum(entry => entry.Earning);
+                var percentageOfOvertimeEntries = CalculateRoundedPercentage(salaryFromOvertimeEntries, sum);
+                OvertimeEarningProgressBar.Value = percentageOfOvertimeEntries;
+                OvertimeEarningTextBlock.Text = percentageOfOvertimeEntries + "%";
 
-            // Calculate total time
-            MinutesToDurationConverter converter = new();
-            ChartTimeSummaryTextBlock.Text = "£¹czny zaraportowany czas: " + converter.Convert(entryList.Sum(entry => entry.DurationRaw), null, null, CultureInfo.CurrentCulture.ToString());
+                // Calculate unpaid leave
+                Chart5TextBlock.Text = GetSumOfTime("Urlop bezp³atny", 3, entryList);
+
+                // Calculate total time
+                MinutesToDurationConverter converter = new();
+                ChartTimeSummaryTextBlock.Text = "£¹czny zaraportowany czas: " + converter.Convert(entryList.Sum(entry => entry.DurationRaw), null, null, CultureInfo.CurrentCulture.ToString());
+            }
         }
-
-        //}
-        //catch (Exception)
-        //{
-        //throw new Exception();
-        //ShowDataError("Coœ posz³o nie tak!", "Nie uda³o siê obliczyæ twojego wynagrodzenia");
-        //}
+        catch (Exception)
+        {
+            ShowDataError("Coœ posz³o nie tak!", "Nie uda³o siê obliczyæ twojego wynagrodzenia");
+        }
     }
 
     private double CalculateRoundedPercentage(double number, double sum)

@@ -50,7 +50,7 @@
                     <ProgressBar Width="280" Value="0" x:Name="OvertimeEarningProgressBar"/>
                     <TextBlock Margin="8,0,0,0" x:Name="OvertimeEarningTextBlock">0%</TextBlock>
                 </StackPanel>
-                    <TextBlock x:Name="Chart5TextBlock" Margin="0,8,0,4">Bezpłatne wolne</TextBlock>
+                    <TextBlock x:Name="Chart5TextBlock" Margin="0,8,0,4">Urlop bezpłatny</TextBlock>
                     <StackPanel Orientation="Horizontal">
                         <ProgressBar Width="280" Value="0" x:Name="UnpaidLeaveEarningProgressBar"/>
                         <TextBlock Margin="8,0,0,0" x:Name="UnpaidLeaveEarningTextBlock">0%</TextBlock>

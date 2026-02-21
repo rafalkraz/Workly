@@ -212,7 +212,7 @@ public sealed partial class LogPage : Page, IDataViewPage
                     DescriptionStackPanel.Visibility = Visibility.Collapsed;
                     break;
                 case 3:
-                    TypeTextBlock.Text = "Bezp³atne wolne";
+                    TypeTextBlock.Text = "Urlop bezp³atny";
                     LocationTextBlock.Visibility = Visibility.Collapsed;
                     LocationStackPanel.Visibility = Visibility.Collapsed;
                     DescriptionTextBox.Visibility = Visibility.Collapsed;
