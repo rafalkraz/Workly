@@ -355,7 +355,7 @@ public sealed partial class EntryEditPage : Page
     {
         if (CheckForm())
         {
-            var date = DateOnly.Parse(EventDatePicker.Date.Value.ToString("dd.MM.yyyy"));
+            var date = DateOnly.FromDateTime(EventDatePicker.Date.Value.DateTime);
             switch (sourceType)
             {
                 case EntrySourceType.Log:

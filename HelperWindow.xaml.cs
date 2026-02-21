@@ -25,7 +25,7 @@ public sealed partial class HelperWindow : WinUIEx.WindowEx
     public HelperWindow(IDataViewPage parentPage, EntryMileage templateEntry, Action action)
     {
         InitializeWindow();
-        templateEntry ??= new EntryMileage(0, 0, DateOnly.Parse(DateTime.Now.Date.ToString("dd.MM.yyyy")), "", "", "", 0, 0);
+        templateEntry ??= new EntryMileage(0, 0, DateOnly.FromDateTime(DateTime.Now), "", "", "", 0, 0);
         SetupContent(parentPage, templateEntry, action);
     }
 
