@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Workly.Structure;
+﻿using Workly.Structure;
 
 namespace Workly.Interfaces;
 

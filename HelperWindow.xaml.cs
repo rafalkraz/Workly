@@ -46,13 +46,15 @@ public sealed partial class HelperWindow : WinUIEx.WindowEx
             Action.Add => "Dodawanie nowego wpisu",
             Action.Duplicate => "Duplikowanie wpisu",
             Action.Edit => "Edycja wpisu",
+            _ => throw new NotImplementedException(),
         };
 
         var mode = action switch
         {
             Action.Add => EntryEditPage.EditMode.Create,
             Action.Duplicate => EntryEditPage.EditMode.Duplicate,
-            Action.Edit => EntryEditPage.EditMode.Edit
+            Action.Edit => EntryEditPage.EditMode.Edit,
+            _ => throw new NotImplementedException()
         };
 
         if (templateEntry is Entry entry)

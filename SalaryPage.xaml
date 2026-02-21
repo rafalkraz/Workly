@@ -25,7 +25,7 @@
                 <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" TextAlignment="Center">Twoje wynagrodzenie w tym miesiącu wynosi</TextBlock>
                 <TextBlock Style="{StaticResource DisplayTextBlockStyle}" TextAlignment="Center" x:Name="SalaryTextBlock">0,00 PLN</TextBlock>
             </StackPanel>
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Width="335">
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,8" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <FontIcon Glyph="&#xE71D;" Margin="0,0,8,0"/>
                     <TextBlock Style="{StaticResource SubtitleTextBlockStyle}">Zestawienie</TextBlock>
@@ -50,6 +50,11 @@
                     <ProgressBar Width="280" Value="0" x:Name="OvertimeEarningProgressBar"/>
                     <TextBlock Margin="8,0,0,0" x:Name="OvertimeEarningTextBlock">0%</TextBlock>
                 </StackPanel>
+                    <TextBlock x:Name="Chart5TextBlock" Margin="0,8,0,4">Bezpłatne wolne</TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <ProgressBar Width="280" Value="0" x:Name="UnpaidLeaveEarningProgressBar"/>
+                        <TextBlock Margin="8,0,0,0" x:Name="UnpaidLeaveEarningTextBlock">0%</TextBlock>
+                    </StackPanel>
                     <TextBlock x:Name="ChartTimeSummaryTextBlock" Margin="0,20,0,4" TextAlignment="Center">Łączny zaraportowany czas: 0 min</TextBlock>
             </StackPanel>
         </StackPanel>

@@ -1,7 +1,7 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Windows.Storage;
 using Workly.Interfaces;
 using Workly.Structure;
@@ -31,15 +31,17 @@ public sealed partial class EntryEditPage : Page
         Create = 0, Edit = 1, Duplicate = 2
     }
 
-    private EntrySourceType sourceType = EntrySourceType.Unknown;
+    private readonly EntrySourceType sourceType = EntrySourceType.Unknown;
     private readonly EditMode mode;
 
-    private Entry? editedEntry = null;
-    private EntryMileage? editedMileage = null;
+#nullable enable
+    private readonly Entry? editedEntry = null;
+    private readonly EntryMileage? editedMileage = null;
+#nullable disable
 
     public EntryEditPage(Window helperWindowRef, IDataViewPage parentPageRef, EditMode mode, Entry templateEntry)
     {
-        this.InitializeComponent();
+        InitializeComponent();
         EntryTypeComboBox.ItemsSource = entryTypes;
         if (mode != EditMode.Create) editedEntry = templateEntry;
         sourceType = EntrySourceType.Log;
@@ -50,7 +52,7 @@ public sealed partial class EntryEditPage : Page
 
     public EntryEditPage(Window helperWindowRef, IDataViewPage parentPageRef, EditMode mode, EntryMileage templateEntry)
     {
-        this.InitializeComponent();
+        InitializeComponent();
         EntryTypeComboBox.ItemsSource = mileageEntryTypes;
         if (mode != EditMode.Create) editedMileage = templateEntry;
         sourceType = EntrySourceType.Mileage;
@@ -65,12 +67,15 @@ public sealed partial class EntryEditPage : Page
         LoadEntryDetails();
     }
 
-    private void ValidateWarnings() {
-        if (sourceType == EntrySourceType.Log && mode == EditMode.Edit) {
+    private void ValidateWarnings()
+    {
+        if (sourceType == EntrySourceType.Log && mode == EditMode.Edit)
+        {
             MoneyInfoBar1.IsOpen = true;
         }
 
-        if (sourceType == EntrySourceType.Mileage && mode == EditMode.Edit) {
+        if (sourceType == EntrySourceType.Mileage && mode == EditMode.Edit)
+        {
             EntryTypeComboBox.IsEnabled = false;
         }
 
@@ -85,7 +90,7 @@ public sealed partial class EntryEditPage : Page
         switch (sourceType)
         {
             case EntrySourceType.Log:
-                
+
                 if (editedEntry == null)
                 {
                     //Type
@@ -95,7 +100,7 @@ public sealed partial class EntryEditPage : Page
                     EventDatePicker.Date = DateTime.Now;
 
                     // Time
-                    TimeSpan timeNow = DateTime.Now.TimeOfDay;
+                    var timeNow = DateTime.Now.TimeOfDay;
                     beginTime = timeNow;
                     endTime = timeNow + TimeSpan.FromMinutes(15);
                 }
@@ -172,7 +177,7 @@ public sealed partial class EntryEditPage : Page
     {
         // Date check
         var isProblem = false;
-        if (EventDatePicker.Date == null) 
+        if (EventDatePicker.Date == null)
         {
             IncorrectDateInfoBar.IsOpen = true;
             isProblem = true;
@@ -246,9 +251,6 @@ public sealed partial class EntryEditPage : Page
 
                 }
                 else IncorrectDistanceInfoBar.IsOpen = false;
-
-                
-
             }
             else if (EntryTypeComboBox.SelectedItem.ToString() == "Parking")
             {
@@ -310,6 +312,7 @@ public sealed partial class EntryEditPage : Page
                 case EntrySourceType.Mileage:
                     TimeStackPanel.Visibility = Visibility.Collapsed;
                     TimePickersStackPanel.Visibility = Visibility.Collapsed;
+                    TimeTextBoxesStackPanel.Visibility = Visibility.Collapsed;
                     WorkTimeTextBlock.Visibility = Visibility.Collapsed;
 
                     if (EntryTypeComboBox.SelectedItem.ToString() == "Parking")
@@ -342,7 +345,7 @@ public sealed partial class EntryEditPage : Page
             }
         }
     }
-    
+
     private void CancelEntryButton_Click(object sender, RoutedEventArgs e)
     {
         helperWindowRef.Close();
@@ -372,7 +375,7 @@ public sealed partial class EntryEditPage : Page
                     }
                     else
                     {
-                        throw new Exception("Nie mo¿na okreœliæ typu TimePickera!");
+                        throw new Exception("Can not determine type of TimePicker!");
                     }
 
                     if (EntryTypeComboBox.SelectedIndex != 0 && EntryTypeComboBox.SelectedIndex != 1)
@@ -402,7 +405,7 @@ public sealed partial class EntryEditPage : Page
                     {
                         EditMode.Create => 0,
                         EditMode.Duplicate => 0,
-                        _ => editedEntry.EntryID,
+                        _ => editedEntry.ID,
                     };
 
                     var entry = new Entry(requestedID, EntryTypeComboBox.SelectedIndex, beginDateTime, endDateTime, LocationTextBox.Text, DescriptionTextBox.Text, earning);
@@ -537,7 +540,8 @@ public sealed partial class EntryEditPage : Page
             WorkTimeTextBlock.Text = $"Czas pracy: ?";
             return 2;
         }
-        else {
+        else
+        {
             if (beginTime <= endTime)
             {
                 var time = TimeSpan.FromMinutes(((TimeSpan)endTime - (TimeSpan)beginTime).TotalMinutes);

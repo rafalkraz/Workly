@@ -18,9 +18,9 @@ public static partial class Log
         ///<returns>
         ///true, if there is any correct data in database; otherwise, false
         ///</returns>
-        public static bool RefreshLog()
+        public static bool RefreshLog(IDataViewPage sender)
         {
-            _years = DataAccess.GetYears("Mileage").OrderDescending().ToList();
+            _years = DataAccess.GetYears("Mileage", sender).OrderDescending().ToList();
             if (_years.Count > 0) return true;
             else return false;
         }

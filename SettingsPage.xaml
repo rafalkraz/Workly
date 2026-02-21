@@ -108,14 +108,14 @@
             <!--#endregion-->
             <!--#region About -->
             <TextBlock Text="O aplikacji" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" />
-            <controls:SettingsExpander Description="© 2025 Rafał Krąż" Header="Workly">
+            <controls:SettingsExpander Description="© 2026 Rafał Krąż" Header="Workly">
                 <controls:SettingsExpander.HeaderIcon>
                     <BitmapIcon ShowAsMonochrome="False" UriSource="/Assets/Calendar.scale-200.png" />
                 </controls:SettingsExpander.HeaderIcon>
                 <TextBlock
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 IsTextSelectionEnabled="True"
-                Text="1.0.1" />
+                Text="1.1" />
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
                     x:Name="BugRequestCard"

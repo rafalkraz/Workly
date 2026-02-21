@@ -12,16 +12,16 @@ public sealed partial class MainWindow : WinUIEx.WindowEx
 
     public MainWindow()
     {
-        this.InitializeComponent();
+        InitializeComponent();
         TitleBarTextBlock.Text = AppInfo.Current.DisplayInfo.DisplayName;
-        mainNavigation.SelectedItem = mainNavigation.MenuItems[0];
-        this.Title = Windows.ApplicationModel.Package.Current.DisplayName;
+        MainNavigation.SelectedItem = MainNavigation.MenuItems[0];
+        Title = Windows.ApplicationModel.Package.Current.DisplayName;
         this.SetIcon(@"Assets\Calendar.ico");
     }
 
     public List<StorageFile> monthList;
 
-    private void mainNavigation_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+    private void MainNavigation_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
         if (args.IsSettingsSelected)
         {

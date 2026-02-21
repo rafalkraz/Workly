@@ -12,7 +12,7 @@ public sealed partial class SettingsPage : Page
 {
     public SettingsPage()
     {
-        this.InitializeComponent();
+        InitializeComponent();
     }
 
     private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -20,11 +20,11 @@ public sealed partial class SettingsPage : Page
         TextBox textBox = sender as TextBox;
         if (textBox != null)
         {
-            string text = textBox.Text.Replace(',', '.');
+            var text = textBox.Text.Replace(',', '.');
             textBox.Text = text;
             textBox.SelectionStart = textBox.Text.Length;
 
-            if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out double value))
+            if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out _))
             {
                 var binding = textBox.GetBindingExpression(TextBox.TextProperty);
                 if (binding != null)
@@ -94,7 +94,7 @@ public sealed partial class SettingsPage : Page
             };
             await dialog.ShowAsync();
         }
-        
+
         senderButton.IsEnabled = true;
 
     }

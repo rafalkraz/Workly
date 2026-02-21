@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Data;
 
 namespace Workly.Converters;
 
-public class MinutesToDurationConverter : IValueConverter
+public partial class MinutesToDurationConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
@@ -15,6 +11,8 @@ public class MinutesToDurationConverter : IValueConverter
             return "";
 
         var totalMinutes = (int)(long)value;
+
+        if (totalMinutes < 0) return "Błąd obliczania czasu pracy";
 
         var hours = totalMinutes / 60;
         var minutes = totalMinutes % 60;

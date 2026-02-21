@@ -39,7 +39,7 @@ public sealed partial class MileagePage : Page, IDataViewPage
 
     public void RefreshEntryList(string year = null, Month month = null)
     {
-        if (myLog.RefreshLog())
+        if (myLog.RefreshLog(this))
         {
             MoneyEntryButton.IsEnabled = true;
             DuplicateEntryButton.IsEnabled = true;
@@ -58,7 +58,7 @@ public sealed partial class MileagePage : Page, IDataViewPage
             MonthSelectionComboBox.ItemsSource = null;
             EntriesCollection.Source = null;
             EntryIDTextBlock.Text = $"ID: -";
-            DateTextBox.Text = "-";
+            DateTextBlock.Text = "-";
             BeginPointStackPanel.Visibility = Visibility.Collapsed;
             BeginPointTextBlock.Visibility = Visibility.Collapsed;
             EndPointStackPanel.Visibility = Visibility.Collapsed;
@@ -182,6 +182,16 @@ public sealed partial class MileagePage : Page, IDataViewPage
         if (entry == null) return;
         else
         {
+            DateStackPanel.Visibility = Visibility.Visible;
+            DateTextBlock.Visibility = Visibility.Visible;
+            TypeStackPanel.Visibility = Visibility.Visible;
+            TypeTextBlock.Visibility = Visibility.Visible;
+            DescriptionStackPanel.Visibility = Visibility.Visible;
+            DescriptionTextBox.Visibility = Visibility.Visible;
+            DamagedEntryTextBlock.Visibility = Visibility.Collapsed;
+            MoneyEntryButton.IsEnabled = true;
+            DuplicateEntryButton.IsEnabled = true;
+            EditEntryButton.IsEnabled = true;
             switch (entry.Type)
             {
                 case 0:
@@ -213,10 +223,30 @@ public sealed partial class MileagePage : Page, IDataViewPage
                     MoneyEntryButton.Visibility = Visibility.Collapsed;
                     break;
                 default:
-                    throw new Exception();
+                    DateStackPanel.Visibility = Visibility.Collapsed;
+                    DateTextBlock.Visibility = Visibility.Collapsed;
+                    TypeStackPanel.Visibility = Visibility.Collapsed;
+                    TypeTextBlock.Visibility = Visibility.Collapsed;
+                    BeginPointStackPanel.Visibility = Visibility.Collapsed;
+                    BeginPointTextBlock.Visibility = Visibility.Collapsed;
+                    EndPointStackPanel.Visibility = Visibility.Collapsed;
+                    EndPointTextBlock.Visibility = Visibility.Collapsed;
+                    LocationStackPanel.Visibility = Visibility.Collapsed;
+                    LocationTextBlock.Visibility = Visibility.Collapsed;
+                    DistanceStackPanel.Visibility = Visibility.Collapsed;
+                    DistanceTextBlock.Visibility = Visibility.Collapsed;
+                    ParkingPriceStackPanel.Visibility = Visibility.Collapsed;
+                    ParkingPriceTextBlock.Visibility = Visibility.Collapsed;
+                    DescriptionStackPanel.Visibility = Visibility.Collapsed;
+                    DescriptionTextBox.Visibility = Visibility.Collapsed;
+                    DamagedEntryTextBlock.Visibility = Visibility.Visible;
+                    MoneyEntryButton.IsEnabled = false;
+                    DuplicateEntryButton.IsEnabled = false;
+                    EditEntryButton.IsEnabled = false;
+                    break;
             }
             EntryIDTextBlock.Text = $"ID: {entry.ID}";
-            DateTextBox.Text = entry.Date.ToString("dd MMMM yyyy");
+            DateTextBlock.Text = entry.Date.ToString("dd MMMM yyyy");
             BeginPointTextBlock.Text = entry.BeginPoint;
             EndPointTextBlock.Text = entry.EndPoint;
             LocationTextBlock.Text = entry.BeginPoint;
@@ -304,6 +334,7 @@ public sealed partial class MileagePage : Page, IDataViewPage
         MonthSelectionComboBox.IsEnabled = false;
         AddEntryButton.IsEnabled = false;
         MoneyEntryButton.IsEnabled = false;
+        DuplicateEntryButton.IsEnabled = false;
         EditEntryButton.IsEnabled = false;
         DeleteEntryButton.IsEnabled = false;
         NoEntriesTextBlock.Visibility = Visibility.Visible;

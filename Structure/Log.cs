@@ -1,8 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
-
-namespace Workly.Structure;
+﻿namespace Workly.Structure;
 
 public static partial class Log
 {

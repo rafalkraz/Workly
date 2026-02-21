@@ -7,6 +7,7 @@ using Windows.Storage;
 using Workly.Interfaces;
 
 namespace Workly.Structure;
+
 public partial class Log
 {
     public static readonly StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
@@ -84,7 +85,19 @@ public partial class Log
                 selectCommand.Parameters.AddWithValue("@year", year);
                 selectCommand.Parameters.AddWithValue("@month", month);
 
-                var query = selectCommand.ExecuteReader();
+                SqliteDataReader query;
+
+                try
+                {
+                    query = selectCommand.ExecuteReader();
+                }
+                catch (Exception e)
+                {
+                    sender.ShowDataError("Coś poszło nie tak!", $"Nie udało się odczytać bazy danych lub jest ona uszkodzona.\nSpróbuj później lub przejdź do ustawień i wybierz opcję \"Usuń dane aplikacji\".\n\nSzczegóły techniczne:\n\"Error while datebase reader initializing, Table=Entries, SQLite: {e}\"");
+                    db.Close();
+                    return [];
+                    throw;
+                }
                 try
                 {
                     while (query.Read())
@@ -104,11 +117,10 @@ public partial class Log
                 }
                 catch (Exception)
                 {
-                    sender.ShowDataError("Wystąpił krytyczny błąd!", "Nie udało się odczytać bazy danych lub jest ona uszkodzona.\nSpróbuj później lub przejdź do ustawień i wybierz opcję \"Usuń dane aplikacji\".");
+                    sender.ShowDataError("Coś poszło nie tak!", $"Nie udało się odczytać bazy danych lub jest ona uszkodzona.\nSpróbuj później lub przejdź do ustawień i wybierz opcję \"Usuń dane aplikacji\".\n\nSzczegóły techniczne:\n\"Error while reading or parsing object, Table=Entries, EntryID={query["EntryID"]}\"");
                     db.Close();
                     return [];
                 }
-                
             }
             return result;
         }
@@ -128,9 +140,22 @@ public partial class Log
                 selectCommand.Parameters.AddWithValue("@year", year);
                 selectCommand.Parameters.AddWithValue("@month", month);
 
-                var query = selectCommand.ExecuteReader();
-                try 
-                { 
+                SqliteDataReader query;
+
+                try
+                {
+                    query = selectCommand.ExecuteReader();
+                }
+                catch (Exception e)
+                {
+                    sender.ShowDataError("Coś poszło nie tak!", $"Nie udało się odczytać bazy danych lub jest ona uszkodzona.\nSpróbuj później lub przejdź do ustawień i wybierz opcję \"Usuń dane aplikacji\".\n\nSzczegóły techniczne:\n\"Error while datebase reader initializing, Table=Mileage, SQLite: {e}\"");
+                    db.Close();
+                    return [];
+                    throw;
+                }
+
+                try
+                {
                     while (query.Read())
                     {
                         var entry = new EntryMileage(
@@ -149,7 +174,7 @@ public partial class Log
                 }
                 catch (Exception)
                 {
-                    sender.ShowDataError("Wystąpił krytyczny błąd!", "Nie udało się odczytać bazy danych lub jest ona uszkodzona.\nSpróbuj później lub przejdź do ustawień i wybierz opcję \"Usuń dane aplikacji\".");
+                    sender.ShowDataError("Coś poszło nie tak!", $"Nie udało się odczytać bazy danych lub jest ona uszkodzona.\nSpróbuj później lub przejdź do ustawień i wybierz opcję \"Usuń dane aplikacji\".\n\nSzczegóły techniczne:\n\"Error while reading or parsing object, Table=Mileage, ID={query["ID"]}\"");
                     db.Close();
                     return [];
                 }
@@ -157,7 +182,7 @@ public partial class Log
             return result;
         }
 
-        internal static List<string> GetYears(string table)
+        internal static List<string> GetYears(string table, IDataViewPage sender)
         {
             var years = new List<string>();
             using (var db = new SqliteConnection($"Filename={dbFile.Path}"))
@@ -173,13 +198,34 @@ public partial class Log
                     Connection = db,
                     CommandText = $"SELECT DISTINCT strftime('%Y', {column}) from {table};"
                 };
-                var query = selectCommand.ExecuteReader();
 
-                while (query.Read())
+                SqliteDataReader query;
+
+                try
                 {
-                    years.Add(query.GetString(0));
+                    query = selectCommand.ExecuteReader();
                 }
-                db.Close();
+                catch (Exception e)
+                {
+                    sender.ShowDataError("Coś poszło nie tak!", $"Nie udało się odczytać bazy danych lub jest ona uszkodzona.\nSpróbuj później lub przejdź do ustawień i wybierz opcję \"Usuń dane aplikacji\".\n\nSzczegóły techniczne:\n\"Error while datebase reader initializing, Table={table}, SQLite: {e}\"");
+                    db.Close();
+                    return [];
+                }
+
+                try
+                {
+                    while (query.Read())
+                    {
+                        years.Add(query.GetString(0));
+                    }
+                    db.Close();
+                }
+                catch (Exception)
+                {
+                    sender.ShowDataError("Coś poszło nie tak!", $"Nie udało się odczytać bazy danych lub jest ona uszkodzona.\nSpróbuj później lub przejdź do ustawień i wybierz opcję \"Usuń dane aplikacji\".\n\nSzczegóły techniczne:\n\"Error while creating list of years, Table={table}, Column={column}\"");
+                    db.Close();
+                    return [];
+                }
             }
             return years;
         }
@@ -281,7 +327,6 @@ public partial class Log
             insertCommand.ExecuteReader();
             db.Close();
             return true;
-
         }
 
         internal static bool EditDataInMileage(int ID, int newType, string newDate, string newBeginPoint, string newEndPoint, string newDescription, string newDistance, string newParkingPrice)
@@ -306,7 +351,6 @@ public partial class Log
             insertCommand.ExecuteReader();
             db.Close();
             return true;
-
         }
 
         internal static bool DeleteDataFromEntries(int entryID)

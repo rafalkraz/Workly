@@ -218,19 +218,19 @@
                         </Grid>
                         <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,10,0,0">
                             <StackPanel  HorizontalAlignment="Left">
-                                <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                                <StackPanel x:Name="DateStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
                                     <FontIcon Glyph="&#xE787;" Margin="0,0,4,0"/>
                                     <TextBlock Text="Data" />
                                 </StackPanel>
                                 <TextBlock x:Name="DateTextBox"  Text="-" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
-                                <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                                <StackPanel x:Name="DurationRangeStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
                                     <FontIcon Glyph="&#xE916;" Margin="0,0,4,0" />
                                     <TextBlock Text="Czas pracy" />
                                 </StackPanel>
                                 <TextBlock x:Name="DurationRangeTextBox" Text="-" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
 
-                                <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                                <StackPanel x:Name="TypeStackPanel" Orientation="Horizontal" Margin="0,8,0,4">
                                     <FontIcon Glyph="&#xE8EC;" Margin="0,0,4,0" />
                                     <TextBlock Text="Rodzaj" />
                                 </StackPanel>
@@ -246,9 +246,10 @@
                                     <FontIcon Glyph="&#xE946;" Margin="0,0,4,0" />
                                     <TextBlock Text="Opis" />
                                 </StackPanel>
-                                <TextBox x:Name="DescriptionTextBox" AutomationProperties.Name="multi-line TextBox" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True" MinWidth="400" MaxWidth="1000"/>
+                                <TextBox x:Name="DescriptionTextBox" AutomationProperties.Name="multi-line TextBox" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True" Width="470"/>
                             </StackPanel>
                         </ScrollView>
+                        <TextBlock Grid.Row="1" x:Name="DamagedEntryTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Visibility="Collapsed">Wpis jest uszkodzony<LineBreak/>Aby aplikacja działała prawidłowo - usuń go</TextBlock>
                     </Grid>
                 </Grid>
                 <!--#endregion-->

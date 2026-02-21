@@ -4,16 +4,17 @@ using System.Runtime.CompilerServices;
 using Windows.Storage;
 
 namespace Workly;
+
 internal class AppSettings : INotifyPropertyChanged
 {
-    private ApplicationDataContainer localSettings;
+    private readonly ApplicationDataContainer localSettings;
     private double _standardSalary;
     private double _overtimeSalary;
     private double _leaveSalary;
     private double _mileageSalary;
     private int _timePickerType;
 
-    public AppSettings() 
+    public AppSettings()
     {
         localSettings = ApplicationData.Current.LocalSettings;
         LoadFromLocalSettings();
@@ -24,7 +25,7 @@ internal class AppSettings : INotifyPropertyChanged
         get => _standardSalary;
         set
         {
-            
+
             if (_standardSalary != value)
             {
                 _standardSalary = value;
@@ -77,11 +78,12 @@ internal class AppSettings : INotifyPropertyChanged
     }
 
     // 0: TextBox, 1: TimePicker
-    public int TimePickerType { 
+    public int TimePickerType
+    {
         get => _timePickerType;
         set
         {
-            if(_timePickerType != value)
+            if (_timePickerType != value)
             {
                 _timePickerType = value;
                 OnPropertyChanged();

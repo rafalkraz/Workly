@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System.Collections.ObjectModel;
+using Workly.Interfaces;
 using Workly.Structure;
 using myLog = Workly.Structure.Log.Entries;
-using Workly.Interfaces;
 
 namespace Workly;
 
@@ -22,7 +22,7 @@ public sealed partial class LogPage : Page, IDataViewPage
     private ObservableCollection<Entry> Entries;
     public LogPage()
     {
-        this.InitializeComponent();
+        InitializeComponent();
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -38,7 +38,7 @@ public sealed partial class LogPage : Page, IDataViewPage
 
     public void RefreshEntryList(string year = null, Month month = null)
     {
-        if (myLog.RefreshLog())
+        if (myLog.RefreshLog(this))
         {
             MoneyEntryButton.IsEnabled = true;
             DuplicateEntryButton.IsEnabled = true;
@@ -113,13 +113,13 @@ public sealed partial class LogPage : Page, IDataViewPage
                     RefreshEntryList();
                     return;
                 }
-                
+
             }
             else
             {
                 MonthSelectionComboBox.SelectedItem = months[a];
             }
-            
+
         }
         else
         {
@@ -177,10 +177,21 @@ public sealed partial class LogPage : Page, IDataViewPage
         if (entry == null) return;
         else
         {
+            DateStackPanel.Visibility = Visibility.Visible;
+            DateTextBox.Visibility = Visibility.Visible;
+            DurationRangeStackPanel.Visibility = Visibility.Visible;
+            DurationRangeTextBox.Visibility = Visibility.Visible;
+            TypeStackPanel.Visibility = Visibility.Visible;
+            TypeTextBlock.Visibility = Visibility.Visible;
+            DamagedEntryTextBlock.Visibility = Visibility.Collapsed;
+            MoneyEntryButton.IsEnabled = true;
+            DuplicateEntryButton.IsEnabled = true;
+            EditEntryButton.IsEnabled = true;
+
             switch (entry.Type)
             {
                 case 0:
-                    TypeTextBlock.Text = "Standardowy"; 
+                    TypeTextBlock.Text = "Standardowy";
                     LocationTextBlock.Visibility = Visibility.Visible;
                     LocationStackPanel.Visibility = Visibility.Visible;
                     DescriptionTextBox.Visibility = Visibility.Visible;
@@ -206,11 +217,27 @@ public sealed partial class LogPage : Page, IDataViewPage
                     LocationStackPanel.Visibility = Visibility.Collapsed;
                     DescriptionTextBox.Visibility = Visibility.Collapsed;
                     DescriptionStackPanel.Visibility = Visibility.Collapsed;
-                    break;     
+                    break;
                 default:
-                    throw new Exception();
+                    DateStackPanel.Visibility = Visibility.Collapsed;
+                    DateTextBox.Visibility = Visibility.Collapsed;
+                    DurationRangeStackPanel.Visibility = Visibility.Collapsed;
+                    DurationRangeTextBox.Visibility = Visibility.Collapsed;
+                    TypeStackPanel.Visibility = Visibility.Collapsed;
+                    TypeTextBlock.Visibility = Visibility.Collapsed;
+
+                    LocationTextBlock.Visibility = Visibility.Collapsed;
+                    LocationStackPanel.Visibility = Visibility.Collapsed;
+                    DescriptionTextBox.Visibility = Visibility.Collapsed;
+                    DescriptionStackPanel.Visibility = Visibility.Collapsed;
+
+                    DamagedEntryTextBlock.Visibility = Visibility.Visible;
+                    MoneyEntryButton.IsEnabled = false;
+                    DuplicateEntryButton.IsEnabled = false;
+                    EditEntryButton.IsEnabled = false;
+                    break;
             }
-            EntryIDTextBlock.Text = $"ID: {entry.EntryID}";
+            EntryIDTextBlock.Text = $"ID: {entry.ID}";
             DateTextBox.Text = entry.Date.ToString("dd MMMM yyyy");
             DurationRangeTextBox.Text = $"{entry.DurationRange} ({entry.Duration})";
             LocationTextBlock.Text = entry.Localization;
@@ -232,9 +259,9 @@ public sealed partial class LogPage : Page, IDataViewPage
 
     private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (AllEntriesButton.Visibility == Visibility.Visible) 
-        { 
-            RootSplitView.OpenPaneLength = this.ActualWidth; 
+        if (AllEntriesButton.Visibility == Visibility.Visible)
+        {
+            RootSplitView.OpenPaneLength = this.ActualWidth;
             if (MonthEntriesListView.Items.Count == 0) RootSplitView.IsPaneOpen = true;
         }
         else
@@ -296,10 +323,16 @@ public sealed partial class LogPage : Page, IDataViewPage
         MonthSelectionComboBox.IsEnabled = false;
         AddEntryButton.IsEnabled = false;
         MoneyEntryButton.IsEnabled = false;
+        DuplicateEntryButton.IsEnabled = false;
         EditEntryButton.IsEnabled = false;
         DeleteEntryButton.IsEnabled = false;
         NoEntriesTextBlock.Visibility = Visibility.Visible;
         NoEntriesTextBlock.Text = "B³¹d bazy danych";
+        DateTextBox.Text = "-";
+        DurationRangeTextBox.Text = "-";
+        TypeTextBlock.Text = "-";
+        LocationTextBlock.Text = "-";
+        DescriptionTextBox.Text = "";
         ContentDialog dialog = new()
         {
             XamlRoot = this.XamlRoot,
