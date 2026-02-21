@@ -55,14 +55,15 @@ Aplikacja Workly obsługuje import i eksport bazy danych w formacie `.db`, co um
 
 ## 🕓 Historia wersji
 
-| Wersja | Data wydania | Zmiany                                                                    |
-| ------ | ------------ | ------------------------------------------------------------------------- |
-| 1.0.0  | 2025-07-15   | Pierwsze publiczne wydanie aplikacji Workly                               |
-
+| Wersja | Data wydania | Zmiany                                                                                 |
+| ------ | ------------ | -------------------------------------------------------------------------------------- |
+| 1.0.0  | 2025-07-15   | Pierwsze publiczne wydanie aplikacji Workly                                            |
+| 1.0.1  | 2025-07-15   | Drobne zmiany w ustawieniach aplikacji                                                 |
+| 1.1    | 2026-02-21   | - Nowa funkcja duplikowania wpisów (dodawanie podobnych wpisów to teraz tylko kliknięcie)<br>- Nowy sposób wprowadzania godzin (wybór pomiędzy klawiaturą, a selektorem czasu)<br>- Zakładka "Kalkulator wynagrodzenia" to teraz "Wynagrodzenie"<br>- Zestawienie w zakładce "Wynagrodzenie" uwzględnia teraz "Bezpłatne wolne" oraz całkowity czas pracy w miesiącu<br>- Czas pracy w poszczególne dni jest teraz widoczny bezpośrednio przy dacie<br>- Poprawki błędów         |
 
 ## 📄 Licencja
 
-Copyright © 2025 Rafał Krąż
+Copyright © 2026 Rafał Krąż
 
 Dozwolone jest korzystanie z tego kodu wyłącznie w celach prywatnych i edukacyjnych.
 Zabronione jest wykorzystywanie w celach komercyjnych, w tym sprzedaż, sublicencjonowanie
