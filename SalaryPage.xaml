@@ -5,19 +5,31 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Workly"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" d:DataContext="{d:DesignInstance Type=local:AppSettings}"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Loaded="Page_Loaded">
+    <Page.Resources>
+        <local:AppSettings x:Key="AppSettings" />
+    </Page.Resources>
 
     <Grid Padding="20,24,20,12">
         <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" MinHeight="55" MaxHeight="80" />
+                <RowDefinition Height="32" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
         <StackPanel x:Name="DateChooseStackPanel" Orientation="Horizontal" Grid.Row="0">
             <ComboBox x:Name="YearSelectionComboBox" Width="80" Margin="0,0,4,0" SelectionChanged="YearSelectionComboBox_SelectionChanged" />
-            <ComboBox x:Name="MonthSelectionComboBox" Width="200" SelectionChanged="MonthSelectionComboBox_SelectionChanged" />
+            <ComboBox x:Name="MonthSelectionComboBox" Width="200" Margin="0,0,4,0" SelectionChanged="MonthSelectionComboBox_SelectionChanged" />
+            <Button x:Name="ViewButton">
+                <FontIcon Glyph="&#xE890;"/>
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <ToggleMenuFlyoutItem x:Name="IncludeMileageToggleMenu" Text="Uwzględniaj kilometrówkę" Click="IncludeMileageToggleMenu_Click" IsChecked="{Binding IncludeMileageInSalary, Source={StaticResource AppSettings}, Mode=TwoWay}" />
+                        <ToggleMenuFlyoutItem x:Name="IncludeParkingToggleMenu" Text="Uwzględniaj parking" Click="IncludeParkingToggleMenu_Click" IsChecked="{Binding IncludeParkingInSalary, Source={StaticResource AppSettings}, Mode=TwoWay}" />
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
         </StackPanel>
         <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="16,0,16,0">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" >
@@ -35,11 +47,16 @@
                     <ProgressBar Width="280" Value="0" x:Name="StandardEarningProgressBar"/>
                     <TextBlock Margin="8,0,0,0" x:Name="StandardEarningTextBlock">0%</TextBlock>
                 </StackPanel>
-                    <TextBlock x:Name="Chart2TextBlock" Margin="0,8,0,4">Kilometrówka + Parking</TextBlock>
+                    <TextBlock x:Name="Chart2_1TextBlock" Margin="0,8,0,4">Kilometrówka</TextBlock>
                 <StackPanel Orientation="Horizontal">
                     <ProgressBar Width="280" Value="0" x:Name="MileageEarningProgressBar" />
                     <TextBlock Margin="8,0,0,0" x:Name="MileageEarningTextBlock">0%</TextBlock>
                 </StackPanel>
+                    <TextBlock x:Name="Chart2_2TextBlock" Margin="0,8,0,4">Parking</TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <ProgressBar Width="280" Value="0" x:Name="ParkingEarningProgressBar" />
+                <TextBlock Margin="8,0,0,0" x:Name="ParkingEarningTextBlock">0%</TextBlock>
+                    </StackPanel>
                     <TextBlock x:Name="Chart3TextBlock" Margin="0,8,0,4">Urlop</TextBlock>
                 <StackPanel Orientation="Horizontal">
                     <ProgressBar Width="280" Value="0" x:Name="LeaveEarningProgressBar" />

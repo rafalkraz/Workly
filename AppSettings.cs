@@ -13,6 +13,8 @@ internal class AppSettings : INotifyPropertyChanged
     private double _leaveSalary;
     private double _mileageSalary;
     private int _timePickerType;
+    private bool _includeMileageInSalary = true;
+    private bool _includeParkingInSalary = true;
 
     public AppSettings()
     {
@@ -92,6 +94,34 @@ internal class AppSettings : INotifyPropertyChanged
         }
     }
 
+    public bool IncludeMileageInSalary
+    {
+        get => _includeMileageInSalary;
+        set
+        {
+            if (_includeMileageInSalary != value)
+            {
+                _includeMileageInSalary = value;
+                OnPropertyChanged();
+                SaveToLocalSettings("IncludeMileageInSalary", value ? 1 : 0);
+            }
+        }
+    }
+
+    public bool IncludeParkingInSalary
+    {
+        get => _includeParkingInSalary;
+        set
+        {
+            if (_includeParkingInSalary != value)
+            {
+                _includeParkingInSalary = value;
+                OnPropertyChanged();
+                SaveToLocalSettings("IncludeParkingInSalary", value ? 1 : 0);
+            }
+        }
+    }
+
     private void LoadFromLocalSettings()
     {
         if (localSettings.Values.ContainsKey("StandardSalary"))
@@ -114,13 +144,20 @@ internal class AppSettings : INotifyPropertyChanged
         {
             TimePickerType = Convert.ToInt32(localSettings.Values["TimePickerType"]);
         }
+        if (localSettings.Values.ContainsKey("IncludeMileageInSalary"))
+        {
+            IncludeMileageInSalary = Convert.ToBoolean(localSettings.Values["IncludeMileageInSalary"]);
+        }
+        if (localSettings.Values.ContainsKey("IncludeParkingInSalary"))
+        {
+            IncludeParkingInSalary = Convert.ToBoolean(localSettings.Values["IncludeParkingInSalary"]);
+        }
     }
 
-    private void SaveToLocalSettings(string keyName, double value)
+    private void SaveToLocalSettings(string keyName, object value)
     {
         localSettings.Values[keyName] = value;
     }
-
 
     public event PropertyChangedEventHandler PropertyChanged;
 

@@ -110,7 +110,17 @@ public sealed partial class SalaryPage : Page, IDataViewPage
             {
                 // Calculate total salary
                 var sum = entryList.Sum(entry => entry.Earning);
-                sum += mileageList.Sum(entry => entry.ParkingPrice);
+
+                var salaryFromMileageEntries = mileageList.Where(entry => entry.Type == 0).Sum(entry => entry.ParkingPrice);
+                var salaryFromParkingEntries = mileageList.Where(entry => entry.Type == 1).Sum(entry => entry.ParkingPrice);
+                if (IncludeMileageToggleMenu.IsChecked)
+                {
+                    sum += salaryFromMileageEntries;
+                }
+                if (IncludeParkingToggleMenu.IsChecked)
+                {
+                    sum += salaryFromParkingEntries;
+                }
                 sum = Math.Round(sum, 2);
                 SalaryTextBlock.Text = sum.ToString("F2") + " PLN";
 
@@ -122,11 +132,41 @@ public sealed partial class SalaryPage : Page, IDataViewPage
                 StandardEarningTextBlock.Text = percentageOfStandardEntries + "%";
 
                 // Calculate mileage entries
-                var salaryFromMileageEntries = mileageList.Sum(entry => entry.ParkingPrice);
-                var percentageOfMileageEntries = CalculateRoundedPercentage(salaryFromMileageEntries, sum);
-                MileageEarningProgressBar.Value = percentageOfMileageEntries;
-                MileageEarningTextBlock.Text = percentageOfMileageEntries + "%";
+                if (IncludeMileageToggleMenu.IsChecked)
+                {
+                    Chart2_1TextBlock.Visibility = Visibility.Visible;
+                    MileageEarningProgressBar.Visibility = Visibility.Visible;
+                    MileageEarningTextBlock.Visibility = Visibility.Visible;
 
+                    var percentageOfMileageEntries = CalculateRoundedPercentage(salaryFromMileageEntries, sum);
+                    MileageEarningProgressBar.Value = percentageOfMileageEntries;
+                    MileageEarningTextBlock.Text = percentageOfMileageEntries + "%";
+                }
+                else
+                {
+                    Chart2_1TextBlock.Visibility = Visibility.Collapsed;
+                    MileageEarningProgressBar.Visibility = Visibility.Collapsed;
+                    MileageEarningTextBlock.Visibility = Visibility.Collapsed;
+                }
+                    
+                // Calculate parking entries
+                if (IncludeParkingToggleMenu.IsChecked)
+                {
+                    Chart2_2TextBlock.Visibility = Visibility.Visible;
+                    ParkingEarningProgressBar.Visibility = Visibility.Visible;
+                    ParkingEarningTextBlock.Visibility = Visibility.Visible;
+
+                    var percentageOfParkingEntries = CalculateRoundedPercentage(salaryFromParkingEntries, sum);
+                    ParkingEarningProgressBar.Value = percentageOfParkingEntries;
+                    ParkingEarningTextBlock.Text = percentageOfParkingEntries + "%";
+                }
+                else
+                {
+                    Chart2_2TextBlock.Visibility = Visibility.Collapsed;
+                    ParkingEarningProgressBar.Visibility = Visibility.Collapsed;
+                    ParkingEarningTextBlock.Visibility = Visibility.Collapsed;
+                }
+                    
                 // Calculate leave entries
                 Chart3TextBlock.Text = GetSumOfTime("Urlop", 2, entryList);
                 var salaryFromLeaveEntries = entryList.Where(entry => entry.Type == 2).Sum(entry => entry.Earning);
@@ -177,11 +217,13 @@ public sealed partial class SalaryPage : Page, IDataViewPage
         isProblem = true;
         StandardEarningProgressBar.Value = 0;
         MileageEarningProgressBar.Value = 0;
+        ParkingEarningProgressBar.Value = 0;
         LeaveEarningProgressBar.Value = 0;
         OvertimeEarningProgressBar.Value = 0;
 
         StandardEarningTextBlock.Text = "0%";
         MileageEarningTextBlock.Text = "0%";
+        ParkingEarningTextBlock.Text = "0%";
         LeaveEarningTextBlock.Text = "0%";
         OvertimeEarningTextBlock.Text = "0%";
         SalaryTextBlock.Text = "-";
@@ -191,6 +233,7 @@ public sealed partial class SalaryPage : Page, IDataViewPage
         YearSelectionComboBox.ItemsSource = null;
         MonthSelectionComboBox.IsEnabled = false;
         YearSelectionComboBox.IsEnabled = false;
+        ViewButton.IsEnabled = false;
 
         ContentDialog dialog = new()
         {
@@ -207,5 +250,15 @@ public sealed partial class SalaryPage : Page, IDataViewPage
             await dialog.ShowAsync();
         }
         catch (Exception) { }
+    }
+
+    private void IncludeMileageToggleMenu_Click(object sender, RoutedEventArgs e)
+    {
+        CalculateSalary();
+    }
+
+    private void IncludeParkingToggleMenu_Click(object sender, RoutedEventArgs e)
+    {
+        CalculateSalary();
     }
 }
