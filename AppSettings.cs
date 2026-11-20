@@ -5,7 +5,7 @@ using Windows.Storage;
 
 namespace Workly;
 
-internal class AppSettings : INotifyPropertyChanged
+internal partial class AppSettings : INotifyPropertyChanged
 {
     private readonly ApplicationDataContainer localSettings;
     private double _standardSalary;

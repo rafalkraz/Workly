@@ -93,7 +93,6 @@
     <Manifest Include="$(ApplicationManifest)" />
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.5" />
     <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
-    <PackageReference Include="System.Private.Uri" Version="4.3.2" />
     <PackageReference Include="WinUIEx" Version="2.9.3" />
   </ItemGroup>
   <!--

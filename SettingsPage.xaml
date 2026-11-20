@@ -115,7 +115,7 @@
                 <TextBlock
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 IsTextSelectionEnabled="True"
-                Text="1.1" />
+                Text="1.1.1" />
                 <controls:SettingsExpander.Items>
                     <controls:SettingsCard
                     x:Name="BugRequestCard"
